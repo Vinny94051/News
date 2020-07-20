@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="ru.kiryanav.news.presentation.viewmodel.NewsViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <SearchView
+            android:id="@+id/searchView"
+            isVisible="@{!viewModel.isProgressVisible()}"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:id="@+id/totalResults"
+            isVisible="@{!viewModel.isProgressVisible()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/searchView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/news_8dp"
+            android:text="@{viewModel.newsLiveData.resultNumber}"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Total results: 4900" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/newsRecycler"
+            articles="@{viewModel.newsLiveData.articles}"
+            isVisible="@{!viewModel.isProgressVisible()}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/totalResults"
+            android:layout_marginTop="@dimen/default_margin"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_article" />
+
+
+        <ProgressBar
+            android:id="@+id/mainProgressBar"
+            isVisible="@{viewModel.isProgressVisible()}"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminateTint="@android:color/black"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+</layout>

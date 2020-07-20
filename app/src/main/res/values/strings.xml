@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">News</string>
+    <string name="unknown_author">unknown</string>
+    <string name="author">Author is: %s</string>
+    <string name="search_hint">Search for news</string>
+    <string name="total_results">Total results: %s</string>
+</resources>
