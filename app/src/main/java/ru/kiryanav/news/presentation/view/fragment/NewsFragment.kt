@@ -2,17 +2,20 @@ package ru.kiryanav.news.presentation.view.fragment
 
 import android.os.Bundle
 import android.widget.SearchView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_news.*
 import ru.kiryanav.news.Constants
 import ru.kiryanav.news.R
 import ru.kiryanav.news.databinding.FragmentNewsBinding
+import ru.kiryanav.news.domain.model.ArticleUI
+import ru.kiryanav.news.presentation.view.list.OnArticleItemClick
 import ru.kiryanav.news.presentation.viewmodel.NewsViewModel
 import vlnny.base.fragment.BaseBindableFragment
 import vlnny.base.fragment.BaseFragmentCompanion
 
 
-class NewsFragment : BaseBindableFragment<FragmentNewsBinding>() {
+class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemClick {
 
     companion object : BaseFragmentCompanion<NewsFragment>() {
         override fun newInstance(): NewsFragment = NewsFragment()
@@ -25,6 +28,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>() {
         super.onActivityCreated(savedInstanceState)
         binding.apply {
             this.viewModel = this@NewsFragment.viewModel
+            this.callback = this@NewsFragment
             executePendingBindings()
             loadNews("Лукашенко")
         }
@@ -34,6 +38,13 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>() {
 
     override fun initViewModel() {
         viewModel = ViewModelProvider(this)[NewsViewModel::class.java]
+            .apply {
+                isArticleSavedLiveData.observe(this@NewsFragment, Observer { isSaved ->
+                    if (isSaved) {
+                        showSnack("Article successfully saved")
+                    } else showSnack("Something went wrong")
+                })
+            }
     }
 
     override fun initViews() {
@@ -47,14 +58,12 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>() {
                 return true
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-//                newText?.let { q ->
-//                    loadNews(q)
-//                }
-                return true
-            }
-
+            override fun onQueryTextChange(newText: String?) = true
         })
+    }
+
+    override fun popupSave(item: ArticleUI) {
+        viewModel.saveArticle(item)
     }
 
 
@@ -65,4 +74,6 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>() {
         language: String = Constants.EMPTY_STRING
     ) =
         viewModel.loadEverythingNews(query, from, to, language)
+
+
 }

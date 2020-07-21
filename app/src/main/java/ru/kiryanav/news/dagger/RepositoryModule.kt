@@ -2,6 +2,8 @@ package ru.kiryanav.news.dagger
 
 import dagger.Binds
 import dagger.Module
+import ru.kiryanav.news.data.repository.ArticleRepository
+import ru.kiryanav.news.data.repository.IArticleRepository
 import ru.kiryanav.news.data.repository.INewsRepository
 import ru.kiryanav.news.data.repository.NewsRepository
 import ru.kiryanav.news.domain.INewsInteractor
@@ -14,4 +16,7 @@ interface RepositoryModule {
 
     @Binds
     fun bindNewsInteractor(newsInteractor : NewsInteractor) : INewsInteractor
+
+    @Binds
+    fun bindArticleRepo(article : ArticleRepository) : IArticleRepository
 }

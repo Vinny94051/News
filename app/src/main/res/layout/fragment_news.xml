@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="ru.kiryanav.news.presentation.viewmodel.NewsViewModel" />
+
+        <variable
+            name="callback"
+            type="ru.kiryanav.news.presentation.view.list.OnArticleItemClick" />
     </data>
 
     <RelativeLayout
@@ -19,7 +23,10 @@
             android:id="@+id/searchView"
             isVisible="@{!viewModel.isProgressVisible()}"
             android:layout_width="match_parent"
-            android:layout_height="40dp" />
+            android:layout_height="40dp"
+            android:layout_margin="@dimen/default_margin"
+            android:background="@android:color/darker_gray"
+            android:searchIcon="@drawable/ic_baseline_search_24" />
 
         <TextView
             android:id="@+id/totalResults"
@@ -35,13 +42,29 @@
             android:textStyle="bold"
             tools:text="Total results: 4900" />
 
+        <TextView
+            android:id="@+id/showSaved"
+            isVisible="@{!viewModel.isProgressVisible()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/totalResults"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/news_8dp"
+            android:text="@={viewModel.showSavedText}"
+            android:layout_marginEnd="@dimen/default_margin"
+            app:onClick="@{() -> viewModel.showSaved()}"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="14sp"
+            android:textStyle="italic" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/newsRecycler"
-            articles="@{viewModel.newsLiveData.articles}"
+            articleCallback="@{callback}"
+            articles="@{viewModel.articlesLiveData}"
             isVisible="@{!viewModel.isProgressVisible()}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/totalResults"
+            android:layout_below="@id/showSaved"
             android:layout_marginTop="@dimen/default_margin"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

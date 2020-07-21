@@ -10,7 +10,8 @@ import javax.inject.Singleton
 @Module(
     includes = [
         RetrofitModule::class,
-        RepositoryModule::class
+        RepositoryModule::class,
+        RoomModule::class
     ]
 )
 class AppModule(private val app: Application) {

@@ -1,27 +1,34 @@
 package ru.kiryanav.news.presentation.view.list.viewholder
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import ru.kiryanav.news.Constants
 import ru.kiryanav.news.R
 import ru.kiryanav.news.databinding.ItemArticleBinding
 import ru.kiryanav.news.domain.model.ArticleUI
+import ru.kiryanav.news.presentation.view.list.OnArticleItemClick
 import vlnny.base.adapter.BaseViewHolder
 import vlnny.base.ext.openLink
 
-class ArticleViewHolder(private val binding: ItemArticleBinding) :
+class ArticleViewHolder(
+    private val binding: ItemArticleBinding,
+    private val callback: OnArticleItemClick
+) :
     BaseViewHolder<ArticleUI>(binding.root) {
 
     companion object {
-        fun from(parent: ViewGroup) = ArticleViewHolder(
+        fun from(parent: ViewGroup, callback: OnArticleItemClick) = ArticleViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.item_article,
                 parent,
                 false
-            )
+            ),
+            callback
         )
     }
 
@@ -34,10 +41,31 @@ class ArticleViewHolder(private val binding: ItemArticleBinding) :
                     .error(Glide.with(binding.previewImage).load(R.drawable.preview_image))
                     .into(binding.previewImage)
             }
-            binding.root.setOnClickListener { root ->
-                root.context.openLink(item.articleUrl)
+            root.apply {
+                setOnClickListener { root ->
+                    root.context.openLink(item.articleUrl)
+                }
+
+                setOnLongClickListener { root ->
+                    showPopup(root, item)
+                    true
+                }
             }
             executePendingBindings()
         }
+    }
+
+    private fun showPopup(view: View, listItem: ArticleUI) {
+        PopupMenu(view.context, view).apply {
+            inflate(R.menu.item_article_popup)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.save -> {
+                        callback.popupSave(listItem)
+                    }
+                }
+                true
+            }
+        }.show()
     }
 }

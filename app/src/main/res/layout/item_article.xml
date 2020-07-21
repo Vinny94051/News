@@ -14,11 +14,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/news_8dp"
-        app:cardCornerRadius="@dimen/default_margin"
-        app:cardElevation="@dimen/default_margin"
+        android:layout_margin="@dimen/default_margin"
         android:foreground="?attr/selectableItemBackground"
-        >
+        app:cardCornerRadius="@dimen/default_margin"
+        app:cardElevation="@dimen/default_margin">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -39,7 +38,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/previewImage"
-                android:layout_margin="4dp"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/news_8dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginBottom="4dp"
                 android:text="@{article.title}"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/title_news"
@@ -51,41 +53,47 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
-                android:layout_margin="4dp"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:text="@{article.description}"
                 android:textColor="#717171"
                 android:textSize="@dimen/subtitle"
-                app:trimLength="140"
+                app:trimLength="100"
                 tools:text="Some title Some title Some title Some title Some title Some title " />
 
-            <ru.kiryanav.news.presentation.view.view.ExpandableTextView
-                android:id="@+id/author"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/description"
-                android:layout_margin="4dp"
-                app:trimLength="40"
-                android:layout_marginTop="@dimen/news_8dp"
-                android:text="@{article.author}"
-                android:textColor="#424242"
-                android:textSize="@dimen/subtitle"
-                android:textStyle="bold"
-                tools:text="Author: Martin" />
+                android:weightSum="1">
 
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/description"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="4dp"
-                android:layout_marginStart="@dimen/margin_news_32dp"
-                android:layout_marginTop="4dp"
-                android:maxLength="10"
-                android:text="@{article.publishedAt}"
-                android:textSize="@dimen/subtitle"
-                tools:text="04.06_13:15" />
+                <TextView
+                    android:id="@+id/author"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:layout_weight="0.5"
+                    android:text="@{article.author}"
+                    android:textColor="#424242"
+                    android:textSize="@dimen/subtitle"
+                    android:textStyle="bold"
+                    tools:text="Author: Martin" />
 
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/margin_news_32dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="0.5"
+                    android:gravity="end"
+                    android:maxLength="10"
+                    android:text="@{article.publishedAt}"
+                    android:textSize="@dimen/subtitle"
+                    tools:text="04.06_13:15" />
+            </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>

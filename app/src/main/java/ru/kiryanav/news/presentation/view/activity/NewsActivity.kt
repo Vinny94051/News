@@ -9,7 +9,6 @@ import vlnny.base.ext.hideActionBar
 class NewsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        hideActionBar()
         super.onCreate(savedInstanceState)
         router.addFragmentWithAddingInBackStack(
             NewsFragment.newInstance(),
