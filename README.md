@@ -1,6 +1,6 @@
 # News
 
-News is the app which showed latest news
+News is the app which showed the latest news
 
 ## Usage
 Just open the app and see news, if you wanna change topic of showed news, use search field on the top of the screen
