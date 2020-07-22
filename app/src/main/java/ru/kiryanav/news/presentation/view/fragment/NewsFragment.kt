@@ -34,7 +34,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
             this.viewModel = this@NewsFragment.viewModel
             this.callback = this@NewsFragment
             executePendingBindings()
-            loadNews("Лукашенко")
+            loadNews(getString(R.string.default_search))
         }
     }
 
@@ -46,7 +46,9 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
                 isArticleSavedLiveData.observe(this@NewsFragment, Observer { isSaved ->
                     if (isSaved) {
                         showSnack(getString(R.string.article_saved))
-                    } else showSnack(getString(R.string.error_saved))
+                    } else {
+                        showSnack(getString(R.string.error_saved))
+                    }
                 })
             }
     }
@@ -59,7 +61,12 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
     }
 
     private fun initPullToRefresh() {
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(
+            ContextCompat.getColor(
+                context!!,
+                R.color.colorPrimary
+            )
+        )
         swipeRefreshLayout.setColorSchemeColors(Color.WHITE)
 
         swipeRefreshLayout.setOnRefreshListener {
@@ -99,10 +106,8 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
         })
     }
 
-    override fun popupSave(item: ArticleUI) {
+    override fun popupSave(item: ArticleUI) =
         viewModel.saveArticle(item)
-    }
-
 
     private fun loadNews(
         query: String,

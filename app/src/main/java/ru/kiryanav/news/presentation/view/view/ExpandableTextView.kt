@@ -1,6 +1,7 @@
 package ru.kiryanav.news.presentation.view.view
 
 import android.content.Context
+import android.text.Html
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import ru.kiryanav.news.R
@@ -14,10 +15,10 @@ class ExpandableTextView @JvmOverloads constructor(
 
     companion object {
         private const val DEFAULT_TRIM_LENGTH = 200
-        private const val ELLIPSIS = "....."
+
     }
 
-
+    private val showMore = "<font color='#6200EE'> ${context.getString(R.string.show_more)}</font>"
     private var originalText: CharSequence? = null
     private var trimmedText: CharSequence? = null
     private var bufferType: BufferType? = null
@@ -50,7 +51,7 @@ class ExpandableTextView @JvmOverloads constructor(
                 originalText,
                 0,
                 trimLength + 1
-            ).append(ELLIPSIS)
+            ).append("\n").append(Html.fromHtml(showMore))
         } else {
             originalText
         }

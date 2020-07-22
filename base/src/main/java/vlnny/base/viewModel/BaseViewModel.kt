@@ -1,7 +1,6 @@
 package vlnny.base.viewModel
 
 import androidx.lifecycle.*
-import io.reactivex.FlowableTransformer
 import io.reactivex.SingleTransformer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -22,7 +21,7 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
 
     override fun onCleared() {
         super.onCleared()
-        disposableList.dispose()
+        removeDisposables()
     }
 
     fun removeDisposables() = disposableList.dispose()
