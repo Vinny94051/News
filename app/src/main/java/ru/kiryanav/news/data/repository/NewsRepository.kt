@@ -14,17 +14,20 @@ class NewsRepository @Inject constructor(private val newsApi: NewsApi) : INewsRe
         from: String,
         to: String,
         language: String,
+        dayNumber : Int,
+        pageNumber: Int,
         sortBy: SortBy
     ): Single<NewsUIModel> {
         val mapper = MapperEverythingRequest()
-        val request = mapper.mapToEntity(query, from, to, language, sortBy)
+        val request = mapper.mapToEntity(query, from, to, language, sortBy, dayNumber)
 
         return newsApi.getEverything(
             request.query,
             request.from,
             request.to,
             request.language,
-            request.sortBy.keyword
+            request.sortBy.keyword,
+            pageNumber
         ).map { response ->
             mapper.mapFromEntity(response)
         }

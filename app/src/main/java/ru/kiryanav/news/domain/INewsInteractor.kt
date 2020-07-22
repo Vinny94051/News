@@ -1,8 +1,10 @@
 package ru.kiryanav.news.domain
 
+import android.provider.SyncStateContract
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
+import ru.kiryanav.news.Constants
 import ru.kiryanav.news.domain.model.ArticleUI
 import ru.kiryanav.news.domain.model.NewsUIModel
 
@@ -20,7 +22,9 @@ interface INewsInteractor {
         query: String,
         from: String,
         to: String,
-        language: String
+        language: String,
+        dayNumber : Int = Constants.ZERO_INT,
+        pageNumber : Int = 1
     ): Single<NewsUIModel>
 
     /**

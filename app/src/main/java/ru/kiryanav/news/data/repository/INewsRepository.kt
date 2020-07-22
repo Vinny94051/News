@@ -10,6 +10,8 @@ interface INewsRepository {
         from: String,
         to: String,
         language: String,
+        dayNumber : Int,
+        pageNumber : Int = 1,
         sortBy: SortBy = SortBy.PUBLISHED_AT
     ): Single<NewsUIModel>
 }

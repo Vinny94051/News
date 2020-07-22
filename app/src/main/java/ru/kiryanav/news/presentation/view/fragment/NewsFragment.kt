@@ -1,9 +1,13 @@
 package ru.kiryanav.news.presentation.view.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_news.*
 import ru.kiryanav.news.Constants
 import ru.kiryanav.news.R
@@ -41,14 +45,47 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
             .apply {
                 isArticleSavedLiveData.observe(this@NewsFragment, Observer { isSaved ->
                     if (isSaved) {
-                        showSnack("Article successfully saved")
-                    } else showSnack("Something went wrong")
+                        showSnack(getString(R.string.article_saved))
+                    } else showSnack(getString(R.string.error_saved))
                 })
             }
     }
 
     override fun initViews() {
         super.initViews()
+        initSearchView()
+        initRecycler()
+        initPullToRefresh()
+    }
+
+    private fun initPullToRefresh() {
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
+        swipeRefreshLayout.setColorSchemeColors(Color.WHITE)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            loadNews(viewModel.lastQuery)
+            swipeRefreshLayout.isRefreshing = false
+        }
+    }
+
+    private fun initRecycler() {
+        newsRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = newsRecycler.layoutManager
+
+                val totalItemCount = layoutManager?.itemCount ?: Constants.EMPTY_INT
+                val lastVisibleItem =
+                    (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                if (!viewModel.isLoadingMore.value!! && totalItemCount <= (lastVisibleItem + 1)) {
+                    viewModel.isLoadingMore.value = true
+                    viewModel.loadMore()
+                }
+            }
+        })
+    }
+
+    private fun initSearchView() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let { q ->

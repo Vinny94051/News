@@ -3,6 +3,7 @@ package ru.kiryanav.news.data.mapper
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import ru.kiryanav.news.App
 import ru.kiryanav.news.Constants
@@ -15,9 +16,6 @@ import ru.kiryanav.news.domain.model.SortBy
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.*
 import javax.inject.Inject
 
@@ -25,6 +23,10 @@ class MapperEverythingRequest : IMapper<NewsResponse, NewsUIModel> {
 
     init {
         App.appComponent.inject(this)
+    }
+
+    companion object {
+        private const val ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm'Z'"
     }
 
     @Inject
@@ -51,8 +53,6 @@ class MapperEverythingRequest : IMapper<NewsResponse, NewsUIModel> {
             }
         )
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("SimpleDateFormat")
     private fun mapDate(date: String): String =
         Instant.parse(date).toString()
 
@@ -62,29 +62,42 @@ class MapperEverythingRequest : IMapper<NewsResponse, NewsUIModel> {
         from: String,
         to: String,
         language: String,
-        sortBy: SortBy
+        sortBy: SortBy,
+        dayNumber: Int
     ): NewsRequest =
         NewsRequest(
             query,
-            if (from == Constants.EMPTY_STRING) getDate() else from,
-            if (to == Constants.EMPTY_STRING) getSDate() else to,
+            if (from == Constants.EMPTY_STRING && dayNumber == Constants.ZERO_INT)
+                getCurrentDate()
+            else if (dayNumber != Constants.ZERO_INT) getSDate(
+                dayNumber
+            ) else from,
+            if (to == Constants.EMPTY_STRING) getSDate(dayNumber, true) else to,
             if (language == Constants.EMPTY_STRING) Locale.getDefault().language else language,
             sortBy
         )
 
     @SuppressLint("SimpleDateFormat")
-    private fun getDate(): String {
+    private fun getCurrentDate(): String {
         val tz = TimeZone.getTimeZone("UTC")
-        val df: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+        val df: DateFormat =
+            SimpleDateFormat(ISO_DATE_FORMAT)
         df.timeZone = tz
-        return df.format(Date()).toString()
+        Log.e(javaClass.simpleName.plus("1"), df.format(Date()))
+        return df.format(Date())
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun getSDate(): String {
-        val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val cal = Calendar.getInstance()
-        cal.add(Calendar.DATE, -1)
-        return dateFormat.format(cal.time).toString()
+    private fun getSDate(dayNumber: Int, isSecondDate: Boolean = false): String {
+        val dateFormat = SimpleDateFormat(ISO_DATE_FORMAT)
+        val myDate = dateFormat.parse(getCurrentDate()) ?: return Constants.EMPTY_STRING
+        val dif : Long =
+            if (isSecondDate)
+                ((dayNumber + 1) * 24L * 60L * 60L * 1000L)
+            else ((dayNumber) * 24L * 60L * 60L * 1000L)
+        val newDate = Date(myDate.time - dif) // n * 24 * 60 * 60 * 1000
+        Log.e(javaClass.simpleName.plus("2"), dateFormat.format(newDate))
+        return dateFormat.format(newDate)
+
     }
 }

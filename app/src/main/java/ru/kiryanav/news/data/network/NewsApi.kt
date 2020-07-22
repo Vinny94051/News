@@ -107,6 +107,10 @@ interface NewsApi {
      * popularity = articles from popular sources and publishers come first.
      * publishedAt = newest articles come first.
      * Default: publishedAt
+     *
+     * @param pageNumber - Use this to page through the results.
+     *
+     * @param pageSize - The number of results to return per page. 20 is the default, 100 is the maximum.
      */
 
     @GET("everything")
@@ -116,6 +120,8 @@ interface NewsApi {
         @Query("to") toDate: String,
         @Query("language") language: String,
         @Query("sortBy") sortBy: String,
+        @Query("page") pageNumber : Int = 1,
+        @Query("pageSize") pageSize: Int = 20,
         @Query("apiKey") apiKey: String = RetrofitClient.BASE_API_KEY
     ): Single<NewsResponse>
 

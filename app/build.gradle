@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "ru.kiryanav.news"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -55,7 +55,7 @@ dependencies {
 
     //View
     implementation "androidx.recyclerview:recyclerview:$recycler_version"
-    implementation "androidx.viewpager2:viewpager2:$viewpager_version"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation "com.google.android.material:material:$material_version"
 
     //Dagger2
