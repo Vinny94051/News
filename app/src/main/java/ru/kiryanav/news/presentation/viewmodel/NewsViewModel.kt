@@ -1,16 +1,17 @@
 package ru.kiryanav.news.presentation.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.kiryanav.news.App
 import ru.kiryanav.news.Constants
+import ru.kiryanav.news.R
 import ru.kiryanav.news.domain.INewsInteractor
 import ru.kiryanav.news.domain.model.ArticleUI
 import ru.kiryanav.news.domain.model.NewsUIModel
 import vlnny.base.rx.subscribeWithError
 import vlnny.base.viewModel.BaseViewModel
-import java.util.zip.ZipError
 import javax.inject.Inject
 
 class NewsViewModel : BaseViewModel() {
@@ -19,10 +20,8 @@ class NewsViewModel : BaseViewModel() {
         App.appComponent.inject(this)
     }
 
-    companion object {
-        private const val SHOW_SAVED = "Show saved"
-        private const val BACK = "Back"
-    }
+    @Inject
+    lateinit var context : Context
 
     @Inject
     lateinit var newsInteractor: INewsInteractor
@@ -32,14 +31,17 @@ class NewsViewModel : BaseViewModel() {
         get() = _newsLiveData
 
     private val _articlesLiveData = MutableLiveData<List<ArticleUI>>()
+
     val articlesLiveData: LiveData<List<ArticleUI>>
         get() = _articlesLiveData
 
     private var dayNumber: Int = Constants.ZERO_INT
+    private var showSaved = context.getString(R.string.show_saved)
+    private val back = context.getString(R.string.back)
     var lastQuery: String = Constants.EMPTY_STRING
     var isLoadingMore = MutableLiveData(false)
     val isArticleSavedLiveData = MutableLiveData<Boolean>()
-    val showSavedText = MutableLiveData(SHOW_SAVED)
+    val showSavedText = MutableLiveData(showSaved)
 
 
     fun loadEverythingNews(
@@ -68,7 +70,7 @@ class NewsViewModel : BaseViewModel() {
         to: String = Constants.EMPTY_STRING,
         language: String = Constants.EMPTY_STRING
     ) {
-        if (showSavedText.value != BACK) {
+        if (showSavedText.value != back) {
             updateUI(lastQuery)
             dayNumber++
             if (dayNumber < 7) {
@@ -116,17 +118,17 @@ class NewsViewModel : BaseViewModel() {
     }
 
     fun showSaved() {
-        if (showSavedText.value == SHOW_SAVED) {
-            showSavedText.value = BACK
+        if (showSavedText.value == showSaved) {
+            showSavedText.value = back
             getSavedArticles()
         } else {
-            showSavedText.value = SHOW_SAVED
+            showSavedText.value = showSaved
             loadEverythingNews(lastQuery)
         }
     }
 
     private fun updateUI(query: String) {
-        showSavedText.value = SHOW_SAVED
+        showSavedText.value = showSaved
         lastQuery = query
     }
 }

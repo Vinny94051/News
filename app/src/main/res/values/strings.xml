@@ -7,4 +7,8 @@
     <string name="popup_save">Save</string>
     <string name="article_saved">Article successfully saved</string>
     <string name="error_saved">Something went wrong</string>
+    <string name="show_more"> Show more</string>
+    <string name="default_search">Models</string>
+    <string name="show_saved">Show saved</string>
+    <string name="back">Back</string>
 </resources>

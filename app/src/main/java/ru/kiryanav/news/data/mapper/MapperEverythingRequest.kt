@@ -47,7 +47,7 @@ class MapperEverythingRequest : IMapper<NewsResponse, NewsUIModel> {
                     article.description ?: Constants.EMPTY_STRING,
                     article.articleUrl ?: Constants.EMPTY_STRING,
                     article.previewUrl ?: Constants.EMPTY_STRING,
-                    mapDate(article.publishedAt ?: Constants.EMPTY_STRING), //Todo
+                    mapDate(article.publishedAt ?: Constants.EMPTY_STRING),
                     article.content ?: Constants.EMPTY_STRING
                 )
             }
@@ -56,7 +56,6 @@ class MapperEverythingRequest : IMapper<NewsResponse, NewsUIModel> {
     private fun mapDate(date: String): String =
         Instant.parse(date).toString()
 
-    //TODO
     fun mapToEntity(
         query: String,
         from: String,
@@ -69,10 +68,10 @@ class MapperEverythingRequest : IMapper<NewsResponse, NewsUIModel> {
             query,
             if (from == Constants.EMPTY_STRING && dayNumber == Constants.ZERO_INT)
                 getCurrentDate()
-            else if (dayNumber != Constants.ZERO_INT) getSDate(
+            else if (dayNumber != Constants.ZERO_INT) getDate(
                 dayNumber
             ) else from,
-            if (to == Constants.EMPTY_STRING) getSDate(dayNumber, true) else to,
+            if (to == Constants.EMPTY_STRING) getDate(dayNumber, true) else to,
             if (language == Constants.EMPTY_STRING) Locale.getDefault().language else language,
             sortBy
         )
@@ -83,12 +82,11 @@ class MapperEverythingRequest : IMapper<NewsResponse, NewsUIModel> {
         val df: DateFormat =
             SimpleDateFormat(ISO_DATE_FORMAT)
         df.timeZone = tz
-        Log.e(javaClass.simpleName.plus("1"), df.format(Date()))
         return df.format(Date())
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun getSDate(dayNumber: Int, isSecondDate: Boolean = false): String {
+    private fun getDate(dayNumber: Int, isSecondDate: Boolean = false): String {
         val dateFormat = SimpleDateFormat(ISO_DATE_FORMAT)
         val myDate = dateFormat.parse(getCurrentDate()) ?: return Constants.EMPTY_STRING
         val dif : Long =
@@ -96,7 +94,6 @@ class MapperEverythingRequest : IMapper<NewsResponse, NewsUIModel> {
                 ((dayNumber + 1) * 24L * 60L * 60L * 1000L)
             else ((dayNumber) * 24L * 60L * 60L * 1000L)
         val newDate = Date(myDate.time - dif) // n * 24 * 60 * 60 * 1000
-        Log.e(javaClass.simpleName.plus("2"), dateFormat.format(newDate))
         return dateFormat.format(newDate)
 
     }
