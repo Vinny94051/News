@@ -27,9 +27,10 @@ buildscript {
     ext.room_version = "1.1.1"
     ext.room_rx_version = "2.2.6"
     ext.viewmodel_provider_version = "2.2.0"
-    ext.material_version = "1.3.0-alpha01"
+    ext.material_version = "1.3.0-alpha02"
     ext.google_services_version = "17.0.0"
     ext.google_places_version = "2.3.0"
+    ext.koin_version = '2.1.6'
 }
 
 allprojects {

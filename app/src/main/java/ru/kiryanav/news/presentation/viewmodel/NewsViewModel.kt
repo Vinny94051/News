@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
-import ru.kiryanav.news.App
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import ru.kiryanav.news.Constants
 import ru.kiryanav.news.R
 import ru.kiryanav.news.domain.INewsInteractor
@@ -12,19 +13,11 @@ import ru.kiryanav.news.domain.model.ArticleUI
 import ru.kiryanav.news.domain.model.NewsUIModel
 import vlnny.base.rx.subscribeWithError
 import vlnny.base.viewModel.BaseViewModel
-import javax.inject.Inject
 
-class NewsViewModel : BaseViewModel() {
+class NewsViewModel : BaseViewModel(), KoinComponent {
 
-    init {
-        App.appComponent.inject(this)
-    }
-
-    @Inject
-    lateinit var context : Context
-
-    @Inject
-    lateinit var newsInteractor: INewsInteractor
+    private val context : Context by inject()
+    private val newsInteractor: INewsInteractor by inject()
 
     private val _newsLiveData = MutableLiveData<NewsUIModel>()
     val newsLiveData: LiveData<NewsUIModel>

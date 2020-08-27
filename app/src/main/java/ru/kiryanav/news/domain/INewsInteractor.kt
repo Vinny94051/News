@@ -1,8 +1,6 @@
 package ru.kiryanav.news.domain
 
-import android.provider.SyncStateContract
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.Single
 import ru.kiryanav.news.Constants
 import ru.kiryanav.news.domain.model.ArticleUI

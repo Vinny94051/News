@@ -19,18 +19,11 @@ import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
-class MapperEverythingRequest : IMapper<NewsResponse, NewsUIModel> {
-
-    init {
-        App.appComponent.inject(this)
-    }
+class MapperEverythingRequest(private val context : Context) : IMapper<NewsResponse, NewsUIModel> {
 
     companion object {
         private const val ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm'Z'"
     }
-
-    @Inject
-    lateinit var context: Context
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun mapFromEntity(input: NewsResponse): NewsUIModel =

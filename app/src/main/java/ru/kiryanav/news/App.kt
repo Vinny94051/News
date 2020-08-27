@@ -1,22 +1,23 @@
 package ru.kiryanav.news
 
 import android.app.Application
-import ru.kiryanav.news.dagger.AppComponent
-import ru.kiryanav.news.dagger.AppModule
-import ru.kiryanav.news.dagger.DaggerAppComponent
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import ru.kiryanav.news.koin.dataModule
+import ru.kiryanav.news.koin.domainModule
+import ru.kiryanav.news.koin.mapperModule
+import ru.kiryanav.news.koin.reposModule
 
 class App : Application() {
 
-    companion object{
-        lateinit var appComponent : AppComponent
-    }
+    override fun onCreate() {
+        super.onCreate()
 
-    init {
-        appComponent = initDagger(this)
+        startKoin {
+            androidLogger()
+            androidContext(this@App)
+            modules(listOf(dataModule, domainModule, reposModule, mapperModule))
+        }
     }
-
-    private fun initDagger(app : App) : AppComponent =
-        DaggerAppComponent.builder()
-            .appModule(AppModule(app))
-            .build()
 }

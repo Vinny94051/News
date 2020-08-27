@@ -5,9 +5,8 @@ import io.reactivex.schedulers.Schedulers
 import ru.kiryanav.news.data.repository.IArticleRepository
 import ru.kiryanav.news.data.repository.INewsRepository
 import ru.kiryanav.news.domain.model.ArticleUI
-import javax.inject.Inject
 
-class NewsInteractor @Inject constructor(
+class NewsInteractor(
     private val newsRepo: INewsRepository,
     private val articleRepository: IArticleRepository
 ) : INewsInteractor {
@@ -17,7 +16,7 @@ class NewsInteractor @Inject constructor(
         from: String,
         to: String,
         language: String,
-        dayNumber : Int,
+        dayNumber: Int,
         pageNumber: Int
     ) =
         newsRepo.getEverything(query, from, to, language, dayNumber, pageNumber)
