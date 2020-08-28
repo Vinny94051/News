@@ -18,6 +18,6 @@ abstract class AppDatabase : RoomDatabase() {
         const val ARTICLES_TABLE_NAME = "articles"
     }
 
-    abstract fun articlesDao(): ArticleDao
+    abstract fun articleDao(): ArticleDao
 
 }

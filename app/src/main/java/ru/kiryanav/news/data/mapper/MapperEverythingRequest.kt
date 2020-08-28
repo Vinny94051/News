@@ -3,9 +3,7 @@ package ru.kiryanav.news.data.mapper
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import ru.kiryanav.news.App
 import ru.kiryanav.news.Constants
 import ru.kiryanav.news.R
 import ru.kiryanav.news.data.dto.news.request.NewsRequest

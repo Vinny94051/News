@@ -11,7 +11,7 @@ interface ArticleDao {
      * @return Flowable List of entities
      */
     @Query("SELECT * FROM articles")
-    fun getAll(): Single<List<ArticleEntity>>
+    suspend fun getAll(): List<ArticleEntity>
 
 
     /**
@@ -19,13 +19,5 @@ interface ArticleDao {
      *@param article - entity which will be inserted
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertCity(article : ArticleEntity)
-
-
-    /**
-     *Delete entity from table
-     * @param article - entity which will be deleted
-     */
-    @Delete
-    fun deleteCity(article: ArticleEntity)
+    suspend fun insertCity(article: ArticleEntity)
 }

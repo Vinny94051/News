@@ -1,6 +1,5 @@
 package ru.kiryanav.news.data.repository
 
-import kotlinx.coroutines.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import ru.kiryanav.news.data.mapper.MapperEverythingRequest
@@ -19,10 +18,8 @@ class NewsRepository(private val newsApi: NewsApi) : INewsRepository, KoinCompon
         pageNumber: Int,
         sortBy: SortBy
     ): NewsUIModel {
-
         val mapper: MapperEverythingRequest by inject()
         val request = mapper.mapToEntity(query, from, to, language, sortBy, dayNumber)
-
 
         return mapper.mapFromEntity(
             newsApi.getEverything(

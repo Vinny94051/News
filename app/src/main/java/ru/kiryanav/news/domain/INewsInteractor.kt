@@ -30,11 +30,11 @@ interface INewsInteractor {
      * @param article - article which will be saved
      */
 
-    fun saveArticle(article: ArticleUI): Completable
+    suspend fun saveArticle(article: ArticleUI)
 
     /**
      * Get all saved articles
      */
 
-    fun getSavedArticles(): Single<List<ArticleUI>>
+    suspend fun getSavedArticles(): List<ArticleUI>
 }

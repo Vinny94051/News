@@ -1,8 +1,5 @@
 package ru.kiryanav.news.data.repository
 
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
 import ru.kiryanav.news.domain.model.ArticleUI
 
 interface IArticleRepository {
@@ -12,11 +9,11 @@ interface IArticleRepository {
      * @param article - this article will be saved
      */
 
-    fun saveArticle(article: ArticleUI): Completable
+    suspend fun saveArticle(article: ArticleUI)
 
     /**
      * Get all saved articles
      */
 
-    fun getAll(): Single<List<ArticleUI>>
+    suspend fun getAll(): List<ArticleUI>
 }

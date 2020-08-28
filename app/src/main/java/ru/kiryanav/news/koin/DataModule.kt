@@ -15,7 +15,7 @@ val dataModule = module {
             .build()
     }
     single {
-        get<AppDatabase>().articlesDao()
+        get<AppDatabase>().articleDao()
     }
 
     single { RetrofitClient.getNewsApi() }

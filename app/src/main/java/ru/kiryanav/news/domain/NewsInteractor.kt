@@ -22,11 +22,10 @@ class NewsInteractor(
         newsRepo.getEverything(query, from, to, language, dayNumber, pageNumber)
 
 
-    override fun saveArticle(article: ArticleUI) =
+    override suspend fun saveArticle(article: ArticleUI) =
         articleRepository.saveArticle(article)
-            .subscribeOn(Schedulers.io())
 
-    override fun getSavedArticles(): Single<List<ArticleUI>> =
+
+    override suspend fun getSavedArticles(): List<ArticleUI> =
         articleRepository.getAll()
-            .subscribeOn(Schedulers.io())
 }

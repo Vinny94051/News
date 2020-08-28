@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -13,7 +13,6 @@ import ru.kiryanav.news.R
 import ru.kiryanav.news.domain.INewsInteractor
 import ru.kiryanav.news.domain.model.ArticleUI
 import ru.kiryanav.news.domain.model.NewsUIModel
-import vlnny.base.rx.subscribeWithError
 import vlnny.base.viewModel.BaseViewModel
 
 class NewsViewModel : BaseViewModel(), KoinComponent {
@@ -48,27 +47,18 @@ class NewsViewModel : BaseViewModel(), KoinComponent {
     ) {
         updateUI(query)
         dayNumber = Constants.ZERO_INT
-
         viewModelScope.launch {
-            val news = newsInteractor.getEverything(
-                query, from, to, language
-            )
-
+            _isProgressVisible.value = true
+            val deffered = async {
+                newsInteractor.getEverything(
+                    query, from, to, language
+                )
+            }
+            val news = deffered.await()
+            _isProgressVisible.value = false
             _newsLiveData.value = news
             _articlesLiveData.value = news.articles
         }
-
-//        addDisposable(
-//            newsInteractor.getEverything(
-//                query, from, to, language
-//            )
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .compose(getProgressSingleTransformer())
-//                .subscribeWithError { news ->
-//                    _newsLiveData.value = news
-//                    _articlesLiveData.value = news.articles
-//                }
-//        )
     }
 
     fun loadMore(
@@ -76,49 +66,46 @@ class NewsViewModel : BaseViewModel(), KoinComponent {
         to: String = Constants.EMPTY_STRING,
         language: String = Constants.EMPTY_STRING
     ) {
-        if (showSavedText.value != back) {
-            updateUI(lastQuery)
-            dayNumber++
-            if (dayNumber < 7) {
-                viewModelScope.launch {
-                    val nextPage =
+        viewModelScope.launch {
+            if (showSavedText.value != back) {
+                updateUI(lastQuery)
+                dayNumber++
+                if (dayNumber < 7) {
+                    val deffered = async {
                         newsInteractor.getEverything(lastQuery, from, to, language, dayNumber)
-
+                    }
+                    val nextPage = deffered.await()
                     _newsLiveData.value = nextPage
-                    _articlesLiveData.value?.plus(nextPage.articles)
+                    _articlesLiveData.value = _articlesLiveData.value?.plus(nextPage.articles)
+                    isLoadingMore.value = false
+                } else {
                     isLoadingMore.value = false
                 }
             } else {
                 isLoadingMore.value = false
             }
-        } else {
-            isLoadingMore.value = false
         }
-
-
     }
 
 
     fun saveArticle(item: ArticleUI) {
-        addDisposable(
-            newsInteractor.saveArticle(item)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    isArticleSavedLiveData.value = true
-                }, {
-                    isArticleSavedLiveData.value = false
-                })
-        )
+        viewModelScope.launch {
+            val isSaved = async {
+                newsInteractor.saveArticle(item)
+            }
+            isSaved.await()
+            isArticleSavedLiveData.value = true
+        }
     }
 
     private fun getSavedArticles() {
-        addDisposable(
-            newsInteractor.getSavedArticles()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWithError { saved ->
-                    _articlesLiveData.value = saved
-                }
-        )
+        viewModelScope.launch {
+            val deffered = async {
+                newsInteractor.getSavedArticles()
+            }
+            val result = deffered.await()
+            _articlesLiveData.value = result
+        }
     }
 
     fun showSaved() {

@@ -11,7 +11,7 @@ import vlnny.base.rx.RxTransformers
 abstract class BaseViewModel : ViewModel(), LifecycleObserver {
     private val disposableList = CompositeDisposable()
 
-    private val _isProgressVisible = MutableLiveData(false)
+    protected val _isProgressVisible = MutableLiveData(false)
     val isProgressVisible: LiveData<Boolean>
         get() = _isProgressVisible
 
