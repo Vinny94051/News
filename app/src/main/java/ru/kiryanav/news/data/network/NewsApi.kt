@@ -114,16 +114,16 @@ interface NewsApi {
      */
 
     @GET("everything")
-    fun getEverything(
+    suspend fun getEverything(
         @Query("q") query: String,
         @Query("from") fromDate: String,
         @Query("to") toDate: String,
         @Query("language") language: String,
         @Query("sortBy") sortBy: String,
-        @Query("page") pageNumber : Int = 1,
+        @Query("page") pageNumber: Int = 1,
         @Query("pageSize") pageSize: Int = 20,
         @Query("apiKey") apiKey: String = RetrofitClient.BASE_API_KEY
-    ): Single<NewsResponse>
+    ): NewsResponse
 
 
     /**
@@ -164,7 +164,7 @@ interface NewsApi {
         @Query("language") language: String,
         @Query("sortBy") sortBy: String,
         @Query("apiKey") apiKey: String = RetrofitClient.BASE_API_KEY
-    ) : Single<NewsResponse>
+    ): Single<NewsResponse>
 
 
 }

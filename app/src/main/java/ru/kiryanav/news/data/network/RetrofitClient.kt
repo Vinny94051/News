@@ -32,7 +32,6 @@ object RetrofitClient {
                 .build()
         )
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
 
     fun getNewsApi(): NewsApi = getClient().create(NewsApi::class.java)

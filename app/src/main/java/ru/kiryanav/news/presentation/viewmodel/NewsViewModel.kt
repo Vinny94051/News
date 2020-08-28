@@ -3,7 +3,9 @@ package ru.kiryanav.news.presentation.viewmodel
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import ru.kiryanav.news.Constants
@@ -16,7 +18,8 @@ import vlnny.base.viewModel.BaseViewModel
 
 class NewsViewModel : BaseViewModel(), KoinComponent {
 
-    private val context : Context by inject()
+
+    private val context: Context by inject()
     private val newsInteractor: INewsInteractor by inject()
 
     private val _newsLiveData = MutableLiveData<NewsUIModel>()
@@ -45,17 +48,27 @@ class NewsViewModel : BaseViewModel(), KoinComponent {
     ) {
         updateUI(query)
         dayNumber = Constants.ZERO_INT
-        addDisposable(
-            newsInteractor.getEverything(
+
+        viewModelScope.launch {
+            val news = newsInteractor.getEverything(
                 query, from, to, language
             )
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(getProgressSingleTransformer())
-                .subscribeWithError { news ->
-                    _newsLiveData.value = news
-                    _articlesLiveData.value = news.articles
-                }
-        )
+
+            _newsLiveData.value = news
+            _articlesLiveData.value = news.articles
+        }
+
+//        addDisposable(
+//            newsInteractor.getEverything(
+//                query, from, to, language
+//            )
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .compose(getProgressSingleTransformer())
+//                .subscribeWithError { news ->
+//                    _newsLiveData.value = news
+//                    _articlesLiveData.value = news.articles
+//                }
+//        )
     }
 
     fun loadMore(
@@ -67,24 +80,22 @@ class NewsViewModel : BaseViewModel(), KoinComponent {
             updateUI(lastQuery)
             dayNumber++
             if (dayNumber < 7) {
-                addDisposable(
-                    newsInteractor.getEverything(
-                        lastQuery, from, to, language, dayNumber
-                    )
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWithError { nextPage ->
-                            _newsLiveData.value = nextPage
-                            _articlesLiveData.value =
-                                _articlesLiveData.value?.plus(nextPage.articles)
-                            isLoadingMore.value = false
-                        }
-                )
+                viewModelScope.launch {
+                    val nextPage =
+                        newsInteractor.getEverything(lastQuery, from, to, language, dayNumber)
+
+                    _newsLiveData.value = nextPage
+                    _articlesLiveData.value?.plus(nextPage.articles)
+                    isLoadingMore.value = false
+                }
             } else {
                 isLoadingMore.value = false
             }
         } else {
             isLoadingMore.value = false
         }
+
+
     }
 
 

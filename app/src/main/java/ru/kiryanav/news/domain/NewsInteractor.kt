@@ -11,7 +11,7 @@ class NewsInteractor(
     private val articleRepository: IArticleRepository
 ) : INewsInteractor {
 
-    override fun getEverything(
+    override suspend fun getEverything(
         query: String,
         from: String,
         to: String,
@@ -20,7 +20,7 @@ class NewsInteractor(
         pageNumber: Int
     ) =
         newsRepo.getEverything(query, from, to, language, dayNumber, pageNumber)
-            .subscribeOn(Schedulers.io())
+
 
     override fun saveArticle(article: ArticleUI) =
         articleRepository.saveArticle(article)

@@ -17,7 +17,6 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
-import javax.inject.Inject
 
 class MapperEverythingRequest(private val context : Context) : IMapper<NewsResponse, NewsUIModel> {
 

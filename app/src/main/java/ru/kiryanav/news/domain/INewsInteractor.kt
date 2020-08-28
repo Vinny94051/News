@@ -16,14 +16,14 @@ interface INewsInteractor {
      * @param language - searching language
      */
 
-    fun getEverything(
+    suspend fun getEverything(
         query: String,
         from: String,
         to: String,
         language: String,
-        dayNumber : Int = Constants.ZERO_INT,
-        pageNumber : Int = 1
-    ): Single<NewsUIModel>
+        dayNumber: Int = Constants.ZERO_INT,
+        pageNumber: Int = 1
+    ): NewsUIModel
 
     /**
      * Save article in local storage
