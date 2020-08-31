@@ -7,11 +7,11 @@ import android.widget.PopupMenu
 import android.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_news.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import ru.kiryanav.news.Constants
 import ru.kiryanav.news.R
@@ -32,18 +32,17 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
         override fun newInstance(): NewsFragment = NewsFragment()
     }
 
-    private lateinit var viewModel: NewsViewModel
-
+    private val newsViewModel by viewModel<NewsViewModel>()
     private val prefs: ISharedPrefsManager by inject()
 
-    private val popup : PopupMenu by lazy {
+    private val popup: PopupMenu by lazy {
         PopupMenu(context, settings).apply {
             inflate(R.menu.item_settings_popup)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                  R.id.changeKeyword -> {
-                      dialogHelper.showAlertDialog()
-                  }
+                    R.id.changeKeyword -> {
+                        dialogHelper.showAlertDialog()
+                    }
                 }
                 true
             }
@@ -57,7 +56,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.apply {
-            this.viewModel = this@NewsFragment.viewModel
+            this.viewModel = this@NewsFragment.newsViewModel
             this.callback = this@NewsFragment
             executePendingBindings()
         }
@@ -78,16 +77,16 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
     override fun layoutId() = R.layout.fragment_news
 
     override fun initViewModel() {
-        viewModel = ViewModelProvider(this)[NewsViewModel::class.java]
-            .apply {
-                isArticleSavedLiveData.observe(this@NewsFragment, Observer { isSaved ->
-                    if (isSaved) {
-                        showSnack(getString(R.string.article_saved))
-                    } else {
-                        showSnack(getString(R.string.error_saved))
-                    }
-                })
-            }
+        //  viewModel = ViewModelProvider(this)[NewsViewModel::class.java]
+        newsViewModel.apply {
+            isArticleSavedLiveData.observe(this@NewsFragment, Observer { isSaved ->
+                if (isSaved) {
+                    showSnack(getString(R.string.article_saved))
+                } else {
+                    showSnack(getString(R.string.error_saved))
+                }
+            })
+        }
     }
 
     override fun initViews() {
@@ -99,7 +98,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
     }
 
     private fun initSettings() {
-        settings.setOnClickListener{
+        settings.setOnClickListener {
             popup.show()
         }
     }
@@ -114,7 +113,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
         swipeRefreshLayout.setColorSchemeColors(Color.WHITE)
 
         swipeRefreshLayout.setOnRefreshListener {
-            loadNews(viewModel.lastQuery)
+            loadNews(newsViewModel.lastQuery)
             swipeRefreshLayout.isRefreshing = false
         }
     }
@@ -128,9 +127,9 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
                 val totalItemCount = layoutManager?.itemCount ?: Constants.EMPTY_INT
                 val lastVisibleItem =
                     (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                if (!viewModel.isLoadingMore.value!! && totalItemCount <= (lastVisibleItem + 1)) {
-                    viewModel.isLoadingMore.value = true
-                    viewModel.loadMore()
+                if (!newsViewModel.isLoadingMore.value!! && totalItemCount <= (lastVisibleItem + 1)) {
+                    newsViewModel.isLoadingMore.value = true
+                    newsViewModel.loadMore()
                 }
             }
         })
@@ -146,18 +145,18 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
                 return true
             }
 
-            override fun onQueryTextChange(newText: String?) : Boolean {
-               if (newText.isNullOrEmpty()){
-                   loadNews(prefs.getKeyword())
-                   searchView.isIconified = true
-               }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrEmpty()) {
+                    loadNews(prefs.getKeyword())
+                    searchView.isIconified = true
+                }
                 return true
             }
         })
     }
 
     override fun popupSave(item: ArticleUI) =
-        viewModel.saveArticle(item)
+        newsViewModel.saveArticle(item)
 
     private fun loadNews(
         query: String,
@@ -165,7 +164,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
         to: String = Constants.EMPTY_STRING,
         language: String = Constants.EMPTY_STRING
     ) =
-        viewModel.loadEverythingNews(query, from, to, language)
+        newsViewModel.loadEverythingNews(query, from, to, language)
 
 
 }

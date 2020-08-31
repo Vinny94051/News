@@ -4,10 +4,8 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
-import org.koin.core.inject
 import ru.kiryanav.news.Constants
 import ru.kiryanav.news.R
 import ru.kiryanav.news.domain.INewsInteractor
@@ -15,11 +13,9 @@ import ru.kiryanav.news.domain.model.ArticleUI
 import ru.kiryanav.news.domain.model.NewsUIModel
 import vlnny.base.viewModel.BaseViewModel
 
-class NewsViewModel : BaseViewModel(), KoinComponent {
+class NewsViewModel(private val context: Context, private val newsInteractor: INewsInteractor) :
+    BaseViewModel(), KoinComponent {
 
-
-    private val context: Context by inject()
-    private val newsInteractor: INewsInteractor by inject()
 
     private val _newsLiveData = MutableLiveData<NewsUIModel>()
     val newsLiveData: LiveData<NewsUIModel>
@@ -49,12 +45,9 @@ class NewsViewModel : BaseViewModel(), KoinComponent {
         dayNumber = Constants.ZERO_INT
         viewModelScope.launch {
             _isProgressVisible.value = true
-            val deffered = async {
-                newsInteractor.getEverything(
-                    query, from, to, language
-                )
-            }
-            val news = deffered.await()
+            val news = newsInteractor.getEverything(
+                query, from, to, language
+            )
             _isProgressVisible.value = false
             _newsLiveData.value = news
             _articlesLiveData.value = news.articles
@@ -71,10 +64,8 @@ class NewsViewModel : BaseViewModel(), KoinComponent {
                 updateUI(lastQuery)
                 dayNumber++
                 if (dayNumber < 7) {
-                    val deffered = async {
+                    val nextPage =
                         newsInteractor.getEverything(lastQuery, from, to, language, dayNumber)
-                    }
-                    val nextPage = deffered.await()
                     _newsLiveData.value = nextPage
                     _articlesLiveData.value = _articlesLiveData.value?.plus(nextPage.articles)
                     isLoadingMore.value = false
@@ -90,20 +81,14 @@ class NewsViewModel : BaseViewModel(), KoinComponent {
 
     fun saveArticle(item: ArticleUI) {
         viewModelScope.launch {
-            val isSaved = async {
-                newsInteractor.saveArticle(item)
-            }
-            isSaved.await()
+            newsInteractor.saveArticle(item)
             isArticleSavedLiveData.value = true
         }
     }
 
     private fun getSavedArticles() {
         viewModelScope.launch {
-            val deffered = async {
-                newsInteractor.getSavedArticles()
-            }
-            val result = deffered.await()
+            val result = newsInteractor.getSavedArticles()
             _articlesLiveData.value = result
         }
     }

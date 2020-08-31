@@ -1,13 +1,12 @@
 package ru.kiryanav.news.data.repository
 
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import ru.kiryanav.news.data.mapper.MapperEverythingRequest
 import ru.kiryanav.news.data.network.NewsApi
 import ru.kiryanav.news.domain.model.NewsUIModel
 import ru.kiryanav.news.domain.model.SortBy
 
-class NewsRepository(private val newsApi: NewsApi) : INewsRepository, KoinComponent {
+class NewsRepository(private val newsApi: NewsApi, private val mapper: MapperEverythingRequest) :
+    INewsRepository {
 
     override suspend fun getEverything(
         query: String,
@@ -18,7 +17,6 @@ class NewsRepository(private val newsApi: NewsApi) : INewsRepository, KoinCompon
         pageNumber: Int,
         sortBy: SortBy
     ): NewsUIModel {
-        val mapper: MapperEverythingRequest by inject()
         val request = mapper.mapToEntity(query, from, to, language, sortBy, dayNumber)
 
         return mapper.mapFromEntity(
