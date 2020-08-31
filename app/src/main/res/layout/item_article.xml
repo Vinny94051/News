@@ -48,7 +48,7 @@
                 android:textStyle="bold"
                 tools:text="Some title Some title Some title Some title Some title Some title " />
 
-            <ru.kiryanav.news.presentation.view.view.ExpandableTextView
+            <ru.kiryanav.news.presentation.ui.view.ExpandableTextView
                 android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

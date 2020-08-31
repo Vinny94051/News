@@ -1,10 +1,9 @@
-package ru.kiryanav.news.presentation.view.activity
+package ru.kiryanav.news.presentation.ui.activity
 
 import android.os.Bundle
 import ru.kiryanav.news.R
-import ru.kiryanav.news.presentation.view.fragment.NewsFragment
+import ru.kiryanav.news.presentation.ui.fragment.NewsFragment
 import vlnny.base.activity.BaseActivity
-import vlnny.base.ext.hideActionBar
 
 class NewsActivity : BaseActivity() {
 

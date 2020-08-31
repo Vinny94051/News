@@ -16,7 +16,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,UnusedAttribute"
         >
-        <activity android:name=".presentation.view.activity.NewsActivity">
+        <activity android:name=".presentation.ui.activity.NewsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

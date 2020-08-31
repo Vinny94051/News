@@ -1,4 +1,4 @@
-package ru.kiryanav.news.presentation.view.list
+package ru.kiryanav.news.presentation.ui.list
 
 import ru.kiryanav.news.domain.model.ArticleUI
 

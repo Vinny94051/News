@@ -1,4 +1,4 @@
-package ru.kiryanav.news.presentation.view.list.viewholder
+package ru.kiryanav.news.presentation.ui.list.viewholder
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,7 @@ import ru.kiryanav.news.Constants
 import ru.kiryanav.news.R
 import ru.kiryanav.news.databinding.ItemArticleBinding
 import ru.kiryanav.news.domain.model.ArticleUI
-import ru.kiryanav.news.presentation.view.list.OnArticleItemClick
+import ru.kiryanav.news.presentation.ui.list.OnArticleItemClick
 import vlnny.base.adapter.BaseViewHolder
 import vlnny.base.ext.openLink
 

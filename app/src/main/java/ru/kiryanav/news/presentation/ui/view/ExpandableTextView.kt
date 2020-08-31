@@ -1,4 +1,4 @@
-package ru.kiryanav.news.presentation.view.view
+package ru.kiryanav.news.presentation.ui.view
 
 import android.content.Context
 import android.text.Html

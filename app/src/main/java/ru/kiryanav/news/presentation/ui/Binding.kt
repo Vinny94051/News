@@ -1,11 +1,11 @@
-package ru.kiryanav.news.presentation.view
+package ru.kiryanav.news.presentation.ui
 
 import android.view.View
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.kiryanav.news.domain.model.ArticleUI
-import ru.kiryanav.news.presentation.view.list.OnArticleItemClick
-import ru.kiryanav.news.presentation.view.list.adapter.ArticleAdapter
+import ru.kiryanav.news.presentation.ui.list.OnArticleItemClick
+import ru.kiryanav.news.presentation.ui.list.adapter.ArticleAdapter
 import vlnny.base.ext.hide
 import vlnny.base.ext.show
 

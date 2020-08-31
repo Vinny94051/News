@@ -4,10 +4,7 @@ import android.app.Application
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import ru.kiryanav.news.koin.dataModule
-import ru.kiryanav.news.koin.domainModule
-import ru.kiryanav.news.koin.mapperModule
-import ru.kiryanav.news.koin.reposModule
+import ru.kiryanav.news.koin.*
 
 class App : Application() {
 
@@ -17,7 +14,7 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(listOf(dataModule, domainModule, reposModule, mapperModule))
+            modules(listOf(dataModule, domainModule, reposModule, mapperModule, prefsModule))
         }
     }
 }
