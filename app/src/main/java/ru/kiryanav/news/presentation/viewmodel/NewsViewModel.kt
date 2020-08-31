@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
 import ru.kiryanav.news.Constants
 import ru.kiryanav.news.R
 import ru.kiryanav.news.domain.INewsInteractor
@@ -14,7 +13,7 @@ import ru.kiryanav.news.domain.model.NewsUIModel
 import vlnny.base.viewModel.BaseViewModel
 
 class NewsViewModel(private val context: Context, private val newsInteractor: INewsInteractor) :
-    BaseViewModel(), KoinComponent {
+    BaseViewModel() {
 
 
     private val _newsLiveData = MutableLiveData<NewsUIModel>()
@@ -22,7 +21,6 @@ class NewsViewModel(private val context: Context, private val newsInteractor: IN
         get() = _newsLiveData
 
     private val _articlesLiveData = MutableLiveData<List<ArticleUI>>()
-
     val articlesLiveData: LiveData<List<ArticleUI>>
         get() = _articlesLiveData
 
