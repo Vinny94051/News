@@ -19,6 +19,4 @@ val dataModule = module {
     }
 
     single { RetrofitClient.getNewsApi() }
-
-
 }

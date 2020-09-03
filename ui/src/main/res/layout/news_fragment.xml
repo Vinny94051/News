@@ -42,8 +42,7 @@
                 android:src="@drawable/ic_round_settings_24"
                 android:layout_marginTop="24dp"
                 isVisible="@{!viewModel.isProgressVisible()}"
-                android:layout_marginEnd="@dimen/default_margin"
-                />
+                android:layout_marginEnd="@dimen/default_margin" />
 
             <TextView
                 android:id="@+id/totalResults"
@@ -53,9 +52,9 @@
                 android:layout_below="@id/searchView"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/news_8dp"
-                android:text="@{viewModel.newsLiveData.resultNumber}"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
+                android:text="@{viewModel.totalNewsLiveData}"
                 android:textStyle="bold"
                 tools:text="Total results: 4900" />
 
@@ -68,11 +67,12 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/news_8dp"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:text="@={viewModel.showSavedText}"
+                android:text="@{viewModel.showSavedText}"
+                app:onClick="@{() -> viewModel.showSaved()}"
                 android:textColor="@android:color/holo_blue_bright"
                 android:textSize="14sp"
                 android:textStyle="italic"
-                app:onClick="@{() -> viewModel.showSaved()}" />
+               />
 
 
             <androidx.recyclerview.widget.RecyclerView

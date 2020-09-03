@@ -7,30 +7,41 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.kiryanav.ui.Constants
 import ru.kiryanav.ui.R
-import ru.kiryanav.ui.domainApi.INewsInteractor
+import com.kiryanav.domain.INewsInteractor
+import ru.kiryanav.ui.mapper.toArticle
+import ru.kiryanav.ui.mapper.toArticleUI
 import ru.kiryanav.ui.model.ArticleUI
-import ru.kiryanav.ui.model.NewsUI
 import vlnny.base.viewModel.BaseViewModel
 
-class NewsViewModel(context: Context, private val newsInteractor: INewsInteractor) :
+class NewsViewModel(private val context: Context, private val newsInteractor: INewsInteractor) :
     BaseViewModel() {
 
-
-    private val _newsLiveData = MutableLiveData<NewsUI>()
-    val newsLiveData: LiveData<NewsUI>
-        get() = _newsLiveData
-
-    private val _articlesLiveData = MutableLiveData<List<ArticleUI>>()
-    val articlesLiveData: LiveData<List<ArticleUI>>
-        get() = _articlesLiveData
 
     private var dayNumber: Int = Constants.ZERO_INT
     private var showSaved = context.getString(R.string.show_saved)
     private val back = context.getString(R.string.back)
     var lastQuery: String = Constants.EMPTY_STRING
-    var isLoadingMore = MutableLiveData(false)
-    val isArticleSavedLiveData = MutableLiveData<Boolean>()
-    val showSavedText = MutableLiveData(showSaved)
+
+
+    private val _totalNewsLiveData = MutableLiveData<String>()
+    val totalNewsLiveData: LiveData<String>
+        get() = _totalNewsLiveData
+
+    private val _articlesLiveData = MutableLiveData<List<ArticleUI>>()
+    val articlesLiveData: LiveData<List<ArticleUI>>
+        get() = _articlesLiveData
+
+    private val _isLoadingMore = MutableLiveData(false)
+    val isLoadingMore: LiveData<Boolean>
+        get() = _isLoadingMore
+
+    private val _isArticleSavedLiveData = MutableLiveData<Boolean>()
+    val isArticleSavedLiveData: LiveData<Boolean>
+        get() = _isArticleSavedLiveData
+
+    private val _showSavedText = MutableLiveData(showSaved)
+    val showSavedText: LiveData<String>
+        get() = _showSavedText
 
 
     fun loadEverythingNews(
@@ -43,12 +54,13 @@ class NewsViewModel(context: Context, private val newsInteractor: INewsInteracto
         dayNumber = Constants.ZERO_INT
         viewModelScope.launch {
             _isProgressVisible.value = true
-            val news = newsInteractor.getEverything(
+            val news = newsInteractor.getNews(
                 query, from, to, language
             )
             _isProgressVisible.value = false
-            _newsLiveData.value = news
-            _articlesLiveData.value = news.articles
+            _totalNewsLiveData.value =
+                context.getString(R.string.total_results).format(news.resultNumber.toString())
+            _articlesLiveData.value = news.articles.map { article -> article.toArticleUI(context) }
         }
     }
 
@@ -58,20 +70,37 @@ class NewsViewModel(context: Context, private val newsInteractor: INewsInteracto
         language: String = Constants.EMPTY_STRING
     ) {
         viewModelScope.launch {
+            _isLoadingMore.value = true
+
             if (showSavedText.value != back) {
                 updateUI(lastQuery)
                 dayNumber++
-                if (dayNumber < 7) {
-                    val nextPage =
-                        newsInteractor.getEverything(lastQuery, from, to, language, dayNumber)
-                    _newsLiveData.value = nextPage
-                    _articlesLiveData.value = _articlesLiveData.value?.plus(nextPage.articles)
-                    isLoadingMore.value = false
+                if (dayNumber < WEEK_DAYS_NUMBER) {
+
+                    val nextPage = newsInteractor
+                        .getNews(
+                            lastQuery,
+                            from,
+                            to,
+                            language,
+                            dayNumber
+                        )
+
+                    _totalNewsLiveData.value = context.getString(R.string.total_results)
+                        .format(nextPage.resultNumber.toString())
+                    _articlesLiveData.value = _articlesLiveData.value
+                        ?.plus(
+                            nextPage.articles
+                                .map { article ->
+                                    article.toArticleUI(context)
+                                }
+                        )
+                    _isLoadingMore.value = false
                 } else {
-                    isLoadingMore.value = false
+                    _isLoadingMore.value = false
                 }
             } else {
-                isLoadingMore.value = false
+                _isLoadingMore.value = false
             }
         }
     }
@@ -79,30 +108,36 @@ class NewsViewModel(context: Context, private val newsInteractor: INewsInteracto
 
     fun saveArticle(item: ArticleUI) {
         viewModelScope.launch {
-            newsInteractor.saveArticle(item)
-            isArticleSavedLiveData.value = true
+            newsInteractor.saveArticle(item.toArticle())
+            _isArticleSavedLiveData.value = true
         }
     }
 
     private fun getSavedArticles() {
         viewModelScope.launch {
             val result = newsInteractor.getSavedArticles()
-            _articlesLiveData.value = result
+            _articlesLiveData.value = result.map { article ->
+                article.toArticleUI(context)
+            }
         }
     }
 
     fun showSaved() {
         if (showSavedText.value == showSaved) {
-            showSavedText.value = back
+            _showSavedText.value = back
             getSavedArticles()
         } else {
-            showSavedText.value = showSaved
+            _showSavedText.value = showSaved
             loadEverythingNews(lastQuery)
         }
     }
 
     private fun updateUI(query: String) {
-        showSavedText.value = showSaved
+        _showSavedText.value = showSaved
         lastQuery = query
+    }
+
+    companion object {
+        private const val WEEK_DAYS_NUMBER = 7
     }
 }

@@ -2,15 +2,16 @@ package ru.kiryanav.data.repository
 
 import com.kiryanav.domain.model.News
 import com.kiryanav.domain.model.SortBy
-import com.kiryanav.domain.repoApi.INewsRepository
+import com.kiryanav.domain.repoApi.RemoteRepository
 import ru.kiryanav.data.mapper.MapperNewsRequest
+import ru.kiryanav.data.mapper.toNews
 import ru.kiryanav.data.network.NewsApi
 
-class NewsRepository(
+class RemoteArticleRepository(
     private val newsApi: NewsApi,
     private val mapper: MapperNewsRequest
 ) :
-    INewsRepository {
+    RemoteRepository {
 
     override suspend fun getEverything(
         query: String,
@@ -23,16 +24,14 @@ class NewsRepository(
     ): News {
         val request = mapper.mapToEntity(query, from, to, language, sortBy, dayNumber)
 
-        return mapper.mapFromEntity(
-            newsApi.getEverything(
-                request.query,
-                request.from,
-                request.to,
-                request.language,
-                request.sortBy.keyword,
-                pageNumber
-            )
-        )
+        return newsApi.getEverything(
+            request.query,
+            request.from,
+            request.to,
+            request.language,
+            request.sortBy.keyword,
+            pageNumber
+        ).toNews()
     }
 
 

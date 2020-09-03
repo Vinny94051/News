@@ -16,6 +16,6 @@
     <string name="Save">Сохранить</string>
     <string name="error_change_keyword_short_word">Введите слово или фразу.</string>
     <string name="alert_title_change_keyword">Какая тема вам наиболее интересна?</string>
-    <string name="alert_comment_change_keyword">Введите ключевое слово по которому будет происходит по входу в приложение.
+    <string name="alert_message_change_keyword">Введите ключевое слово по которому будет происходит по входу в приложение.
 Вы всегда можете его поменять.</string>
 </resources>

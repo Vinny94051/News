@@ -10,22 +10,23 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_news.*
+import kotlinx.android.synthetic.main.news_fragment.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import ru.kiryanav.ui.Constants
 import ru.kiryanav.ui.R
-import ru.kiryanav.ui.databinding.FragmentNewsBinding
+import ru.kiryanav.ui.databinding.NewsFragmentBinding
 import ru.kiryanav.ui.model.ArticleUI
 import ru.kiryanav.ui.presentation.ui.list.OnArticleItemClick
 import ru.kiryanav.ui.presentation.ui.view.AlertDialogHelper
 import ru.kiryanav.ui.presentation.ui.view.InputAlertCallback
 import ru.kiryanav.ui.presentation.viewmodel.NewsViewModel
+import vlnny.base.ext.openLink
 import vlnny.base.fragment.BaseBindableFragment
 import vlnny.base.fragment.BaseFragmentCompanion
 
 
-class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemClick,
+class NewsFragment : BaseBindableFragment<NewsFragmentBinding>(), OnArticleItemClick,
     InputAlertCallback, KoinComponent {
 
     companion object : BaseFragmentCompanion<NewsFragment>() {
@@ -49,10 +50,13 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
         }
     }
 
-    private lateinit var itemPopup: PopupMenu
-
     private val dialogHelper: AlertDialogHelper by lazy {
-        AlertDialogHelper(requireContext(), this)
+        AlertDialogHelper(
+            requireContext(),
+            this,
+            requireContext().getString(R.string.alert_title_change_keyword),
+            requireContext().getString(R.string.alert_message_change_keyword)
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -74,7 +78,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
         }
     }
 
-    override fun layoutId() = R.layout.fragment_news
+    override fun layoutId() = R.layout.news_fragment
 
     override fun initViewModel() {
         newsViewModel.apply {
@@ -128,7 +132,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
                 val lastVisibleItem =
                     (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                 if (!newsViewModel.isLoadingMore.value!! && totalItemCount <= (lastVisibleItem + 1)) {
-                    newsViewModel.isLoadingMore.value = true
+
                     newsViewModel.loadMore()
                 }
             }
@@ -169,22 +173,21 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
     }
 
     override fun onLongClick(article: ArticleUI, itemView: View) {
-        if (!::itemPopup.isInitialized) {
-            itemPopup = PopupMenu(requireContext(), itemView).apply {
-                inflate(R.menu.item_article_popup)
-                setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.save -> {
-                            newsViewModel.saveArticle(article)
-                        }
+        PopupMenu(requireContext(), itemView).apply {
+            inflate(R.menu.item_article_popup)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.save -> {
+                        newsViewModel.saveArticle(article)
                     }
-                    true
                 }
+                true
             }
-        } else {
-            itemPopup.show()
-        }
+        }.show()
     }
 
+    override fun onItemClick(article: ArticleUI) {
+        context?.openLink(article.articleUrl)
+    }
 
 }

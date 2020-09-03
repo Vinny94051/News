@@ -1,18 +1,16 @@
 package com.kiryanav.domain
 
-import com.kiryanav.domain.mapper.toDomain
-import com.kiryanav.domain.mapper.toUIModel
-import com.kiryanav.domain.repoApi.IArticleRepository
-import com.kiryanav.domain.repoApi.INewsRepository
-import ru.kiryanav.ui.domainApi.INewsInteractor
-import ru.kiryanav.ui.model.ArticleUI
+import com.kiryanav.domain.model.Article
+import com.kiryanav.domain.repoApi.LocalRepository
+import com.kiryanav.domain.repoApi.RemoteRepository
+
 
 class NewsInteractor(
-    private val newsRepo: INewsRepository,
-    private val articleRepository: IArticleRepository
+    private val newsRepo: RemoteRepository,
+    private val articleRepository: LocalRepository
 ) : INewsInteractor {
 
-    override suspend fun getEverything(
+    override suspend fun getNews(
         query: String,
         from: String,
         to: String,
@@ -21,15 +19,12 @@ class NewsInteractor(
         pageNumber: Int
     ) =
         newsRepo.getEverything(query, from, to, language, dayNumber, pageNumber)
-            .toUIModel()
 
-    override suspend fun saveArticle(article: ArticleUI) {
-        articleRepository.saveArticle(article.toDomain())
+    override suspend fun saveArticle(article: Article) {
+        articleRepository.saveArticle(article)
     }
 
 
-    override suspend fun getSavedArticles(): List<ArticleUI> =
-        articleRepository.getAll().map { article ->
-            article.toUIModel()
-        }
+    override suspend fun getSavedArticles(): List<Article> =
+        articleRepository.getAll()
 }

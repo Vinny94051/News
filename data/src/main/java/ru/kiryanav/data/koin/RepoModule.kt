@@ -1,17 +1,17 @@
 package ru.kiryanav.data.koin
 
-import com.kiryanav.domain.repoApi.IArticleRepository
-import com.kiryanav.domain.repoApi.INewsRepository
+import com.kiryanav.domain.repoApi.LocalRepository
+import com.kiryanav.domain.repoApi.RemoteRepository
 import org.koin.dsl.module
-import ru.kiryanav.data.repository.ArticleRepository
-import ru.kiryanav.data.repository.NewsRepository
+import ru.kiryanav.data.repository.LocalArticleRepository
+import ru.kiryanav.data.repository.RemoteArticleRepository
 
 val repoModule = module {
-    single<INewsRepository> {
-        NewsRepository(get(), get())
+    single<RemoteRepository> {
+        RemoteArticleRepository(get(), get())
     }
 
-    single<IArticleRepository> {
-        ArticleRepository(get())
+    single<LocalRepository> {
+        LocalArticleRepository(get())
     }
 }

@@ -1,8 +1,7 @@
-package ru.kiryanav.ui.domainApi
+package com.kiryanav.domain
 
-import ru.kiryanav.ui.Constants
-import ru.kiryanav.ui.model.ArticleUI
-import ru.kiryanav.ui.model.NewsUI
+import com.kiryanav.domain.model.Article
+import com.kiryanav.domain.model.News
 
 interface INewsInteractor {
 
@@ -14,25 +13,25 @@ interface INewsInteractor {
      * @param language - searching language
      */
 
-    suspend fun getEverything(
+    suspend fun getNews(
         query: String,
         from: String,
         to: String,
         language: String,
         dayNumber: Int = Constants.ZERO_INT,
         pageNumber: Int = 1
-    ): NewsUI
+    ): News
 
     /**
      * Save article in local storage
      * @param article - article which will be saved
      */
 
-    suspend fun saveArticle(article: ArticleUI)
+    suspend fun saveArticle(article: Article)
 
     /**
      * Get all saved articles
      */
 
-    suspend fun getSavedArticles(): List<ArticleUI>
+    suspend fun getSavedArticles(): List<Article>
 }

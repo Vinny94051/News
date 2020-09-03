@@ -1,4 +1,4 @@
-package ru.kiryanav.ui.prefs
+package com.kiryanav.domain.prefs
 
 interface ISharedPrefsManager {
     fun isKeyWordExist(): Boolean

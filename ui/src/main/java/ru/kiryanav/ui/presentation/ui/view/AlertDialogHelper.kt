@@ -10,26 +10,26 @@ import vlnny.base.ext.toDp
 
 class AlertDialogHelper(
     private val context: Context,
-    private val callback: InputAlertCallback
+    private val callback: InputAlertCallback,
+    private val title: String,
+    private val message: String
 ) :
     KoinComponent {
 
     companion object {
         const val ID = 90902
-        const val OFFSET = 40
+        const val EDIT_TEXT_HEIGHT_OFFSET = 40
     }
 
-    private lateinit var alertDialog: AlertDialog
-
-    private fun createInputDialog() {
+    private fun createInputDialog(): AlertDialog {
         val editText = EditText(context).apply {
             id = ID
             setSingleLine()
         }
-        alertDialog = AlertDialog.Builder(context)
+        return AlertDialog.Builder(context)
             .apply {
-                setTitle(context.getString(R.string.alert_title_change_keyword))
-                setMessage(context.getString(R.string.alert_comment_change_keyword))
+                setTitle(title)
+                setMessage(message)
                 editText.layoutParams = createLayoutParams()
                 setView(editText)
                 setPositiveButton(context.getString(R.string.Save), null)
@@ -39,9 +39,9 @@ class AlertDialogHelper(
             //and you cannot lock btn if editText has less then 3 symbols
             .apply {
                 setOnShowListener {
-                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    getButton(AlertDialog.BUTTON_POSITIVE)
                         .setOnClickListener {
-                            callback.onAlertPositiveSaveClick(editText.text.toString(), alertDialog)
+                            callback.onAlertPositiveSaveClick(editText.text.toString(), this)
                         }
                 }
             }
@@ -50,14 +50,10 @@ class AlertDialogHelper(
     private fun createLayoutParams() =
         LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
-            OFFSET.toDp()
+            EDIT_TEXT_HEIGHT_OFFSET.toDp()
         )
 
-
     fun showAlertDialog() {
-        if (!::alertDialog.isInitialized) {
-            createInputDialog()
-        }
-        alertDialog.show()
+        createInputDialog().show()
     }
 }

@@ -10,17 +10,21 @@ import vlnny.base.ext.hide
 import vlnny.base.ext.show
 
 @BindingAdapter("articles", "articleCallback")
-fun bindArticles(recyclerView: RecyclerView, articles: List<ArticleUI>?, callback : OnArticleItemClick) {
+fun bindArticles(
+    recyclerView: RecyclerView,
+    articles: List<ArticleUI>?,
+    callback: OnArticleItemClick
+) {
     if (recyclerView.adapter == null) {
         recyclerView.adapter = ArticleAdapter(callback)
     }
 
-    (recyclerView.adapter as ArticleAdapter).updateList(articles ?: emptyList<ArticleUI>())
+    (recyclerView.adapter as ArticleAdapter).updateList(articles ?: emptyList())
 }
 
 @BindingAdapter("isVisible")
-fun bindVisibility(view : View, isVisible : Boolean){
-    if(isVisible)
+fun bindVisibility(view: View, isVisible: Boolean) {
+    if (isVisible)
         view.show()
     else
         view.hide()

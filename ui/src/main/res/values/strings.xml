@@ -15,6 +15,6 @@
     <string name="Save">Save</string>
     <string name="error_change_keyword_short_word">Enter word or phrase.</string>
     <string name="alert_title_change_keyword">What your favorite theme?</string>
-    <string name="alert_comment_change_keyword">Enter the keyword, which will be searched
+    <string name="alert_message_change_keyword">Enter the keyword, which will be searched
 You always can change it.</string>
 </resources>

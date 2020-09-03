@@ -1,8 +1,8 @@
 package ru.kiryanav.ui.koin
 
 import org.koin.dsl.module
-import ru.kiryanav.ui.prefs.ISharedPrefsManager
-import ru.kiryanav.ui.prefs.SharedPrefsManager
+import com.kiryanav.domain.prefs.ISharedPrefsManager
+import com.kiryanav.domain.prefs.SharedPrefsManager
 
 
 val prefsModule = module {
