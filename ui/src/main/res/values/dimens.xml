@@ -5,4 +5,5 @@
     <dimen name="title_news">20sp</dimen>
     <dimen name="news_8dp">8dp</dimen>
     <dimen name="subtitle">14sp</dimen>
+    <dimen name="margin_setting_item">64dp</dimen>
 </resources>

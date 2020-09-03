@@ -15,7 +15,6 @@ class ExpandableTextView @JvmOverloads constructor(
 
     companion object {
         private const val DEFAULT_TRIM_LENGTH = 200
-
     }
 
     private val showMore = "<font color='#6200EE'> ${context.getString(R.string.show_more)}</font>"
@@ -26,7 +25,7 @@ class ExpandableTextView @JvmOverloads constructor(
     private var trimLength: Int = 0
         set(value) {
             field = value
-            trimmedText = getTrimmedText(originalText)
+            trimmedText = getTrimmedText()
             setText()
         }
 
@@ -40,12 +39,12 @@ class ExpandableTextView @JvmOverloads constructor(
 
     override fun setText(text: CharSequence, type: BufferType) {
         originalText = text
-        trimmedText = getTrimmedText(text)
+        trimmedText = getTrimmedText()
         bufferType = type
         setText()
     }
 
-    private fun getTrimmedText(text: CharSequence?): CharSequence? {
+    private fun getTrimmedText(): CharSequence? {
         return if (originalText != null && originalText!!.length > trimLength) {
             SpannableStringBuilder(
                 originalText,

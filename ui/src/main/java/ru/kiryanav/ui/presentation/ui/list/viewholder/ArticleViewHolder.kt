@@ -1,9 +1,7 @@
 package ru.kiryanav.ui.presentation.ui.list.viewholder
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import ru.kiryanav.ui.Constants
@@ -47,25 +45,11 @@ class ArticleViewHolder(
                 }
 
                 setOnLongClickListener { root ->
-                    showPopup(root, item)
+                    callback.onLongClick(item, root)
                     true
                 }
             }
             executePendingBindings()
         }
-    }
-
-    private fun showPopup(view: View, listItem: ArticleUI) {
-        PopupMenu(view.context, view).apply {
-            inflate(R.menu.item_article_popup)
-            setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.save -> {
-                        callback.popupSave(listItem)
-                    }
-                }
-                true
-            }
-        }.show()
     }
 }

@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -18,13 +19,14 @@ import ru.kiryanav.ui.databinding.FragmentNewsBinding
 import ru.kiryanav.ui.model.ArticleUI
 import ru.kiryanav.ui.presentation.ui.list.OnArticleItemClick
 import ru.kiryanav.ui.presentation.ui.view.AlertDialogHelper
+import ru.kiryanav.ui.presentation.ui.view.InputAlertCallback
 import ru.kiryanav.ui.presentation.viewmodel.NewsViewModel
 import vlnny.base.fragment.BaseBindableFragment
 import vlnny.base.fragment.BaseFragmentCompanion
 
 
 class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemClick,
-    KoinComponent {
+    InputAlertCallback, KoinComponent {
 
     companion object : BaseFragmentCompanion<NewsFragment>() {
         override fun newInstance(): NewsFragment = NewsFragment()
@@ -33,7 +35,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
     private val newsViewModel by viewModel<NewsViewModel>()
     //private val keywordPrefs: ISharedPrefsManager by inject()
 
-    private val popup: PopupMenu by lazy {
+    private val settingsPopup: PopupMenu by lazy {
         PopupMenu(requireContext(), settings).apply {
             inflate(R.menu.item_settings_popup)
             setOnMenuItemClickListener { item ->
@@ -47,8 +49,10 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
         }
     }
 
+    private lateinit var itemPopup: PopupMenu
+
     private val dialogHelper: AlertDialogHelper by lazy {
-        AlertDialogHelper(requireContext())
+        AlertDialogHelper(requireContext(), this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -94,22 +98,23 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
 
     private fun initSettings() {
         settings.setOnClickListener {
-            popup.show()
+            settingsPopup.show()
         }
     }
 
     private fun initPullToRefresh() {
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.colorPrimary
+        swipeRefreshLayout.apply {
+            setProgressBackgroundColorSchemeColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.colorPrimary
+                )
             )
-        )
-        swipeRefreshLayout.setColorSchemeColors(Color.WHITE)
-
-        swipeRefreshLayout.setOnRefreshListener {
-            loadNews(newsViewModel.lastQuery)
-            swipeRefreshLayout.isRefreshing = false
+            setColorSchemeColors(Color.WHITE)
+            setOnRefreshListener {
+                loadNews(newsViewModel.lastQuery)
+                swipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 
@@ -159,8 +164,26 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(), OnArticleItemC
     ) =
         newsViewModel.loadEverythingNews(query, from, to, language)
 
-    override fun popupSave(item: ArticleUI) {
+    override fun onAlertPositiveSaveClick(data: String, alert: AlertDialog) {
+        //TODO alert logic
+    }
 
+    override fun onLongClick(article: ArticleUI, itemView: View) {
+        if (!::itemPopup.isInitialized) {
+            itemPopup = PopupMenu(requireContext(), itemView).apply {
+                inflate(R.menu.item_article_popup)
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.save -> {
+                            newsViewModel.saveArticle(article)
+                        }
+                    }
+                    true
+                }
+            }
+        } else {
+            itemPopup.show()
+        }
     }
 
 

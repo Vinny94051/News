@@ -7,9 +7,10 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import ru.kiryanav.data.koin.dataModule
+import ru.kiryanav.data.koin.mapperModule
+import ru.kiryanav.data.koin.repoModule
 import ru.kiryanav.ui.koin.prefsModule
 import ru.kiryanav.ui.koin.viewModelModule
-import ru.kiryanav.ui.presentation.ui.activity.NewsActivity
 
 class App : Application() {
 
@@ -19,10 +20,7 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(listOf(prefsModule, viewModelModule, dataModule, domainModule))
+            modules(listOf(prefsModule, viewModelModule, dataModule, domainModule, repoModule, mapperModule))
         }
-
-       // val firstActivityIntent = Intent(this, NewsActivity::class.java)
-        //startActivity(firstActivityIntent)
     }
 }
