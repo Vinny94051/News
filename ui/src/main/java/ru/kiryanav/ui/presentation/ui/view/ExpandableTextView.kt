@@ -18,15 +18,19 @@ class ExpandableTextView @JvmOverloads constructor(
     }
 
     private val showMore = "<font color='#6200EE'> ${context.getString(R.string.show_more)}</font>"
-    private lateinit var originalText: CharSequence
+    private var originalText: CharSequence? = null
     private var trimmedText: CharSequence? = null
     private var bufferType: BufferType? = null
     private var trim = true
     private var trimLength: Int = 0
         set(value) {
-            field = value
-            trimmedText = getTrimmedText()
-            setText()
+            try {
+                field = value
+                trimmedText = getTrimmedText()
+                setText()
+            } catch (ex: Throwable) {
+                ex.printStackTrace()
+            }
         }
 
 
@@ -39,13 +43,17 @@ class ExpandableTextView @JvmOverloads constructor(
 
     override fun setText(text: CharSequence, type: BufferType) {
         originalText = text
-        trimmedText = getTrimmedText()
+        try {
+            trimmedText = getTrimmedText()
+        } catch (ex: Throwable) {
+            ex.printStackTrace()
+        }
         bufferType = type
         setText()
     }
 
     private fun getTrimmedText(): CharSequence? {
-        return if (!::originalText.isInitialized && originalText.length > trimLength) {
+        return if (originalText != null && originalText!!.length > trimLength) {
             SpannableStringBuilder(
                 originalText,
                 0,

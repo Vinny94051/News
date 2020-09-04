@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="default_margin">16dp</dimen>
     <dimen name="margin_news_32dp">32dp</dimen>
     <dimen name="title_news">20sp</dimen>
     <dimen name="news_8dp">8dp</dimen>
     <dimen name="subtitle">14sp</dimen>
-    <dimen name="margin_setting_item">64dp</dimen>
+    <dimen name="margin_setting_item">48dp</dimen>
+    <dimen name="text_size_settings">22sp</dimen>
+    <dimen name="margin_default">16dp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="text_size_22sp">22sp</dimen>
 </resources>

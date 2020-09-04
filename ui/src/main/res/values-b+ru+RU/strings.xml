@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Новости</string>
-    <string name="unknown_author">неизвестный</string>
-    <string name="author">Автор : %s</string>
+    <string name="unknown_author">Неизвестный</string>
+    <string name="author">Автор: %s</string>
     <string name="search_hint">Поиск новостей</string>
     <string name="total_results">Количество результатов: %s</string>
     <string name="popup_save">Добавить в избранное</string>
@@ -18,4 +18,6 @@
     <string name="alert_title_change_keyword">Какая тема вам наиболее интересна?</string>
     <string name="alert_message_change_keyword">Введите ключевое слово по которому будет происходит по входу в приложение.
 Вы всегда можете его поменять.</string>
+    <string name="source">Источники</string>
+    <string name="snack_source_changed">Источник успешно изменен на %s</string>
 </resources>

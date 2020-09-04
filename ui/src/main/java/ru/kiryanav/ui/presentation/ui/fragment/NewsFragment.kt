@@ -102,7 +102,12 @@ class NewsFragment : BaseBindableFragment<NewsFragmentBinding>(), OnArticleItemC
 
     private fun initSettings() {
         settings.setOnClickListener {
-            settingsPopup.show()
+          //  settingsPopup.show()
+            router.addFragmentWithAddingInBackStack(
+                SettingsFragment.newInstance(),
+                R.id.mainContainer,
+                SettingsFragment.id
+            )
         }
     }
 

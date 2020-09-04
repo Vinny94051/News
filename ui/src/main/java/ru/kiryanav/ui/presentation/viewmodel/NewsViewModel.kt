@@ -1,6 +1,7 @@
 package ru.kiryanav.ui.presentation.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,8 @@ import ru.kiryanav.ui.mapper.toArticle
 import ru.kiryanav.ui.mapper.toArticleUI
 import ru.kiryanav.ui.model.ArticleUI
 import vlnny.base.viewModel.BaseViewModel
+import java.time.LocalDateTime
+import java.util.*
 
 class NewsViewModel(private val context: Context, private val newsInteractor: INewsInteractor) :
     BaseViewModel() {
@@ -65,8 +68,6 @@ class NewsViewModel(private val context: Context, private val newsInteractor: IN
     }
 
     fun loadMore(
-        from: String = Constants.EMPTY_STRING,
-        to: String = Constants.EMPTY_STRING,
         language: String = Constants.EMPTY_STRING
     ) {
         viewModelScope.launch {
@@ -75,15 +76,15 @@ class NewsViewModel(private val context: Context, private val newsInteractor: IN
             if (showSavedText.value != back) {
                 updateUI(lastQuery)
                 dayNumber++
+
                 if (dayNumber < WEEK_DAYS_NUMBER) {
 
                     val nextPage = newsInteractor
                         .getNews(
                             lastQuery,
-                            from,
-                            to,
-                            language,
-                            dayNumber
+                            getDate(dayNumber - 1),
+                            getDate(dayNumber),
+                            language
                         )
 
                     _totalNewsLiveData.value = context.getString(R.string.total_results)
@@ -104,6 +105,9 @@ class NewsViewModel(private val context: Context, private val newsInteractor: IN
             }
         }
     }
+
+    private fun getDate(dayNumber: Int): String =
+        LocalDateTime.now().minusDays(dayNumber.toLong()).toString()
 
 
     fun saveArticle(item: ArticleUI) {

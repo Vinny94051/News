@@ -1,6 +1,6 @@
 package com.kiryanav.domain.prefs
 
-interface ISharedPrefsManager {
+interface IKeywordManager {
     fun isKeyWordExist(): Boolean
     fun setKeyWord(keyword: String)
     fun getKeyword(): String

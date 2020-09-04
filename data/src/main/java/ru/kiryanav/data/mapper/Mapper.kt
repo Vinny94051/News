@@ -1,12 +1,16 @@
 package ru.kiryanav.data.mapper
 
 import com.kiryanav.domain.model.Article
+import com.kiryanav.domain.model.ArticleSource
 import com.kiryanav.domain.model.News
+import com.kiryanav.domain.model.SortBy
 import ru.kiryanav.data.database.entites.ArticleEntity
 import ru.kiryanav.data.dto.news.response.NewsResponse
+import ru.kiryanav.data.dto.news.response.SortByForApi
+import ru.kiryanav.data.dto.source.Source
 import java.time.Instant
 
-fun Article.toEntity(): ArticleEntity =
+fun Article.toArticleEntity(): ArticleEntity =
     ArticleEntity(
         sourceId.orEmpty(),
         sourceName.orEmpty(),
@@ -19,7 +23,10 @@ fun Article.toEntity(): ArticleEntity =
         content.orEmpty()
     )
 
-fun ArticleEntity.toDomainModel(): Article =
+fun Source.toArticleSource() : ArticleSource =
+    ArticleSource(name, description, category, url)
+
+fun ArticleEntity.toArticle(): Article =
     Article(
         sourceId,
         sourceName,
@@ -32,7 +39,7 @@ fun ArticleEntity.toDomainModel(): Article =
         content
     )
 
-fun NewsResponse.toNews() : News =
+fun NewsResponse.toNews(): News =
     News(
         resultsNumber?.toInt(),
         articles.map { article ->
@@ -49,3 +56,12 @@ fun NewsResponse.toNews() : News =
             )
         }
     )
+
+fun SortBy.toSortByApi(): SortByForApi =
+    when (this) {
+        SortBy.POPULARITY -> SortByForApi.POPULARITY
+        SortBy.RELEVANCY -> SortByForApi.RELEVANCY
+        SortBy.PUBLISHED_AT -> SortByForApi.PUBLISHED_AT
+    }
+
+

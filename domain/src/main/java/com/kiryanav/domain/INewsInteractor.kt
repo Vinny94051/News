@@ -1,6 +1,7 @@
 package com.kiryanav.domain
 
 import com.kiryanav.domain.model.Article
+import com.kiryanav.domain.model.ArticleSource
 import com.kiryanav.domain.model.News
 
 interface INewsInteractor {
@@ -18,7 +19,6 @@ interface INewsInteractor {
         from: String,
         to: String,
         language: String,
-        dayNumber: Int = Constants.ZERO_INT,
         pageNumber: Int = 1
     ): News
 
@@ -34,4 +34,6 @@ interface INewsInteractor {
      */
 
     suspend fun getSavedArticles(): List<Article>
+
+    suspend fun getSourcesByLanguage(language : String) : List<ArticleSource>
 }

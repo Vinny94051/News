@@ -5,7 +5,7 @@ import com.kiryanav.domain.koin.domainModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import ru.kiryanav.data.koin.dataModules
+import ru.kiryanav.data.koin.dataModule
 import ru.kiryanav.ui.koin.prefsModule
 import ru.kiryanav.ui.koin.viewModelModule
 
@@ -21,9 +21,9 @@ class App : Application() {
                 listOf(
                     prefsModule,
                     viewModelModule,
-                    domainModule
-                ) +
-                        dataModules
+                    domainModule,
+                    dataModule
+                )
             )
         }
     }

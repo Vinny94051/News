@@ -3,7 +3,7 @@ package com.kiryanav.domain.repoApi
 import com.kiryanav.domain.model.Article
 
 
-interface LocalRepository {
+interface LocalNewsRepository {
 
     /**
      * Save article into database

@@ -1,6 +1,7 @@
 package ru.kiryanav.data.dto.source
 
 import com.google.gson.annotations.SerializedName
+import com.kiryanav.domain.model.ArticleSource
 
 data class Source(
     @SerializedName("id")

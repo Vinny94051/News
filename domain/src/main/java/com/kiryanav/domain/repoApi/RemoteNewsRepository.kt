@@ -2,15 +2,20 @@ package com.kiryanav.domain.repoApi
 
 import com.kiryanav.domain.model.News
 import com.kiryanav.domain.model.SortBy
+import com.kiryanav.domain.model.ArticleSource
 
-interface RemoteRepository {
+interface RemoteNewsRepository {
     suspend fun getEverything(
         query: String,
         from: String,
         to: String,
         language: String,
-        dayNumber: Int,
-        pageNumber: Int = 1,
+        pageNumber: Int,
         sortBy: SortBy = SortBy.PUBLISHED_AT
     ): News
+
+    suspend fun getSourcesByLanguage(
+        language: String
+    ): List<ArticleSource>
+
 }

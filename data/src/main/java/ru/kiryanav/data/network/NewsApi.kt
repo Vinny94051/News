@@ -48,7 +48,13 @@ interface NewsApi {
         @Query("language") language: String,
         @Query("country") country: String,
         @Query("apiKey") apiKey: String = RetrofitClient.BASE_API_KEY
-    ): Single<SourceResponse>
+    ): SourceResponse
+
+    @GET("sources")
+    suspend fun getSourcesByLanguage(
+        @Query("language") language: String,
+        @Query("apiKey") apiKey: String = RetrofitClient.BASE_API_KEY
+    ): SourceResponse
 
     /**
      * This endpoint provides live top and breaking headlines for a country,

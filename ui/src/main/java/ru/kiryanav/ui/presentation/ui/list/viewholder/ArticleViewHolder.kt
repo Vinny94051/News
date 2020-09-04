@@ -34,12 +34,11 @@ class ArticleViewHolder(
         binding.apply {
             article = item
 
-            if (item.previewImageUrl != Constants.EMPTY_STRING) {
                 Glide.with(binding.root.context)
                     .load(item.previewImageUrl)
                     .error(Glide.with(binding.previewImage).load(R.drawable.preview_image))
                     .into(binding.previewImage)
-            }
+
             root.apply {
                 setOnClickListener {
                     callback.onItemClick(item)
