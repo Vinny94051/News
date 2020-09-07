@@ -17,6 +17,7 @@ import ru.kiryanav.ui.Constants
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.NewsFragmentBinding
 import ru.kiryanav.ui.model.ArticleUI
+import ru.kiryanav.ui.presentation.ui.activity.NewsActivity
 import ru.kiryanav.ui.presentation.ui.list.OnArticleItemClick
 import ru.kiryanav.ui.presentation.ui.view.AlertDialogHelper
 import ru.kiryanav.ui.presentation.ui.view.InputAlertCallback
@@ -103,11 +104,7 @@ class NewsFragment : BaseBindableFragment<NewsFragmentBinding>(), OnArticleItemC
     private fun initSettings() {
         settings.setOnClickListener {
           //  settingsPopup.show()
-            router.addFragmentWithAddingInBackStack(
-                SettingsFragment.newInstance(),
-                R.id.mainContainer,
-                SettingsFragment.id
-            )
+            (activity as NewsActivity).openSettings()
         }
     }
 

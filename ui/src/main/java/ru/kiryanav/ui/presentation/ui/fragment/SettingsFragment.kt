@@ -13,6 +13,8 @@ import ru.kiryanav.ui.model.ArticleSourceUI
 import ru.kiryanav.ui.presentation.ui.list.OnSourceItemClick
 import ru.kiryanav.ui.presentation.viewmodel.SettingsViewModel
 import vlnny.base.ext.hide
+import vlnny.base.ext.rotateDefault
+import vlnny.base.ext.rotateFromTopToBottom
 import vlnny.base.ext.show
 import vlnny.base.fragment.BaseBindableFragment
 import vlnny.base.fragment.BaseFragmentCompanion
@@ -38,10 +40,10 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
         initRecycler()
         sourceLayout.setOnClickListener {
             if (sourcesRecyclerView.isVisible) {
-                openSourcesBtn.animate().rotation(0f).start()
+                openSourcesBtn.rotateDefault()
                 sourcesRecyclerView.hide()
             } else {
-                openSourcesBtn.animate().rotation(180f).start()
+                openSourcesBtn.rotateFromTopToBottom()
                 sourcesRecyclerView.show()
             }
         }
