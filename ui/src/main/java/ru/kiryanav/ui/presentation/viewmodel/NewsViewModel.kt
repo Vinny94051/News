@@ -57,8 +57,11 @@ class NewsViewModel(private val context: Context, private val newsInteractor: IN
         dayNumber = Constants.ZERO_INT
         viewModelScope.launch {
             _isProgressVisible.value = true
+
+            val sources = newsInteractor.getSavedSources()
+
             val news = newsInteractor.getNews(
-                query, from, to, language
+                query, from, to, sources, language
             )
             _isProgressVisible.value = false
             _totalNewsLiveData.value =
@@ -73,6 +76,8 @@ class NewsViewModel(private val context: Context, private val newsInteractor: IN
         viewModelScope.launch {
             _isLoadingMore.value = true
 
+            val sources = newsInteractor.getSavedSources()
+
             if (showSavedText.value != back) {
                 updateUI(lastQuery)
                 dayNumber++
@@ -84,6 +89,7 @@ class NewsViewModel(private val context: Context, private val newsInteractor: IN
                             lastQuery,
                             getDate(dayNumber - 1),
                             getDate(dayNumber),
+                            sources,
                             language
                         )
 

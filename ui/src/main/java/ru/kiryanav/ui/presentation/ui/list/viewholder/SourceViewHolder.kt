@@ -9,18 +9,24 @@ import ru.kiryanav.ui.model.ArticleSourceUI
 import ru.kiryanav.ui.presentation.ui.list.OnSourceItemClick
 import vlnny.base.adapter.BaseViewHolder
 
-class SourceViewHolder(private val binding: ItemSourceBinding, private val callback: OnSourceItemClick) : BaseViewHolder<ArticleSourceUI>(binding.root) {
+class SourceViewHolder(
+    private val binding: ItemSourceBinding,
+    private val callback: OnSourceItemClick
+) : BaseViewHolder<ArticleSourceUI>(binding.root) {
+
+
     override fun bindView(item: ArticleSourceUI) {
         binding.apply {
             source = item
 
-            root.setOnClickListener {
-                callback.chooseItem(item)
+            isItemSelected.setOnCheckedChangeListener { _, isChecked ->
+                callback.selectClick(item, isChecked)
             }
 
             executePendingBindings()
         }
     }
+
 
     companion object {
         fun from(

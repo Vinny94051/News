@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import ru.kiryanav.ui.R
-import ru.kiryanav.ui.presentation.ui.fragment.NewsFragment
-import ru.kiryanav.ui.presentation.ui.navifation.NewsNavigationCallback
+import ru.kiryanav.ui.presentation.ui.navigation.NewsNavigationCallback
 import vlnny.base.activity.BaseActivity
 
 class NewsActivity : BaseActivity(), NewsNavigationCallback {

@@ -41,8 +41,19 @@ fun Article.toArticleUI(context: Context): ArticleUI =
         this
     )
 
-fun ArticleSource.toArticleSourceUI(): ArticleSourceUI =
+fun ArticleSource.toArticleSourceUI(isSaved : Boolean = false): ArticleSourceUI =
     ArticleSourceUI(
-        name, description, category, url
+        name, description, category, url, this, isSaved
+    )
+
+fun ArticleSourceUI.toArticleSource(): ArticleSource =
+    ArticleSource(
+        item.id,
+        item.name,
+        item.description,
+        item.url,
+        item.category,
+        item.lang,
+        item.country
     )
 

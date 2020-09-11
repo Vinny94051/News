@@ -33,12 +33,10 @@ class ArticleViewHolder(
     override fun bindView(item: ArticleUI) {
         binding.apply {
             article = item
-
                 Glide.with(binding.root.context)
                     .load(item.previewImageUrl)
                     .error(Glide.with(binding.previewImage).load(R.drawable.preview_image))
                     .into(binding.previewImage)
-
             root.apply {
                 setOnClickListener {
                     callback.onItemClick(item)

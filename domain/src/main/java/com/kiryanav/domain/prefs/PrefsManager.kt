@@ -37,8 +37,8 @@ class PrefsManager(context: Context) : IKeywordManager, SourceManager {
     }
 
     override fun getSource(): String =
-        sourcePrefs.getString(SOURCE_NAME, Constants.EMPTY_STRING)
-            ?: Constants.EMPTY_STRING
+        sourcePrefs.getString(SOURCE_NAME, "RBC")
+            ?: "RBC"
 
     companion object {
         const val PREFS_NAME_KEYWORD = "ru.kir.prefs.keyword.name"

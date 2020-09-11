@@ -15,19 +15,31 @@ class NewsInteractor(
         query: String,
         from: String,
         to: String,
+        sources: List<ArticleSource>,
         language: String,
         pageNumber: Int
     ) =
-        newsRepo.getEverything(query, from, to, language, pageNumber)
+        newsRepo.loadNews(query, from, to, sources, language, pageNumber)
 
     override suspend fun saveArticle(article: Article) {
         articleRepository.saveArticle(article)
     }
 
     override suspend fun getSavedArticles(): List<Article> =
-        articleRepository.getAll()
+        articleRepository.getArticlesAll()
 
     override suspend fun getSourcesByLanguage(language: String): List<ArticleSource> =
         newsRepo.getSourcesByLanguage(language)
+
+    override suspend fun getSavedSources(): List<ArticleSource> =
+        articleRepository.getAllSources()
+
+
+    override suspend fun saveSources(sources: List<ArticleSource>) =
+        articleRepository.insertSources(sources)
+
+    override suspend fun deleteSource(source: ArticleSource) {
+        articleRepository.deleteSource(source)
+    }
 
 }

@@ -4,50 +4,72 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.kiryanav.domain.INewsInteractor
-import com.kiryanav.domain.prefs.SourceManager
 import kotlinx.coroutines.launch
+import ru.kiryanav.ui.mapper.toArticleSource
 import ru.kiryanav.ui.mapper.toArticleSourceUI
 import ru.kiryanav.ui.model.ArticleSourceUI
-import ru.kiryanav.ui.model.SavedSource
 import vlnny.base.viewModel.BaseViewModel
 
 class SettingsViewModel(
-    private val newsInteractor: INewsInteractor,
-    private val prefsManager: SourceManager
+    private val newsInteractor: INewsInteractor
 ) : BaseViewModel() {
 
     private val _sourcesLiveData = MutableLiveData<List<ArticleSourceUI>>()
     val sourcesLiveData: LiveData<List<ArticleSourceUI>>
         get() = _sourcesLiveData
 
-    private val _isSourceSaved = MutableLiveData<SavedSource>()
-    val isSourceSaved: LiveData<SavedSource>
-        get() = _isSourceSaved
-
     fun loadSourcesByLanguages(language: String) {
         viewModelScope.launch {
-            _sourcesLiveData.value = newsInteractor
-                .getSourcesByLanguage(language)
-                .map { source ->
-                    source.toArticleSourceUI()
-                }
-        }
-    }
+            val byLangSources =
+                newsInteractor
+                    .getSourcesByLanguage(language)
+                    .map { source ->
+                        source.toArticleSourceUI()
+                    }
 
-    fun setSource(item: ArticleSourceUI) {
-        try {
-            //Server sent 400 error, when {source.name} has space
-            if (item.name!!.contains(" ")) {
-                _isSourceSaved.value = SavedSource(false, item)
-                return
+            val savedSources = newsInteractor.getSavedSources().map { source ->
+                source.toArticleSourceUI(true)
             }
-            prefsManager.saveSource(item.name)
-            _isSourceSaved.value = SavedSource(true, item)
-        } catch (ex: Throwable) {
-            ex.printStackTrace()
-            _isSourceSaved.value = SavedSource(false, item)
+            if (savedSources.isNotEmpty()) {
+                val resultSources = compareAndChoose(byLangSources, savedSources)
+                _sourcesLiveData.value = resultSources
+            } else {
+                _sourcesLiveData.value = byLangSources
+            }
         }
     }
 
+    private fun compareAndChoose(
+        l1: List<ArticleSourceUI>,
+        l2: List<ArticleSourceUI>
+    ): List<ArticleSourceUI> {
+        val tmpList: MutableList<ArticleSourceUI> = l1.toMutableList()
+        for (i in l1.indices) {
+            for (k in l2.indices) {
+                if (l1[i].name == l2[k].name) {
+                    tmpList[i] = l2[k]
+                    break
+                }
+            }
+        }
+
+        return tmpList.filter {
+            !it.name!!.contains(" ")
+        }
+    }
+
+    fun saveSources(sources: List<ArticleSourceUI>) {
+        if (sources.isNotEmpty()) {
+            viewModelScope.launch {
+                newsInteractor.saveSources(sources.map { it.toArticleSource() })
+            }
+        }
+    }
+
+    fun deleteSource(source: ArticleSourceUI) {
+        viewModelScope.launch {
+            newsInteractor.deleteSource(source.toArticleSource())
+        }
+    }
 
 }

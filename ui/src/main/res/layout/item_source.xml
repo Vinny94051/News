@@ -12,9 +12,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:paddingStart="@dimen/margin_default"
         android:paddingTop="8dp"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
         tools:ignore="RtlSymmetry">
 
         <TextView
@@ -41,12 +41,21 @@
             android:id="@+id/categoryTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{source.category}"
-            android:layout_marginTop="@dimen/news_8dp"
             android:layout_below="@id/nameTextView"
+            android:layout_marginTop="@dimen/news_8dp"
+            android:text="@{source.category}"
             android:textColor="@color/color_grey_49"
             android:textSize="@dimen/text_size_16sp"
             tools:text="Category" />
+
+        <CheckBox
+            android:id="@+id/isItemSelected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/margin_default"
+            android:checked="@{source.isSelected}" />
 
     </RelativeLayout>
 </layout>

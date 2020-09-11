@@ -1,4 +1,4 @@
-package ru.kiryanav.ui.presentation.ui.navifation
+package ru.kiryanav.ui.presentation.ui.navigation
 
 interface NewsNavigationCallback {
     fun openSettings()

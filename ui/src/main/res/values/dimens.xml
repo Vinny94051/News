@@ -9,4 +9,5 @@
     <dimen name="margin_default">16dp</dimen>
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="text_size_22sp">22sp</dimen>
+    <dimen name="default_margin">16dp</dimen>
 </resources>

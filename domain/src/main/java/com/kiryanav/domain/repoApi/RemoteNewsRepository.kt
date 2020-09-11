@@ -5,10 +5,11 @@ import com.kiryanav.domain.model.SortBy
 import com.kiryanav.domain.model.ArticleSource
 
 interface RemoteNewsRepository {
-    suspend fun getEverything(
+    suspend fun loadNews(
         query: String,
         from: String,
         to: String,
+        sources : List<ArticleSource>,
         language: String,
         pageNumber: Int,
         sortBy: SortBy = SortBy.PUBLISHED_AT

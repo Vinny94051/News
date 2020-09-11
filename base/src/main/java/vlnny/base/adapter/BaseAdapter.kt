@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class BaseAdapter<VH : BaseViewHolder<MV>, MV> : RecyclerView.Adapter<VH>() {
 
     private var items: List<MV> = mutableListOf()
+    val currentList: List<MV>
+        get() = items
 
     /**
      * Override this fun if you need to bind only new items

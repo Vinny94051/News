@@ -18,6 +18,7 @@ interface INewsInteractor {
         query: String,
         from: String,
         to: String,
+        sources : List<ArticleSource>,
         language: String,
         pageNumber: Int = 1
     ): News
@@ -36,4 +37,10 @@ interface INewsInteractor {
     suspend fun getSavedArticles(): List<Article>
 
     suspend fun getSourcesByLanguage(language : String) : List<ArticleSource>
+
+    suspend fun getSavedSources() : List<ArticleSource>
+
+    suspend fun saveSources(sources : List<ArticleSource>)
+
+    suspend fun deleteSource(source : ArticleSource)
 }

@@ -64,5 +64,15 @@
             tools:itemCount="10"
             tools:listitem="@layout/item_source" />
 
+        <Button
+            android:id="@+id/saveSourcesBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Сохранить"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/margin_default"
+            android:background="@android:color/holo_green_light"
+            />
+
     </RelativeLayout>
 </layout>

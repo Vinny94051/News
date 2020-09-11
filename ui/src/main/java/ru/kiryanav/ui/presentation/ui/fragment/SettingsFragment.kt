@@ -2,7 +2,6 @@ package ru.kiryanav.ui.presentation.ui.fragment
 
 import android.os.Bundle
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -24,13 +23,14 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
 
     private val settingsViewModel: SettingsViewModel by viewModel()
     override fun layoutId(): Int = R.layout.fragment_settings
+    private val sourcesForSaving = mutableListOf<ArticleSourceUI>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.apply {
             this.viewModel = settingsViewModel
             this.callback = this@SettingsFragment
-            loadSourcesByLanguage("ru")
+            loadSourcesByLanguage("ru") //Stub!
             executePendingBindings()
         }
     }
@@ -42,29 +42,34 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
             if (sourcesRecyclerView.isVisible) {
                 openSourcesBtn.rotateDefault()
                 sourcesRecyclerView.hide()
+                saveSourcesBtn.hide()
             } else {
                 openSourcesBtn.rotateFromTopToBottom()
                 sourcesRecyclerView.show()
+                saveSourcesBtn.show()
             }
+        }
+
+        saveSourcesBtn.setOnClickListener {
+            settingsViewModel.saveSources(sourcesForSaving)
         }
     }
 
-    override fun chooseItem(item: ArticleSourceUI) {
-        settingsViewModel.setSource(item)
-    }
-
-    override fun initViewModel() {
-        super.initViewModel()
-        settingsViewModel.isSourceSaved.observe(this, Observer { savedSource ->
-            if (savedSource.isSaved) {
-                showSnack(
-                    getString(R.string.snack_source_changed)
-                        .format(savedSource.source.name)
-                )
+    override fun selectClick(item: ArticleSourceUI, isChecked: Boolean) {
+        if (!isChecked) {
+            item.isSelected = false
+            sourcesForSaving.remove(item)
+            settingsViewModel.deleteSource(item)
+        } else {
+            if (!item.name!!.contains(" ")) {
+                if (isChecked && !sourcesForSaving.contains(item)) {
+                    item.isSelected = true
+                    sourcesForSaving.add(item)
+                }
             } else {
-                showSnack(getString(R.string.error_something_went_wrong))
+                showSnack(requireContext().getString(R.string.error_saved))
             }
-        })
+        }
     }
 
     private fun initRecycler() {

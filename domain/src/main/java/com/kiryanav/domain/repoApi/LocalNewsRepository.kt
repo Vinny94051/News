@@ -1,6 +1,7 @@
 package com.kiryanav.domain.repoApi
 
 import com.kiryanav.domain.model.Article
+import com.kiryanav.domain.model.ArticleSource
 
 
 interface LocalNewsRepository {
@@ -16,5 +17,12 @@ interface LocalNewsRepository {
      * Get all saved articles
      */
 
-    suspend fun getAll(): List<Article>
+    suspend fun getArticlesAll(): List<Article>
+
+    suspend fun getAllSources(): List<ArticleSource>
+
+    suspend fun insertSources(source: List<ArticleSource>)
+
+    suspend fun deleteSource(source: ArticleSource)
+
 }

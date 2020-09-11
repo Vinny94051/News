@@ -5,6 +5,7 @@ import com.kiryanav.domain.model.ArticleSource
 import com.kiryanav.domain.model.News
 import com.kiryanav.domain.model.SortBy
 import ru.kiryanav.data.database.entites.ArticleEntity
+import ru.kiryanav.data.database.entites.ArticleSourceEntity
 import ru.kiryanav.data.dto.news.response.NewsResponse
 import ru.kiryanav.data.dto.news.response.SortByForApi
 import ru.kiryanav.data.dto.source.Source
@@ -23,8 +24,16 @@ fun Article.toArticleEntity(): ArticleEntity =
         content.orEmpty()
     )
 
-fun Source.toArticleSource() : ArticleSource =
-    ArticleSource(name, description, category, url)
+fun Source.toArticleSource(): ArticleSource =
+    ArticleSource(
+        id,
+        name,
+        description,
+        url,
+        category,
+        lang,
+        country
+    )
 
 fun ArticleEntity.toArticle(): Article =
     Article(
@@ -63,5 +72,23 @@ fun SortBy.toSortByApi(): SortByForApi =
         SortBy.RELEVANCY -> SortByForApi.RELEVANCY
         SortBy.PUBLISHED_AT -> SortByForApi.PUBLISHED_AT
     }
+
+fun ArticleSourceEntity.toArticleSource(): ArticleSource =
+    ArticleSource(
+        id, name, description, url, category, lang, country
+    )
+
+fun ArticleSource.toArticleSourceEntity(): ArticleSourceEntity =
+    ArticleSourceEntity(
+        id ?: throw SourceIdNotFound(),
+        lang.orEmpty(),
+        country.orEmpty(),
+        name.orEmpty(),
+        description.orEmpty(),
+        category.orEmpty(),
+        url.orEmpty()
+    )
+
+class SourceIdNotFound : Throwable()
 
 
