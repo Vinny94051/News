@@ -38,12 +38,13 @@ fun Article.toArticleUI(context: Context): ArticleUI =
                 )
             ).toString()
         } else "",
-        this
+        this,
+        isLocalSaved
     )
 
-fun ArticleSource.toArticleSourceUI(isSaved : Boolean = false): ArticleSourceUI =
+fun ArticleSource.toArticleSourceUI(): ArticleSourceUI =
     ArticleSourceUI(
-        name, description, category, url, this, isSaved
+        name, description, category, url, this, isLocalSaved
     )
 
 fun ArticleSourceUI.toArticleSource(): ArticleSource =

@@ -17,12 +17,14 @@ interface LocalNewsRepository {
      * Get all saved articles
      */
 
-    suspend fun getArticlesAll(): List<Article>
+    suspend fun getAllSavedArticles(isLocalSavedFlagNeedToBeTrue : Boolean = true): List<Article>
 
     suspend fun getAllSources(): List<ArticleSource>
 
     suspend fun insertSources(source: List<ArticleSource>)
 
     suspend fun deleteSource(source: ArticleSource)
+
+    suspend fun deleteArticle(article: Article)
 
 }

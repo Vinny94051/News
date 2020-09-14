@@ -1,9 +1,6 @@
 package ru.kiryanav.data.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import ru.kiryanav.data.database.entites.ArticleEntity
 
 @Dao
@@ -21,5 +18,8 @@ interface ArticleDao {
      *@param article - entity which will be inserted
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCity(article: ArticleEntity)
+    suspend fun insertArticle(article: ArticleEntity)
+
+    @Delete
+    suspend fun deleteArticle(article: ArticleEntity)
 }

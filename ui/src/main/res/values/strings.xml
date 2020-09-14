@@ -20,4 +20,7 @@ You always can change it.</string>
     <string name="source">Sources</string>
     <string name="snack_source_changed">Source successfuly changed to %s</string>
     <string name="error_something_went_wrong">Something went wrong</string>
+    <string name="popup_remove">Удалить</string>
+    <string name="settings">Настройки</string>
+    <string name="saved_news">Избранное</string>
 </resources>

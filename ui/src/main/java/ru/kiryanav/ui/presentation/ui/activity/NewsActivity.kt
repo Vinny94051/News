@@ -26,4 +26,8 @@ class NewsActivity : BaseActivity(), NewsNavigationCallback {
     override fun openSettings() {
         navController.navigate(R.id.action_newsFragment_to_settingsFragment)
     }
+
+    override fun openSaved() {
+        navController.navigate(R.id.savedNewsFragment)
+    }
 }

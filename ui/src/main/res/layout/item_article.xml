@@ -33,6 +33,17 @@
                 android:src="@drawable/preview_image"
                 tools:background="@color/cardview_shadow_start_color" />
 
+            <ImageView
+                android:id="@+id/isSavedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                isVisible="@{article.localSaved}"
+                android:src="@drawable/ic_baseline_done_24"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/news_8dp"
+                android:background="@android:color/black"
+                />
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"

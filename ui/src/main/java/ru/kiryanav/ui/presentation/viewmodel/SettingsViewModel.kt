@@ -18,43 +18,12 @@ class SettingsViewModel(
     val sourcesLiveData: LiveData<List<ArticleSourceUI>>
         get() = _sourcesLiveData
 
-    fun loadSourcesByLanguages(language: String) {
+    fun loadSources() {
         viewModelScope.launch {
-            val byLangSources =
-                newsInteractor
-                    .getSourcesByLanguage(language)
-                    .map { source ->
-                        source.toArticleSourceUI()
-                    }
-
-            val savedSources = newsInteractor.getSavedSources().map { source ->
-                source.toArticleSourceUI(true)
-            }
-            if (savedSources.isNotEmpty()) {
-                val resultSources = compareAndChoose(byLangSources, savedSources)
-                _sourcesLiveData.value = resultSources
-            } else {
-                _sourcesLiveData.value = byLangSources
-            }
-        }
-    }
-
-    private fun compareAndChoose(
-        l1: List<ArticleSourceUI>,
-        l2: List<ArticleSourceUI>
-    ): List<ArticleSourceUI> {
-        val tmpList: MutableList<ArticleSourceUI> = l1.toMutableList()
-        for (i in l1.indices) {
-            for (k in l2.indices) {
-                if (l1[i].name == l2[k].name) {
-                    tmpList[i] = l2[k]
-                    break
+            _sourcesLiveData.value = newsInteractor.getSources()
+                .map { source ->
+                    source.toArticleSourceUI()
                 }
-            }
-        }
-
-        return tmpList.filter {
-            !it.name!!.contains(" ")
         }
     }
 

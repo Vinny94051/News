@@ -13,9 +13,16 @@
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_newsFragment_to_savedNewsFragment"
+            app:destination="@id/savedNewsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="ru.kiryanav.ui.presentation.ui.fragment.SettingsFragment"
         android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/savedNewsFragment"
+        android:name="ru.kiryanav.ui.presentation.ui.fragment.SavedNewsFragment"
+        android:label="SavedNewsFragment" />
 </navigation>

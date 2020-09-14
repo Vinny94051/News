@@ -8,6 +8,6 @@ data class ArticleSourceUI(
     val url: String?,
     val category: String?,
     val item: ArticleSource,
-    var isSelected: Boolean = false
+    var isSelected: Boolean
 
 )

@@ -7,7 +7,8 @@ data class ArticleSource(
     val url: String?,
     val category: String?,
     val lang : String?,
-    val country : String?
+    val country : String?,
+    var isLocalSaved : Boolean = false
 )
 
 

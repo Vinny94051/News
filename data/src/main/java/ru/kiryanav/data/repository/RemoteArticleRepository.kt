@@ -14,7 +14,7 @@ class RemoteArticleRepository(
     private val newsApi: NewsApi
 ) : RemoteNewsRepository {
 
-    override suspend fun loadNews(
+    override suspend fun getNews(
         query: String,
         from: String,
         to: String,

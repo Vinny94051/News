@@ -21,7 +21,7 @@ import vlnny.base.fragment.BaseFragmentCompanion
 
 class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSourceItemClick {
 
-    private val settingsViewModel: SettingsViewModel by viewModel()
+    private val settingsViewModel by viewModel<SettingsViewModel>()
     override fun layoutId(): Int = R.layout.fragment_settings
     private val sourcesForSaving = mutableListOf<ArticleSourceUI>()
 
@@ -30,7 +30,7 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
         binding.apply {
             this.viewModel = settingsViewModel
             this.callback = this@SettingsFragment
-            loadSourcesByLanguage("ru") //Stub!
+            loadSourcesByLanguage() //Stub!
             executePendingBindings()
         }
     }
@@ -81,8 +81,8 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
     }
 
     @Suppress("SameParameterValue")
-    private fun loadSourcesByLanguage(language: String) =
-        settingsViewModel.loadSourcesByLanguages(language)
+    private fun loadSourcesByLanguage() =
+        settingsViewModel.loadSources()
 
     companion object : BaseFragmentCompanion<SettingsFragment>() {
         override fun newInstance(): SettingsFragment = SettingsFragment()

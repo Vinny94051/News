@@ -34,7 +34,7 @@ interface INewsInteractor {
      * Get all saved articles
      */
 
-    suspend fun getSavedArticles(): List<Article>
+    suspend fun getSavedArticles(isLocalSavedFlagNeedToBeTrue : Boolean = true): List<Article>
 
     suspend fun getSourcesByLanguage(language : String) : List<ArticleSource>
 
@@ -43,4 +43,8 @@ interface INewsInteractor {
     suspend fun saveSources(sources : List<ArticleSource>)
 
     suspend fun deleteSource(source : ArticleSource)
+
+    suspend fun getSources() : List<ArticleSource>
+
+    suspend fun deleteArticle(article: Article)
 }

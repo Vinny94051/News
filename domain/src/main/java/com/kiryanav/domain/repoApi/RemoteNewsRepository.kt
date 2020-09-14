@@ -5,7 +5,7 @@ import com.kiryanav.domain.model.SortBy
 import com.kiryanav.domain.model.ArticleSource
 
 interface RemoteNewsRepository {
-    suspend fun loadNews(
+    suspend fun getNews(
         query: String,
         from: String,
         to: String,

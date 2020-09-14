@@ -9,5 +9,6 @@ data class ArticleUI(
     val articleUrl: String,
     val previewImageUrl: String,
     val publishedAt: String,
-    val item : Article
+    val item : Article,
+    val isLocalSaved : Boolean
 )

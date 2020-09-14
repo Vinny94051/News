@@ -16,14 +16,18 @@ class LocalArticleRepository(
 ) : LocalNewsRepository {
 
     override suspend fun saveArticle(article: Article) {
-        articleDao.insertCity(
+        articleDao.insertArticle(
             article.toArticleEntity()
         )
     }
 
-    override suspend fun getArticlesAll(): List<Article> =
+    override suspend fun getAllSavedArticles(isLocalSavedFlagNeedToBeTrue: Boolean): List<Article> =
         articleDao.getAll().map { entity ->
-            entity.toArticle()
+            entity.toArticle().apply {
+                if (isLocalSavedFlagNeedToBeTrue) {
+                    isLocalSaved = true
+                }
+            }
         }
 
     override suspend fun getAllSources(): List<ArticleSource> =
@@ -39,5 +43,9 @@ class LocalArticleRepository(
 
     override suspend fun deleteSource(source: ArticleSource) {
         sourcesDao.deleteSource(source.toArticleSourceEntity())
+    }
+
+    override suspend fun deleteArticle(article: Article) {
+        articleDao.deleteArticle(article.toArticleEntity())
     }
 }
