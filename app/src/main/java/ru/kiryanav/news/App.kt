@@ -6,7 +6,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import ru.kiryanav.data.koin.dataModule
-import ru.kiryanav.ui.koin.prefsModule
 import ru.kiryanav.ui.koin.viewModelModule
 
 class App : Application() {
@@ -19,7 +18,6 @@ class App : Application() {
             androidContext(this@App)
             modules(
                 listOf(
-                    prefsModule,
                     viewModelModule,
                     domainModule,
                     dataModule

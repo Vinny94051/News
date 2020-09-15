@@ -13,11 +13,11 @@ class NewsInteractorImpl(
 ) : NewsInteractor {
 
     override suspend fun getNews(
-        query: String,
-        from: String,
-        to: String,
+        query: String?,
+        from: String?,
+        to: String?,
         sources: List<ArticleSource>,
-        language: String,
+        language: String?,
         pageNumber: Int
     ) =
         compareAndChooseArticles(
@@ -66,11 +66,11 @@ class NewsInteractorImpl(
         val tmpList = mutableListOf<ArticleSource>()
         list1.forEach { item1 ->
             val item = list2.find { item2 ->
-                item1.name == item2.name
-            }?.apply {
-                isLocalSaved = true
-            } ?: item1
-            if (!item.name!!.contains(" ")) { // if source name contains " "-symbol NewsApi not found it
+                 item1.name == item2.name
+             }?.copy(isLocalSaved = true)
+             //isLocalSaved = true
+             ?: item1
+            if (item.name?.contains(" ") == false) { // if source name contains " "-symbol NewsApi not found it
                 tmpList.add(item)
             }
         }

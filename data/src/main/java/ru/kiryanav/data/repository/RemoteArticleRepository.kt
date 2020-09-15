@@ -15,11 +15,11 @@ class RemoteArticleRepository(
 ) : RemoteNewsRepository {
 
     override suspend fun getNews(
-        query: String,
-        from: String,
-        to: String,
+        query: String?,
+        from: String?,
+        to: String?,
         sources: List<ArticleSource>,
-        language: String,
+        language: String?,
         pageNumber: Int,
         sortBy: SortBy
     ): News {
@@ -46,7 +46,7 @@ class RemoteArticleRepository(
         }
 
 
-    private fun getLanguage(language: String): String =
-        if (language.isEmpty()) Locale.getDefault().language else language
+    private fun getLanguage(language: String?): String =
+        language ?: Locale.getDefault().language
 
 }

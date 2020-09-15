@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.kiryanav.ui.Constants
 import ru.kiryanav.ui.R
 import com.kiryanav.domain.NewsInteractor
 import ru.kiryanav.ui.mapper.toArticle
@@ -35,41 +34,46 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
     val isArticleSavedLiveData: LiveData<Boolean>
         get() = _isArticleSavedLiveData
 
-    private var dayNumber: Int = Constants.ZERO_INT
-    var lastQuery: String = Constants.EMPTY_STRING
+    private var dayNumber: Int = 0
+    var lastQuery: String = ""
 
     fun removeArticle(article: ArticleUI) {
-     viewModelScope.launch {
-         newsInteractor.deleteArticle(article.toArticle())
-         loadNews()
-     }
+        viewModelScope.launch {
+            newsInteractor.deleteArticle(article.toArticle())
+            loadNews()
+        }
     }
 
     fun loadNews(
-        query: String = Constants.EMPTY_STRING,
-        from: String = Constants.EMPTY_STRING,
-        to: String = Constants.EMPTY_STRING,
-        language: String = Constants.EMPTY_STRING
+        query: String? = null,
+        from: String? = null,
+        to: String? = null,
+        language: String? = null
     ) {
         updateUI(query)
-        dayNumber = Constants.ZERO_INT
+        dayNumber = 0
+
         viewModelScope.launch {
             _isProgressVisible.value = true
 
-            val sources = newsInteractor.getSavedSources()
-
-            val news = newsInteractor.getNews(
-                query, from, to, sources, language
+            newsInteractor.getNews(
+                query, from, to, newsInteractor.getSavedSources(), language
             )
-            _isProgressVisible.value = false
-            _totalNewsLiveData.value =
-                context.getString(R.string.total_results).format(news.resultNumber.toString())
-            articlesMutableLiveData.value = news.articles.map { article -> article.toArticleUI(context) }
+                .apply {
+                    _isProgressVisible.value = false
+
+                    _totalNewsLiveData.value =
+                        context.getString(R.string.total_results).format(resultNumber.toString())
+
+                    articlesMutableLiveData.value =
+                        articles.map { article -> article.toArticleUI(context) }
+
+                }
         }
     }
 
     fun loadMore(
-        language: String = Constants.EMPTY_STRING
+        language: String? = null
     ) {
         viewModelScope.launch {
             _isLoadingMore.value = true
@@ -118,8 +122,8 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
         }
     }
 
-    private fun updateUI(query: String) {
-        lastQuery = query
+    private fun updateUI(query: String?) {
+        lastQuery = query.orEmpty()
     }
 
     companion object {

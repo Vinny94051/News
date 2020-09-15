@@ -11,8 +11,8 @@ import ru.kiryanav.data.mapper.toArticleSource
 import ru.kiryanav.data.mapper.toArticleSourceEntity
 
 class LocalArticleRepository(
-    private val articleDao: ArticleDao,
-    private val sourcesDao: ArticleSourceDao
+private val articleDao: ArticleDao,
+private val sourcesDao: ArticleSourceDao
 ) : LocalNewsRepository {
 
     override suspend fun saveArticle(article: Article) {

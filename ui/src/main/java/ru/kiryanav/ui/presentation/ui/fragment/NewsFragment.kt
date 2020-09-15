@@ -10,11 +10,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kiryanav.domain.model.News
 import kotlinx.android.synthetic.main.news_fragment.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
-import ru.kiryanav.ui.Constants
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.NewsFragmentBinding
 import ru.kiryanav.ui.model.ArticleUI
@@ -56,6 +54,8 @@ class NewsFragment : BaseBindableFragment<NewsFragmentBinding>(), OnArticleItemC
         newsViewModel.isArticleSavedLiveData.observe(this, Observer {
             showSnack(requireContext().getString(R.string.article_saved))
         })
+
+
     }
 
     override fun initViews() {
@@ -100,11 +100,11 @@ class NewsFragment : BaseBindableFragment<NewsFragmentBinding>(), OnArticleItemC
                 super.onScrolled(recyclerView, dx, dy)
                 val layoutManager = newsRecycler.layoutManager
 
-                val totalItemCount = layoutManager?.itemCount ?: Constants.EMPTY_INT
+                val totalItemCount: Int = layoutManager?.itemCount ?: 0
                 val lastVisibleItem =
                     (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                if (!newsViewModel.isLoadingMore.value!! && totalItemCount <= (lastVisibleItem + 1)) {
 
+                if (!newsViewModel.isLoadingMore.value!! && totalItemCount <= (lastVisibleItem + 1)) {
                     newsViewModel.loadMore()
                 }
             }
@@ -133,10 +133,10 @@ class NewsFragment : BaseBindableFragment<NewsFragmentBinding>(), OnArticleItemC
 
 
     private fun loadNews(
-        query: String = Constants.EMPTY_STRING,
-        from: String = Constants.EMPTY_STRING,
-        to: String = Constants.EMPTY_STRING,
-        language: String = Constants.EMPTY_STRING
+        query: String? = null,
+        from: String? = null,
+        to: String? = null,
+        language: String? = null
     ) =
         newsViewModel.loadNews(query, from, to, language)
 

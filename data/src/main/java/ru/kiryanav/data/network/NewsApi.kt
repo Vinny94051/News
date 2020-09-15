@@ -121,10 +121,10 @@ interface NewsApi {
 
     @GET("everything")
     suspend fun getEverything(
-        @Query("q") query: String,
-        @Query("from") fromDate: String,
-        @Query("to") toDate: String,
-        @Query("language") language: String,
+        @Query("q") query: String?,
+        @Query("from") fromDate: String?,
+        @Query("to") toDate: String?,
+        @Query("language") language: String?,
         @Query("sortBy") sortBy: String,
         @Query("page") pageNumber: Int = 1,
         @Query("sources") sources: String = "RBC",

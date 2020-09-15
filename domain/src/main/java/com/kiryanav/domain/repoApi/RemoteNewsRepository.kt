@@ -6,11 +6,11 @@ import com.kiryanav.domain.model.ArticleSource
 
 interface RemoteNewsRepository {
     suspend fun getNews(
-        query: String,
-        from: String,
-        to: String,
+        query: String?,
+        from: String?,
+        to: String?,
         sources : List<ArticleSource>,
-        language: String,
+        language: String?,
         pageNumber: Int,
         sortBy: SortBy = SortBy.PUBLISHED_AT
     ): News
