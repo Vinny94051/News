@@ -40,7 +40,6 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/newsRecycler"
             articleCallback="@{callback}"
             articles="@{viewModel.articlesLiveData}"
             isVisible="@{!viewModel.isProgressVisible()}"

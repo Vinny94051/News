@@ -30,4 +30,8 @@ class NewsActivity : BaseActivity(), NewsNavigationCallback {
     override fun openSaved() {
         navController.navigate(R.id.savedNewsFragment)
     }
+
+    override fun popBack() {
+        navController.popBackStack()
+    }
 }

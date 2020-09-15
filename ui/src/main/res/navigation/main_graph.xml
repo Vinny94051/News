@@ -12,7 +12,8 @@
             android:id="@+id/action_newsFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/fragment_fade_exit" />
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@id/newsFragment" />
         <action
             android:id="@+id/action_newsFragment_to_savedNewsFragment"
             app:destination="@id/savedNewsFragment" />

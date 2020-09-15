@@ -3,96 +3,48 @@ package com.kiryanav.domain
 import com.kiryanav.domain.model.Article
 import com.kiryanav.domain.model.ArticleSource
 import com.kiryanav.domain.model.News
-import com.kiryanav.domain.repoApi.LocalNewsRepository
-import com.kiryanav.domain.repoApi.RemoteNewsRepository
 
+interface NewsInteractor {
 
-class NewsInteractor(
-    private val newsRepo: RemoteNewsRepository,
-    private val articleRepository: LocalNewsRepository
-) : INewsInteractor {
+    /**
+     * Get all news by
+     * @param query like keyword in period
+     * @param from date
+     * @param to date
+     * @param language - searching language
+     */
 
-    override suspend fun getNews(
+    suspend fun getNews(
         query: String,
         from: String,
         to: String,
-        sources: List<ArticleSource>,
+        sources : List<ArticleSource>,
         language: String,
-        pageNumber: Int
-    ) =
-        compareAndChooseArticles(
-            newsRepo.getNews(query, from, to, sources, language, pageNumber),
-            articleRepository.getAllSavedArticles()
-        )
+        pageNumber: Int = 1
+    ): News
 
+    /**
+     * Save article in local storage
+     * @param article - article which will be saved
+     */
 
-    override suspend fun saveArticle(article: Article) {
-        articleRepository.saveArticle(article)
-    }
+    suspend fun saveArticle(article: Article)
 
-    override suspend fun getSavedArticles(isLocalSavedFlagNeedToBeTrue : Boolean): List<Article> =
-        articleRepository.getAllSavedArticles(isLocalSavedFlagNeedToBeTrue)
+    /**
+     * Get all saved articles
+     */
 
-    override suspend fun getSourcesByLanguage(language: String): List<ArticleSource> =
-        newsRepo.getSourcesByLanguage(language)
+    suspend fun getSavedArticles(isLocalSavedFlagNeedToBeTrue : Boolean = true): List<Article>
 
-    override suspend fun getSavedSources(): List<ArticleSource> =
-        articleRepository.getAllSources()
+    suspend fun getSourcesByLanguage(language : String) : List<ArticleSource>
 
+    suspend fun getSavedSources() : List<ArticleSource>
 
-    override suspend fun saveSources(sources: List<ArticleSource>) =
-        articleRepository.insertSources(sources)
+    suspend fun saveSources(sources : List<ArticleSource>)
 
-    override suspend fun deleteSource(source: ArticleSource) {
-        articleRepository.deleteSource(source)
-    }
+    suspend fun deleteSource(source : ArticleSource)
 
-    override suspend fun getSources(): List<ArticleSource> {
-        return compareAndChooseArticleSources(
-            newsRepo.getSourcesByLanguage("ru"), //Stub
-            articleRepository.getAllSources()
-        )
-    }
+    suspend fun getSources() : List<ArticleSource>
 
-    override suspend fun deleteArticle(article: Article) {
-        articleRepository.deleteArticle(article)
-    }
-
-    private fun compareAndChooseArticleSources(
-        list1: List<ArticleSource>,
-        list2: List<ArticleSource>
-    ): List<ArticleSource> {
-
-        val tmpList = mutableListOf<ArticleSource>()
-        list1.forEach { item1 ->
-            val item = list2.find { item2 ->
-                item1.name == item2.name
-            }?.apply {
-                isLocalSaved = true
-            } ?: item1
-            if (!item.name!!.contains(" ")) { // if source name contains " "-symbol NewsApi not found it
-                tmpList.add(item)
-            }
-        }
-        return tmpList
-    }
-
-    private fun compareAndChooseArticles(
-        news: News,
-        list2: List<Article>
-    ): News {
-
-        val tmpList = mutableListOf<Article>()
-
-        news.articles.forEach { item1 ->
-            val item = list2.find { item2 ->
-                item1.title == item2.title
-            }?.apply {
-                isLocalSaved = true
-            } ?: item1
-            tmpList.add(item)
-        }
-        return News(news.resultNumber, tmpList)
-    }
-
+    suspend fun deleteArticle(article: Article)
 }

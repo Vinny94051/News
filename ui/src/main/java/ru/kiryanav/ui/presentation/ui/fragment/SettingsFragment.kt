@@ -2,6 +2,7 @@ package ru.kiryanav.ui.presentation.ui.fragment
 
 import android.os.Bundle
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -9,6 +10,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentSettingsBinding
 import ru.kiryanav.ui.model.ArticleSourceUI
+import ru.kiryanav.ui.presentation.ui.activity.NewsActivity
 import ru.kiryanav.ui.presentation.ui.list.OnSourceItemClick
 import ru.kiryanav.ui.presentation.viewmodel.SettingsViewModel
 import vlnny.base.ext.hide
@@ -33,6 +35,13 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
             loadSourcesByLanguage() //Stub!
             executePendingBindings()
         }
+    }
+
+    override fun initViewModel() {
+        super.initViewModel()
+        settingsViewModel.sourcesSavedNotify.observe(this, Observer{
+            (activity as NewsActivity).popBack()
+        } )
     }
 
     override fun initViews() {

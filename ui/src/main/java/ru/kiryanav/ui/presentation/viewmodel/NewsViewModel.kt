@@ -7,16 +7,21 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.kiryanav.ui.Constants
 import ru.kiryanav.ui.R
-import com.kiryanav.domain.INewsInteractor
+import com.kiryanav.domain.NewsInteractor
 import ru.kiryanav.ui.mapper.toArticle
 import ru.kiryanav.ui.mapper.toArticleUI
 import ru.kiryanav.ui.model.ArticleUI
 import ru.kiryanav.ui.utils.SingleLiveEvent
+import vlnny.base.viewModel.BaseViewModel
 import java.time.LocalDateTime
 
 
-class NewsViewModel(private val context: Context, private val newsInteractor: INewsInteractor) :
-    BaseNewsViewModel(newsInteractor) {
+class NewsViewModel(private val context: Context, private val newsInteractor: NewsInteractor) :
+    BaseViewModel() {
+
+    private val articlesMutableLiveData = MutableLiveData<List<ArticleUI>>()
+    val articlesLiveData: LiveData<List<ArticleUI>>
+        get() = articlesMutableLiveData
 
     private val _totalNewsLiveData = MutableLiveData<String>()
     val totalNewsLiveData: LiveData<String>
@@ -33,9 +38,11 @@ class NewsViewModel(private val context: Context, private val newsInteractor: IN
     private var dayNumber: Int = Constants.ZERO_INT
     var lastQuery: String = Constants.EMPTY_STRING
 
-    override fun removeArticle(article: ArticleUI) {
-        super.removeArticle(article)
-        loadNews()
+    fun removeArticle(article: ArticleUI) {
+     viewModelScope.launch {
+         newsInteractor.deleteArticle(article.toArticle())
+         loadNews()
+     }
     }
 
     fun loadNews(

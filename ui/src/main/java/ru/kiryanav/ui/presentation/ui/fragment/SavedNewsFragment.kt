@@ -35,7 +35,7 @@ class SavedNewsFragment : BaseBindableFragment<FragmentLocalNewsBinding>(), OnAr
             setOnMenuItemClickListener { item ->
                 when (item?.itemId) {
                     R.id.remove -> {
-                        savedNewsViewModel.removeArticle(article)
+                        savedNewsViewModel.deleteArticle(article)
                     }
                 }
                 true
