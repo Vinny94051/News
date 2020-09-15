@@ -30,7 +30,7 @@ class SavedNewsViewModel(
     fun getSavedArticles() {
         viewModelScope.launch {
             _isProgressVisible.value = true
-            val result = newsInteractor.getSavedArticles(false)
+            val result = newsInteractor.getSavedArticles()
             articlesMutableLiveData.value = result.map { article ->
                 article.toArticleUI(context)
             }

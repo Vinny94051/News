@@ -64,6 +64,7 @@
                 articleCallback="@{callback}"
                 articles="@{viewModel.articlesLiveData}"
                 isVisible="@{!viewModel.isProgressVisible()}"
+                isWithSaveIcon="@{true}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/totalResults"

@@ -9,5 +9,4 @@ data class ArticleSourceUI(
     val category: String?,
     val item: ArticleSource,
     var isSelected: Boolean
-
 )

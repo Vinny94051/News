@@ -12,25 +12,31 @@ import vlnny.base.adapter.BaseViewHolder
 
 class ArticleViewHolder(
     private val binding: ItemArticleBinding,
-    private val callback: OnArticleItemClick
+    private val callback: OnArticleItemClick,
+    private val isWithSaveIcon : Boolean
 ) :
     BaseViewHolder<ArticleUI>(binding.root) {
 
     companion object {
-        fun from(parent: ViewGroup, callback: OnArticleItemClick) = ArticleViewHolder(
+        fun from(
+            parent: ViewGroup,
+            callback: OnArticleItemClick,
+            withSaveIcon: Boolean
+        ) = ArticleViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.item_article,
                 parent,
                 false
             ),
-            callback
+            callback,
+            withSaveIcon
         )
     }
 
     override fun bindView(item: ArticleUI) {
         with (binding) {
-            article = item
+            article = if(isWithSaveIcon) item else item.copy(isSaved = false)
 
             Glide.with(binding.root.context)
                 .load(item.previewImageUrl)

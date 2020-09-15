@@ -2,9 +2,10 @@ package ru.kiryanav.ui.mapper
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import com.kiryanav.domain.model.Article
 import com.kiryanav.domain.model.ArticleSource
+import com.kiryanav.domain.model.SavedArticleSourceWrapper
+import com.kiryanav.domain.model.SavedArticleWrapper
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.model.ArticleSourceUI
 import ru.kiryanav.ui.model.ArticleUI
@@ -18,33 +19,38 @@ private const val DATE_OUTPUT = "dd.MM.yyyy"
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @SuppressLint("SimpleDateFormat")
-fun Article.toArticleUI(context: Context): ArticleUI =
+fun SavedArticleWrapper.toArticleUI(context: Context): ArticleUI =
     ArticleUI(
-        if (!author.isNullOrEmpty()) {
+        if (!item.author.isNullOrEmpty()) {
             context.getString(R.string.author).format(
-                author
+                item.author
             )
         } else {
             context.getString(R.string.unknown_author)
         },
-        title.orEmpty(),
-        description.orEmpty(),
-        articleUrl.orEmpty(),
-        previewImageUrl.orEmpty(),
-        if (!publishedAt.isNullOrEmpty()) {
+        item.title.orEmpty(),
+        item.description.orEmpty(),
+        item.articleUrl.orEmpty(),
+        item.previewImageUrl.orEmpty(),
+        if (!item.publishedAt.isNullOrEmpty()) {
             SimpleDateFormat(DATE_OUTPUT).format(
                 SimpleDateFormat(DATE_INPUT).parse(
-                    publishedAt.toString().substring(0, 10)
+                    item.publishedAt.toString().substring(0, 10)
                 )
             ).toString()
         } else "",
-        this,
-        isLocalSaved
+        item,
+        isSaved
     )
 
-fun ArticleSource.toArticleSourceUI(): ArticleSourceUI =
+fun SavedArticleSourceWrapper.toArticleSourceUI() =
     ArticleSourceUI(
-        name, description, category, url, this, isLocalSaved
+        item.name,
+        item.description,
+        item.url,
+        item.category,
+        item,
+        isSelected
     )
 
 fun ArticleSourceUI.toArticleSource(): ArticleSource =

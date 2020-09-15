@@ -9,6 +9,5 @@ data class Article(
     val articleUrl : String?,
     val previewImageUrl : String?,
     val publishedAt : String?,
-    val content : String?,
-    var isLocalSaved : Boolean = false
+    val content : String?
 )

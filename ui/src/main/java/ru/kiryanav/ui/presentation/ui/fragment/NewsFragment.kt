@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.news_fragment.*
+import kotlinx.android.synthetic.main.fragment_news.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import ru.kiryanav.ui.R
@@ -47,7 +47,7 @@ class NewsFragment : BaseBindableFragment<NewsFragmentBinding>(), OnArticleItemC
         }
     }
 
-    override fun layoutId() = R.layout.news_fragment
+    override fun layoutId() = R.layout.fragment_news
 
     override fun initViewModel() {
         super.initViewModel()
@@ -141,7 +141,7 @@ class NewsFragment : BaseBindableFragment<NewsFragmentBinding>(), OnArticleItemC
         newsViewModel.loadNews(query, from, to, language)
 
     override fun onLongClick(article: ArticleUI, itemView: View) {
-        if (!article.isLocalSaved) {
+        if (!article.isSaved) {
             createAndShowPopup(
                 itemView,
                 R.menu.item_article_popup_remote,

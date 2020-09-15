@@ -37,7 +37,7 @@
                 android:id="@+id/isSavedLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                isVisible="@{article.localSaved}"
+                isVisible="@{article.saved}"
                 android:src="@drawable/ic_baseline_done_24"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/news_8dp"

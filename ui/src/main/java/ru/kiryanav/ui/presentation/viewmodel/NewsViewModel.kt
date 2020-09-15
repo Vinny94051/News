@@ -63,7 +63,7 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
                     _isProgressVisible.value = false
 
                     _totalNewsLiveData.value =
-                        context.getString(R.string.total_results).format(resultNumber.toString())
+                        context.getString(R.string.total_results).format(totalResult.toString())
 
                     articlesMutableLiveData.value =
                         articles.map { article -> article.toArticleUI(context) }
@@ -95,7 +95,7 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
                     )
 
                 _totalNewsLiveData.value = context.getString(R.string.total_results)
-                    .format(nextPage.resultNumber.toString())
+                    .format(nextPage.totalResult.toString())
                 articlesMutableLiveData.value = articlesMutableLiveData.value
                     ?.plus(
                         nextPage.articles

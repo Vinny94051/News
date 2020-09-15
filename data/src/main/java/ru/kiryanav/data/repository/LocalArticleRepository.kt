@@ -11,8 +11,8 @@ import ru.kiryanav.data.mapper.toArticleSource
 import ru.kiryanav.data.mapper.toArticleSourceEntity
 
 class LocalArticleRepository(
-private val articleDao: ArticleDao,
-private val sourcesDao: ArticleSourceDao
+    private val articleDao: ArticleDao,
+    private val sourcesDao: ArticleSourceDao
 ) : LocalNewsRepository {
 
     override suspend fun saveArticle(article: Article) {
@@ -21,16 +21,13 @@ private val sourcesDao: ArticleSourceDao
         )
     }
 
-    override suspend fun getAllSavedArticles(isLocalSavedFlagNeedToBeTrue: Boolean): List<Article> =
+    override suspend fun getAllSavedArticles(): List<Article> =
         articleDao.getAll().map { entity ->
-            entity.toArticle().apply {
-                if (isLocalSavedFlagNeedToBeTrue) {
-                    isLocalSaved = true
-                }
-            }
+            entity.toArticle()
         }
 
-    override suspend fun getAllSources(): List<ArticleSource> =
+
+    override suspend fun getSavedSources(): List<ArticleSource> =
         sourcesDao.getAll().map { entity ->
             entity.toArticleSource()
         }

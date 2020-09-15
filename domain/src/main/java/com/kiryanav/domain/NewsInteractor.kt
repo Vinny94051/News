@@ -1,8 +1,6 @@
 package com.kiryanav.domain
 
-import com.kiryanav.domain.model.Article
-import com.kiryanav.domain.model.ArticleSource
-import com.kiryanav.domain.model.News
+import com.kiryanav.domain.model.*
 
 interface NewsInteractor {
 
@@ -21,7 +19,7 @@ interface NewsInteractor {
         sources : List<ArticleSource>,
         language: String?,
         pageNumber: Int = 1
-    ): News
+    ): NewsWrapper
 
     /**
      * Save article in local storage
@@ -34,7 +32,7 @@ interface NewsInteractor {
      * Get all saved articles
      */
 
-    suspend fun getSavedArticles(isLocalSavedFlagNeedToBeTrue : Boolean = true): List<Article>
+    suspend fun getSavedArticles(): List<SavedArticleWrapper>
 
     suspend fun getSourcesByLanguage(language : String) : List<ArticleSource>
 
@@ -44,7 +42,7 @@ interface NewsInteractor {
 
     suspend fun deleteSource(source : ArticleSource)
 
-    suspend fun getSources() : List<ArticleSource>
+    suspend fun getSources() : List<SavedArticleSourceWrapper>
 
     suspend fun deleteArticle(article: Article)
 }

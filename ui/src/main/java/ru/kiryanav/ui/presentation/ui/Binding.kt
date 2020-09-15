@@ -12,14 +12,15 @@ import ru.kiryanav.ui.presentation.ui.list.adapter.SourceAdapter
 import vlnny.base.ext.hide
 import vlnny.base.ext.show
 
-@BindingAdapter("articles", "articleCallback")
+@BindingAdapter("articles", "articleCallback", "isWithSaveIcon")
 fun bindArticles(
     recyclerView: RecyclerView,
     articles: List<ArticleUI>?,
-    callback: OnArticleItemClick
+    callback: OnArticleItemClick,
+    isWithSaveIcon : Boolean = true
 ) {
     if (recyclerView.adapter == null) {
-        recyclerView.adapter = ArticleAdapter(callback)
+        recyclerView.adapter = ArticleAdapter(callback, isWithSaveIcon)
     }
 
     (recyclerView.adapter as ArticleAdapter).updateList(articles ?: emptyList())
