@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/newsFragment"
-        android:name="ru.kiryanav.ui.presentation.ui.fragment.NewsFragment"
+        android:name="ru.kiryanav.ui.presentation.fragment.news.current.NewsFragment"
         android:label="NewsFragment" >
         <action
             android:id="@+id/action_newsFragment_to_settingsFragment"
@@ -16,14 +16,16 @@
             app:popUpTo="@id/newsFragment" />
         <action
             android:id="@+id/action_newsFragment_to_savedNewsFragment"
-            app:destination="@id/savedNewsFragment" />
+            app:destination="@id/savedNewsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="ru.kiryanav.ui.presentation.ui.fragment.SettingsFragment"
+        android:name="ru.kiryanav.ui.presentation.fragment.settings.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/savedNewsFragment"
-        android:name="ru.kiryanav.ui.presentation.ui.fragment.SavedNewsFragment"
+        android:name="ru.kiryanav.ui.presentation.ui.fragment.news.selected.SelectedNewsFragment"
         android:label="SavedNewsFragment" />
 </navigation>

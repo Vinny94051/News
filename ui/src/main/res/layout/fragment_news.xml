@@ -7,11 +7,11 @@
 
         <variable
             name="viewModel"
-            type="ru.kiryanav.ui.presentation.viewmodel.NewsViewModel" />
+            type="ru.kiryanav.ui.presentation.fragment.news.current.NewsViewModel" />
 
         <variable
             name="callback"
-            type="ru.kiryanav.ui.presentation.ui.list.OnArticleItemClick" />
+            type="ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

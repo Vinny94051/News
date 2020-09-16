@@ -1,14 +1,16 @@
 package com.kiryanav.domain
 
 import com.kiryanav.domain.model.*
-import com.kiryanav.domain.repoApi.LocalNewsRepository
-import com.kiryanav.domain.repoApi.RemoteNewsRepository
+import com.kiryanav.domain.repoApi.ArticleRepository
+import com.kiryanav.domain.repoApi.NewsRepository
+import com.kiryanav.domain.repoApi.SourceRepository
 import vlnny.base.ext.updateFrom
 
 
 class NewsInteractorImpl(
-    private val newsRepository: RemoteNewsRepository,
-    private val articleRepository: LocalNewsRepository
+    private val newsRepository: NewsRepository,
+    private val articleRepository: ArticleRepository,
+    private val sourceRepository: SourceRepository
 ) : NewsInteractor {
 
     override suspend fun getNews(
@@ -41,7 +43,7 @@ class NewsInteractorImpl(
             SavedArticleSourceWrapper(false, source)
         }
 
-        val savedWrappedSource = articleRepository.getSavedSources().map { source ->
+        val savedWrappedSource = sourceRepository.getSavedSources().map { source ->
             SavedArticleSourceWrapper(true, source)
         }
 
@@ -69,14 +71,14 @@ class NewsInteractorImpl(
         newsRepository.getSourcesByLanguage(language)
 
     override suspend fun getSavedSources(): List<ArticleSource> =
-        articleRepository.getSavedSources()
+        sourceRepository.getSavedSources()
 
 
     override suspend fun saveSources(sources: List<ArticleSource>) =
-        articleRepository.insertSources(sources)
+        sourceRepository.insertSources(sources)
 
     override suspend fun deleteSource(source: ArticleSource) {
-        articleRepository.deleteSource(source)
+        sourceRepository.deleteSource(source)
     }
 
 }

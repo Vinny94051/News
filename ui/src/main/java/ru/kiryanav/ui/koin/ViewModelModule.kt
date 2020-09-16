@@ -2,13 +2,16 @@ package ru.kiryanav.ui.koin
 
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import ru.kiryanav.ui.presentation.viewmodel.NewsViewModel
-import ru.kiryanav.ui.presentation.viewmodel.SavedNewsViewModel
-import ru.kiryanav.ui.presentation.viewmodel.SettingsViewModel
+import ru.kiryanav.ui.presentation.ui.fragment.news.current.NewsViewModel
+import ru.kiryanav.ui.presentation.fragment.news.selected.SelectedNewsViewModel
+import ru.kiryanav.ui.presentation.ui.fragment.settings.SettingsViewModel
 
 val viewModelModule = module {
     viewModel {
-        NewsViewModel(get(), get())
+        NewsViewModel(
+            get(),
+            get()
+        )
     }
 
     viewModel {
@@ -16,6 +19,9 @@ val viewModelModule = module {
     }
 
     viewModel {
-        SavedNewsViewModel(get(), get())
+        SelectedNewsViewModel(
+            get(),
+            get()
+        )
     }
 }

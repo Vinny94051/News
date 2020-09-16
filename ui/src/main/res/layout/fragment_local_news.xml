@@ -7,11 +7,11 @@
 
         <variable
             name="callback"
-            type="ru.kiryanav.ui.presentation.ui.list.OnArticleItemClick" />
+            type="ru.kiryanav.ui.presentation.ui.fragment.news.OnArticleItemClick" />
 
         <variable
             name="viewModel"
-            type="ru.kiryanav.ui.presentation.viewmodel.SavedNewsViewModel" />
+            type="ru.kiryanav.ui.presentation.fragment.news.selected.SelectedNewsViewModel" />
     </data>
 
     <RelativeLayout

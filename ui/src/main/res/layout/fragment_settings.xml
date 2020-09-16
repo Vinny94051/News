@@ -7,11 +7,11 @@
 
         <variable
             name="viewModel"
-            type="ru.kiryanav.ui.presentation.viewmodel.SettingsViewModel" />
+            type="ru.kiryanav.ui.presentation.fragment.settings.SettingsViewModel" />
 
         <variable
             name="callback"
-            type="ru.kiryanav.ui.presentation.ui.list.OnSourceItemClick" />
+            type="ru.kiryanav.ui.presentation.fragment.settings.OnSourceItemClick" />
     </data>
 
     <RelativeLayout
