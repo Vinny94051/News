@@ -8,7 +8,7 @@ import com.kiryanav.domain.NewsInteractor
 import kotlinx.coroutines.launch
 import ru.kiryanav.ui.mapper.toArticle
 import ru.kiryanav.ui.mapper.toArticleUI
-import ru.kiryanav.ui.model.ArticleUI
+import ru.kiryanav.ui.model.ArticleItem
 import vlnny.base.viewModel.BaseViewModel
 
 class SelectedNewsViewModel(
@@ -16,14 +16,13 @@ class SelectedNewsViewModel(
     private val context: Context
 ) : BaseViewModel() {
 
-    private val articlesMutableLiveData = MutableLiveData<List<ArticleUI>>()
-    val articlesLiveData: LiveData<List<ArticleUI>>
+    private val articlesMutableLiveData = MutableLiveData<List<ArticleItem>>()
+    val articlesLiveData: LiveData<List<ArticleItem>>
         get() = articlesMutableLiveData
 
-    fun deleteArticle(article: ArticleUI) {
+    fun remove(article: ArticleItem.ArticleUI) {
         viewModelScope.launch {
             newsInteractor.deleteArticle(article.toArticle())
-            getSavedArticles()
         }
     }
 

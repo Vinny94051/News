@@ -23,4 +23,6 @@ You always can change it.</string>
     <string name="popup_remove">Удалить</string>
     <string name="settings">Настройки</string>
     <string name="saved_news">Избранное</string>
+    <string name="send_action_text">Довольно интересная статья. Рекомендую прочитать.</string>
+    <string name="chosser_send_header">Кому отправить?</string>
 </resources>

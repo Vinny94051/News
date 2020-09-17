@@ -5,18 +5,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import vlnny.base.activity.BaseActivity
-import vlnny.base.ext.hideKeyboard
-import vlnny.base.ext.showKeyboard
-import vlnny.base.ext.showSnack
-import vlnny.base.ext.showToast
+import vlnny.base.ext.*
 import vlnny.base.router.Router
 
 abstract class BaseFragment : Fragment() {
     protected val router: Router
-        get() = Router(activity as AppCompatActivity, (activity as BaseActivity).supportFragmentManager)
+        get() = Router(
+            activity as AppCompatActivity,
+            (activity as BaseActivity).supportFragmentManager
+        )
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -68,7 +69,7 @@ abstract class BaseFragment : Fragment() {
     @LayoutRes
     abstract fun layoutId(): Int
 
-    open fun onFragmentHide(){
+    open fun onFragmentHide() {
         Log.e(javaClass.simpleName, "onFragmentHide")
     }
 
@@ -84,4 +85,9 @@ abstract class BaseFragment : Fragment() {
 
     fun showKeyboard(btn: View) = activity?.showKeyboard(btn)
 
+    fun startShareIntent(send: String, @StringRes chooserHeadId: Int) =
+        activity?.startShareIntent(send, chooserHeadId)
+
+    fun startShareIntent(send: String, chooserHead: String) =
+        activity?.startShareIntent(send, chooserHead)
 }

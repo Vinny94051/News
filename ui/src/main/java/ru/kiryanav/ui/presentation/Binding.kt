@@ -3,11 +3,11 @@ package ru.kiryanav.ui.presentation
 import android.view.View
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.model.ArticleSourceUI
-import ru.kiryanav.ui.model.ArticleUI
-import ru.kiryanav.ui.presentation.ui.fragment.news.OnArticleItemClick
-import ru.kiryanav.ui.presentation.ui.fragment.settings.OnSourceItemClick
 import ru.kiryanav.ui.presentation.fragment.news.ArticleAdapter
+import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
+import ru.kiryanav.ui.presentation.fragment.settings.OnSourceItemClick
 import ru.kiryanav.ui.presentation.fragment.settings.SourceAdapter
 import vlnny.base.ext.hide
 import vlnny.base.ext.show
@@ -15,9 +15,9 @@ import vlnny.base.ext.show
 @BindingAdapter("articles", "articleCallback", "isWithSaveIcon")
 fun bindArticles(
     recyclerView: RecyclerView,
-    articles: List<ArticleUI>?,
+    articles: List<ArticleItem>?,
     callback: OnArticleItemClick,
-    isWithSaveIcon : Boolean = true
+    isWithSaveIcon: Boolean = true
 ) {
     if (recyclerView.adapter == null) {
         recyclerView.adapter =

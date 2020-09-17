@@ -8,7 +8,7 @@
 
         <variable
             name="article"
-            type="ru.kiryanav.ui.model.ArticleUI" />
+            type="ru.kiryanav.ui.model.ArticleItem.ArticleUI" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -33,16 +33,16 @@
                 android:src="@drawable/preview_image"
                 tools:background="@color/cardview_shadow_start_color" />
 
-            <ImageView
+            <CheckBox
                 android:id="@+id/isSavedLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                isVisible="@{article.saved}"
-                android:src="@drawable/ic_baseline_done_24"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/news_8dp"
-                android:background="@drawable/ic_baseline_lens_24"
-                />
+                android:checked="@{article.saved}"
+                android:button="@drawable/checkbox_saved_selector"
+                android:foreground="?attr/selectableItemBackground"
+                android:src="@drawable/ic_baseline_done_24" />
 
             <TextView
                 android:id="@+id/title"
@@ -73,38 +73,32 @@
                 app:trimLength="100"
                 tools:text="Some title Some title Some title Some title Some title Some title " />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/description"
-                android:weightSum="1">
+                android:layout_margin="@dimen/default_margin"
+                android:text="@{article.author}"
+                android:textColor="@color/color_grey42"
+                android:textSize="@dimen/subtitle"
+                android:textStyle="bold"
+                tools:text="Author: Martin" />
 
-                <TextView
-                    android:id="@+id/author"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_margin"
-                    android:layout_weight="0.5"
-                    android:text="@{article.author}"
-                    android:textColor="#424242"
-                    android:textSize="@dimen/subtitle"
-                    android:textStyle="bold"
-                    tools:text="Author: Martin" />
-
-                <TextView
-                    android:id="@+id/date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/margin_news_32dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="0.5"
-                    android:gravity="end"
-                    android:maxLength="10"
-                    android:text="@{article.publishedAt}"
-                    android:textSize="@dimen/subtitle"
-                    tools:text="04.06_13:15" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/description"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/default_margin"
+                android:layout_marginStart="@dimen/margin_news_32dp"
+                android:layout_marginTop="4dp"
+                android:gravity="end"
+                android:foreground="?attr/selectableItemBackground"
+                android:maxLength="10"
+                android:src="@drawable/ic_baseline_share_24"
+                android:textSize="@dimen/subtitle" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>

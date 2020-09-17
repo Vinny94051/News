@@ -7,7 +7,7 @@
 
         <variable
             name="callback"
-            type="ru.kiryanav.ui.presentation.ui.fragment.news.OnArticleItemClick" />
+            type="ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick" />
 
         <variable
             name="viewModel"
@@ -43,7 +43,7 @@
             articleCallback="@{callback}"
             articles="@{viewModel.articlesLiveData}"
             isVisible="@{!viewModel.isProgressVisible()}"
-            isWithSaveIcon="@{false}"
+            isWithSaveIcon="@{true}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/headerTextView"

@@ -1,9 +1,9 @@
 package ru.kiryanav.ui.presentation.fragment.news
 
-import android.view.View
-import ru.kiryanav.ui.model.ArticleUI
+import ru.kiryanav.ui.model.ArticleItem
 
 interface OnArticleItemClick {
-    fun onLongClick(article: ArticleUI, itemView: View)
-    fun onItemClick(article : ArticleUI)
+    fun onCheckBoxClick(article: ArticleItem.ArticleUI, isSave : Boolean)
+    fun onItemClick(article: ArticleItem.ArticleUI)
+    fun onShareItemClick(article: ArticleItem.ArticleUI)
 }

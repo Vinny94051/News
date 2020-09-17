@@ -7,7 +7,6 @@ import android.widget.SearchView
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +15,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentNewsBinding
-import ru.kiryanav.ui.model.ArticleUI
+import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
 import vlnny.base.ext.openLink
 import vlnny.base.fragment.BaseBindableFragment
@@ -49,13 +48,6 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
 
     override fun layoutId() = R.layout.fragment_news
 
-    override fun initViewModel() {
-        super.initViewModel()
-        newsViewModel.isArticleSavedLiveData.observe(this, Observer {
-            showSnack(requireContext().getString(R.string.article_saved))
-        })
-    }
-
     override fun initViews() {
         super.initViews()
         initSearchView()
@@ -72,7 +64,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
                         R.id.settings -> findNavController()
                             .navigate(R.id.action_newsFragment_to_settingsFragment)
                         R.id.savedNews -> findNavController()
-                            .navigate(R.id.action_newsFragment_to_savedNewsFragment)
+                            .navigate(R.id.action_newsFragment_to_selectedNewsFragment)
                     }
                     true
                 })
@@ -144,35 +136,6 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
     ) =
         newsViewModel.loadNews(query, from, to, language)
 
-    override fun onLongClick(article: ArticleUI, itemView: View) {
-        if (!article.isSaved) {
-            createAndShowPopup(
-                itemView,
-                R.menu.item_article_popup_remote,
-                PopupMenu.OnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.save -> {
-                            newsViewModel.saveArticle(article)
-                        }
-                    }
-                    true
-                }
-            )
-        } else {
-            createAndShowPopup(itemView,
-                R.menu.item_article_popup_local,
-                PopupMenu.OnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.remove -> {
-                            newsViewModel.removeArticle(article)
-                        }
-                    }
-                    true
-                }
-            )
-        }
-    }
-
     private fun createAndShowPopup(
         itemView: View,
         @MenuRes menuId: Int,
@@ -183,8 +146,20 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
             setOnMenuItemClickListener(menuItemClickListener)
         }.show()
 
-    override fun onItemClick(article: ArticleUI) {
+    override fun onCheckBoxClick(article: ArticleItem.ArticleUI, isSave: Boolean) {
+        if (isSave) {
+            newsViewModel.saveArticle(article)
+        } else {
+            newsViewModel.removeArticle(article)
+        }
+    }
+
+    override fun onItemClick(article: ArticleItem.ArticleUI) {
         context?.openLink(article.articleUrl)
+    }
+
+    override fun onShareItemClick(article: ArticleItem.ArticleUI) {
+        startShareIntent(article.articleUrl, R.string.chosser_send_header)
     }
 
 }

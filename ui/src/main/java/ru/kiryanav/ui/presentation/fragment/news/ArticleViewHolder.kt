@@ -6,15 +6,16 @@ import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.ItemArticleBinding
-import ru.kiryanav.ui.model.ArticleUI
+import ru.kiryanav.ui.model.ArticleItem
 import vlnny.base.adapter.BaseViewHolder
+import vlnny.base.ext.hide
 
 class ArticleViewHolder(
     private val binding: ItemArticleBinding,
     private val callback: OnArticleItemClick,
-    private val isWithSaveIcon : Boolean
+    private val isWithSaveIcon: Boolean
 ) :
-    BaseViewHolder<ArticleUI>(binding.root) {
+    BaseViewHolder<ArticleItem.ArticleUI>(binding.root) {
 
     companion object {
         fun from(
@@ -33,25 +34,31 @@ class ArticleViewHolder(
         )
     }
 
-    override fun bindView(item: ArticleUI) {
-        with (binding) {
-            article = if(isWithSaveIcon) item else item.copy(isSaved = false)
+    override fun bindView(item: ArticleItem.ArticleUI) {
+        with(binding) {
+            article = item
+
+            if (!isWithSaveIcon) {
+                isSavedLabel.hide()
+            } else {
+                isSavedLabel.setOnCheckedChangeListener { _, isChecked ->
+                    callback.onCheckBoxClick(item, isChecked)
+                }
+            }
 
             Glide.with(binding.root.context)
                 .load(item.previewImageUrl)
                 .error(Glide.with(binding.previewImage).load(R.drawable.preview_image))
                 .into(binding.previewImage)
 
-            root.apply {
-                setOnClickListener {
-                    callback.onItemClick(item)
-                }
-
-                setOnLongClickListener { root ->
-                    callback.onLongClick(item, root)
-                    true
-                }
+            root.setOnClickListener {
+                callback.onItemClick(item)
             }
+
+            share.setOnClickListener {
+                callback.onShareItemClick(item)
+            }
+
             executePendingBindings()
         }
 

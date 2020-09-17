@@ -8,9 +8,9 @@ import kotlinx.coroutines.launch
 import ru.kiryanav.ui.R
 import com.kiryanav.domain.NewsInteractor
 import ru.kiryanav.ui.mapper.toArticle
+import ru.kiryanav.ui.mapper.toArticleItemList
 import ru.kiryanav.ui.mapper.toArticleUI
-import ru.kiryanav.ui.model.ArticleUI
-import ru.kiryanav.ui.utils.SingleLiveEvent
+import ru.kiryanav.ui.model.ArticleItem
 import vlnny.base.viewModel.BaseViewModel
 import java.time.LocalDateTime
 
@@ -18,8 +18,8 @@ import java.time.LocalDateTime
 class NewsViewModel(private val context: Context, private val newsInteractor: NewsInteractor) :
     BaseViewModel() {
 
-    private val articlesMutableLiveData = MutableLiveData<List<ArticleUI>>()
-    val articlesLiveData: LiveData<List<ArticleUI>>
+    private val articlesMutableLiveData = MutableLiveData<List<ArticleItem>>()
+    val articlesLiveData: LiveData<List<ArticleItem>>
         get() = articlesMutableLiveData
 
     private val _totalNewsLiveData = MutableLiveData<String>()
@@ -30,17 +30,12 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
     val isLoadingMore: LiveData<Boolean>
         get() = _isLoadingMore
 
-    private val _isArticleSavedLiveData = SingleLiveEvent<Boolean>()
-    val isArticleSavedLiveData: LiveData<Boolean>
-        get() = _isArticleSavedLiveData
-
     private var dayNumber: Int = 0
     var lastQuery: String = ""
 
-    fun removeArticle(article: ArticleUI) {
+    fun removeArticle(article: ArticleItem.ArticleUI) {
         viewModelScope.launch {
             newsInteractor.deleteArticle(article.toArticle())
-            loadNews()
         }
     }
 
@@ -66,7 +61,7 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
                         context.getString(R.string.total_results).format(totalResult.toString())
 
                     articlesMutableLiveData.value =
-                        articles.map { article -> article.toArticleUI(context) }
+                        articles.toArticleItemList(context)
 
                 }
         }
@@ -99,9 +94,7 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
                 articlesMutableLiveData.value = articlesMutableLiveData.value
                     ?.plus(
                         nextPage.articles
-                            .map { article ->
-                                article.toArticleUI(context)
-                            }
+                            .toArticleItemList(context)
                     )
                 _isLoadingMore.value = false
             } else {
@@ -114,11 +107,9 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
         LocalDateTime.now().minusDays(dayNumber.toLong()).toString()
 
 
-    fun saveArticle(item: ArticleUI) {
+    fun saveArticle(item: ArticleItem.ArticleUI) {
         viewModelScope.launch {
             newsInteractor.saveArticle(item.toArticle())
-            _isArticleSavedLiveData.call()
-            loadNews()
         }
     }
 

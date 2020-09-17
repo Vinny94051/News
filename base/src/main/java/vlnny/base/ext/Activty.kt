@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
 import vlnny.base.R
 
@@ -74,4 +75,32 @@ fun Context.openLink(link: String) {
         ex.printStackTrace()
         Toast.makeText(this, getString(R.string.link_is_invalid), Toast.LENGTH_SHORT).show()
     }
+}
+
+fun Activity.startShareIntent(
+    send: String,
+    @StringRes chooserHeaderId: Int
+) {
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, send)
+        type = "text/plain"
+    }
+
+    val shareIntent = Intent.createChooser(sendIntent, getString(chooserHeaderId))
+    startActivity(shareIntent)
+}
+
+fun Activity.startShareIntent(
+    send : String,
+    chooserHeader : String
+){
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, send)
+        type = "text/plain"
+    }
+
+    val shareIntent = Intent.createChooser(sendIntent, chooserHeader)
+    startActivity(shareIntent)
 }

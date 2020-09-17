@@ -1,6 +1,7 @@
 package vlnny.base.adapter
 
 import android.util.Log
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseAdapter<VH : BaseViewHolder<MV>, MV> : RecyclerView.Adapter<VH>() {
@@ -47,14 +48,4 @@ abstract class BaseAdapter<VH : BaseViewHolder<MV>, MV> : RecyclerView.Adapter<V
         items.toMutableList().removeAt(position)
         updateList(items)
     }
-
-    protected fun getItemByPosition(position: Int): MV {
-        try {
-            return items[position]
-        } catch (ex: IndexOutOfBoundsException) {
-            ex.printStackTrace()
-        }
-        return items[0]
-    }
-
 }

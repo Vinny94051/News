@@ -15,17 +15,21 @@
             app:exitAnim="@anim/fragment_fade_exit"
             app:popUpTo="@id/newsFragment" />
         <action
-            android:id="@+id/action_newsFragment_to_savedNewsFragment"
-            app:destination="@id/savedNewsFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/fragment_fade_exit" />
+            android:id="@+id/action_newsFragment_to_selectedNewsFragment"
+            app:destination="@id/selectedNewsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="ru.kiryanav.ui.presentation.fragment.settings.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
-        android:id="@+id/savedNewsFragment"
-        android:name="ru.kiryanav.ui.presentation.ui.fragment.news.selected.SelectedNewsFragment"
-        android:label="SavedNewsFragment" />
+        android:id="@+id/selectedNewsFragment"
+        android:name="ru.kiryanav.ui.presentation.fragment.news.selected.SelectedNewsFragment"
+        android:label="SelectedNewsFragment" >
+        <action
+            android:id="@+id/action_selectedNewsFragment_to_newsFragment"
+            app:destination="@id/newsFragment"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/fragment_fade_enter" />
+    </fragment>
 </navigation>
