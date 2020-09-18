@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import ru.kiryanav.ui.model.ArticleItem
 import vlnny.base.adapter.BaseAdapter
 import vlnny.base.adapter.BaseViewHolder
+import vlnny.base.adapter.MultiItemRecyclerViewHolderCreator
 
 class ArticleAdapter(
     private val callback: OnArticleItemClick,
@@ -13,24 +14,29 @@ class ArticleAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (currentList[position]) {
-            is ArticleItem.ArticleUI -> 0
-            is ArticleItem.DateHeader -> 1
+            is ArticleItem.ArticleUI -> ARTICLE_UI_VIEW_TYPE
+            is ArticleItem.DateHeader -> DATE_HEADER_VIEW_TYPE
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ArticleItem>  =
-        when (viewType) {
-            0 -> ArticleViewHolder.from(
-                parent,
-                callback,
-                withSaveIcon
-            ) as BaseViewHolder<ArticleItem>
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ArticleItem> {
+        return MultiItemRecyclerViewHolderCreator<ArticleItem>(
+            hashMapOf(
+                Pair(
+                    ARTICLE_UI_VIEW_TYPE,
+                    ArticleViewHolder.from(parent, callback, withSaveIcon)
+                ),
+                Pair(
+                    DATE_HEADER_VIEW_TYPE,
+                    ArticleHeaderViewHolder.from(parent)
+                )
+            )
+        ).onCreateViewHolder(viewType)
+    }
 
-            1 -> ArticleHeaderViewHolder.from(
-                parent
-            ) as BaseViewHolder<ArticleItem>
-            else -> throw ClassCastException("Unknown viewType $viewType")
-        }
-
+    companion object {
+        private const val ARTICLE_UI_VIEW_TYPE = 0
+        private const val DATE_HEADER_VIEW_TYPE = 1
+    }
 }
+

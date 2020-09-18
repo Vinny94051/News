@@ -20,10 +20,9 @@ abstract class BaseAdapter<VH : BaseViewHolder<MV>, MV> : RecyclerView.Adapter<V
     open fun equals(oldItem: MV, newItem: MV): Boolean =
         oldItem == newItem
 
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: VH, position: Int) = holder.bindView(items[position])
-
-    override fun getItemCount(): Int = items.size
 
     fun updateList(data: List<MV>) {
         items = data

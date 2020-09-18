@@ -1,6 +1,7 @@
 package ru.kiryanav.ui.presentation.fragment.news.current
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -30,7 +31,7 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
     val isLoadingMore: LiveData<Boolean>
         get() = _isLoadingMore
 
-    private var dayNumber: Int = 0
+    private var dayNumber: Int = DAY_NUMBER_DEFAULT_VALUE
     var lastQuery: String = ""
 
     fun removeArticle(article: ArticleItem.ArticleUI) {
@@ -46,7 +47,7 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
         language: String? = null
     ) {
         updateUI(query)
-        dayNumber = 0
+        dayNumber = DAY_NUMBER_DEFAULT_VALUE
 
         viewModelScope.launch {
             _isProgressVisible.value = true
@@ -103,10 +104,6 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
         }
     }
 
-    private fun getDate(dayNumber: Int): String =
-        LocalDateTime.now().minusDays(dayNumber.toLong()).toString()
-
-
     fun saveArticle(item: ArticleItem.ArticleUI) {
         viewModelScope.launch {
             newsInteractor.saveArticle(item.toArticle())
@@ -117,7 +114,11 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
         lastQuery = query.orEmpty()
     }
 
+    private fun getDate(dayNumber: Int): String =
+        LocalDateTime.now().minusDays(dayNumber.toLong()).toString()
+
     companion object {
-        private const val WEEK_DAYS_NUMBER = 7
+        private const val WEEK_DAYS_NUMBER = 8
+        private const val DAY_NUMBER_DEFAULT_VALUE = 1
     }
 }
