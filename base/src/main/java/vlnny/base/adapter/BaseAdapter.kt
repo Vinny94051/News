@@ -38,7 +38,6 @@ abstract class BaseAdapter<VH : BaseViewHolder<MV>, MV> : RecyclerView.Adapter<V
         notifyDataSetChanged()
     }
 
-
     protected fun addItem(item: MV) {
         items.toMutableList().add(item)
         notifyItemChanged(items.size - 1)
