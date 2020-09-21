@@ -22,7 +22,16 @@ abstract class BaseAdapter<VH : BaseViewHolder<MV>, MV> : RecyclerView.Adapter<V
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: VH, position: Int) = holder.bindView(items[position])
+    abstract fun setViewHolders(parent: ViewGroup): HashMap<Int, BaseViewHolder<out MV>>
+
+    override fun getItemViewType(position: Int) = ONE_ITEM_VIEW_TYPE
+
+    @Suppress("UNCHECKED_CAST")
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
+        setViewHolders(parent)[viewType] as VH
+
+    override fun onBindViewHolder(holder: VH, position: Int)
+            = holder.bindView(items[position])
 
     fun updateList(data: List<MV>) {
         items = data
@@ -46,5 +55,14 @@ abstract class BaseAdapter<VH : BaseViewHolder<MV>, MV> : RecyclerView.Adapter<V
     protected fun deleteItem(position: Int) {
         items.toMutableList().removeAt(position)
         updateList(items)
+    }
+
+    companion object {
+        /**
+         * If recycler has only one item view type, use this const like view type
+         *
+         */
+
+        const val ONE_ITEM_VIEW_TYPE = 1
     }
 }

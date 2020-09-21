@@ -19,7 +19,7 @@ fun ArticleItem.ArticleUI.toArticle(): Article =
 private const val DATE_INPUT = "yyyy-MM-dd"
 private const val DATE_OUTPUT = "dd.MM.yyyy"
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 @SuppressLint("SimpleDateFormat")
 fun SavedArticleWrapper.toArticleUI(context: Context): ArticleItem.ArticleUI =
     ArticleItem.ArticleUI(
