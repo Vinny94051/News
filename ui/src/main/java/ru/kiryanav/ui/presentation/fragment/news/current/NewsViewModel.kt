@@ -1,17 +1,19 @@
 package ru.kiryanav.ui.presentation.fragment.news.current
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.WorkManager
 import kotlinx.coroutines.launch
 import ru.kiryanav.ui.R
 import com.kiryanav.domain.NewsInteractor
+import ru.kiryanav.ui.presentation.worker.NewsWorkManager
 import ru.kiryanav.ui.mapper.toArticle
 import ru.kiryanav.ui.mapper.toArticleItemList
-import ru.kiryanav.ui.mapper.toArticleUI
 import ru.kiryanav.ui.model.ArticleItem
+import ru.kiryanav.ui.presentation.worker.WorkerViewModel
 import vlnny.base.viewModel.BaseViewModel
 import java.time.LocalDateTime
 
@@ -19,9 +21,11 @@ import java.time.LocalDateTime
 class NewsViewModel(private val context: Context, private val newsInteractor: NewsInteractor) :
     BaseViewModel() {
 
-    private val articlesMutableLiveData = MutableLiveData<List<ArticleItem>>()
-    val articlesLiveData: LiveData<List<ArticleItem>>
-        get() = articlesMutableLiveData
+
+
+//    private val articlesMutableLiveData = MutableLiveData<List<ArticleItem>>()
+//    val articlesLiveData: LiveData<List<ArticleItem>>
+//        get() = articlesMutableLiveData
 
     private val _totalNewsLiveData = MutableLiveData<String>()
     val totalNewsLiveData: LiveData<String>
@@ -61,7 +65,7 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
                     _totalNewsLiveData.value =
                         context.getString(R.string.total_results).format(totalResult.toString())
 
-                    articlesMutableLiveData.value =
+                    WorkerViewModel.newsLiveData.value =
                         articles.toArticleItemList(context)
 
                 }
@@ -92,7 +96,7 @@ class NewsViewModel(private val context: Context, private val newsInteractor: Ne
 
                 _totalNewsLiveData.value = context.getString(R.string.total_results)
                     .format(nextPage.totalResult.toString())
-                articlesMutableLiveData.value = articlesMutableLiveData.value
+                WorkerViewModel.newsLiveData.value = WorkerViewModel.newsLiveData.value
                     ?.plus(
                         nextPage.articles
                             .toArticleItemList(context)

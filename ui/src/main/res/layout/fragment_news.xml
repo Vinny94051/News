@@ -10,6 +10,10 @@
             type="ru.kiryanav.ui.presentation.fragment.news.current.NewsViewModel" />
 
         <variable
+            name="workerViewModel"
+            type="ru.kiryanav.ui.presentation.worker.WorkerViewModel" />
+
+        <variable
             name="callback"
             type="ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick" />
     </data>
@@ -62,7 +66,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/newsRecycler"
                 articleCallback="@{callback}"
-                articles="@{viewModel.articlesLiveData}"
+                articles="@{workerViewModel.newsLiveData}"
                 isVisible="@{!viewModel.isProgressVisible()}"
                 isWithSaveIcon="@{true}"
                 android:layout_width="match_parent"

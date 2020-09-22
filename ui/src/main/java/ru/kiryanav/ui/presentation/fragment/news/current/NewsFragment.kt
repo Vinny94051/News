@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.SearchView
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +19,8 @@ import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentNewsBinding
 import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
+import ru.kiryanav.ui.presentation.worker.NewsWorkManager
+import ru.kiryanav.ui.presentation.worker.WorkerViewModel
 import vlnny.base.ext.openLink
 import vlnny.base.fragment.BaseBindableFragment
 
@@ -26,11 +30,13 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
     KoinComponent {
 
     private val newsViewModel by viewModel<NewsViewModel>()
+    private val workViewModel = WorkerViewModel
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.apply {
             this.viewModel = this@NewsFragment.newsViewModel
+            this.workerViewModel = this@NewsFragment.workViewModel
             this.callback = this@NewsFragment
             executePendingBindings()
         }
@@ -126,7 +132,6 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
             }
         })
     }
-
 
     private fun loadNews(
         query: String? = null,

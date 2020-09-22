@@ -25,4 +25,5 @@ You always can change it.</string>
     <string name="saved_news">Избранное</string>
     <string name="send_action_text">Довольно интересная статья. Рекомендую прочитать.</string>
     <string name="chosser_send_header">Кому отправить?</string>
+    <string name="channel_name">Notify channel</string>
 </resources>

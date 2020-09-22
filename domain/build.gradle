@@ -24,6 +24,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    kotlinOptions{
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -34,9 +38,14 @@ dependencies {
 
     implementation project(':base')
 
+    def work_version = "2.4.0"
 
     // Koin for Android
     implementation "org.koin:koin-android:$koin_version"
     // Koin Android Scope features
     implementation "org.koin:koin-android-scope:$koin_version"
+
+    //Work manager + coroutine
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
 }

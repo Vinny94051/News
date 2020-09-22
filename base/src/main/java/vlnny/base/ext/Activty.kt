@@ -29,6 +29,7 @@ fun Activity.showToast(message: String) {
 
 fun Activity.vibrate() {
     val v = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    @Suppress("DEPRECATION")
     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
         v.vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE))
     else

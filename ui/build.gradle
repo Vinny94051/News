@@ -52,6 +52,7 @@ dependencies {
 
     def swipe_refresh_layout_version = "1.1.0"
     def nav_components_version = "1.0.0"
+    def  work_version = "2.4.0"
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
@@ -85,4 +86,9 @@ dependencies {
 
     //NavComponents
     implementation "android.arch.navigation:navigation-fragment:$nav_components_version"
+
+    //Work manager + coroutine
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
+
 }

@@ -13,11 +13,11 @@ interface NewsInteractor {
      */
 
     suspend fun getNews(
-        query: String?,
-        from: String?,
-        to: String?,
+        query: String? = null,
+        from: String? = null,
+        to: String? = null,
         sources : List<ArticleSource>,
-        language: String?,
+        language: String? = null,
         pageNumber: Int = 1
     ): NewsWrapper
 
