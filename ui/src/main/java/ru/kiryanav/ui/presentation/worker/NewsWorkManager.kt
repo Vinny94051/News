@@ -1,10 +1,14 @@
 package ru.kiryanav.ui.presentation.worker
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
@@ -26,14 +30,16 @@ class NewsWorkManager(
     private val viewModel = WorkerViewModel
     private val interactor: NewsInteractor by inject()
 
-    private val notificationManager =
+    private val notifyManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as
                 NotificationManager
 
 
     override suspend fun doWork(): Result {
-        Log.e(javaClass.simpleName, "Start work.")
-        setForeground(createForegroundInfo("Start..."))
+        Looper.prepare()
+        Toast.makeText(context, "Start work.", Toast.LENGTH_SHORT).show()
+        Log.e(javaClass.simpleName, "Start working")
+        setForeground(createForegroundInfo())
         val news = interactor
             .getNews(
                 null, null, null, interactor.getSavedSources()
@@ -43,43 +49,63 @@ class NewsWorkManager(
 
         viewModel.newsLiveData.postValue(news)
 
-        createAndShowNotify(
-            (news[1] as ArticleItem.ArticleUI).title,
-            (news[1] as ArticleItem.ArticleUI).description
-        )
+        saveCurTime()
 
+        with(NotificationManagerCompat.from(context)) {
+            notify(
+                NEWS_NOTIFY_ID, createNewsNotify(
+                    getPrefs(),
+                    (news[1] as ArticleItem.ArticleUI).description
+                )
+            )
+        }
 
         return Result.success()
     }
 
-    private fun getCurrentTime(): String {
-        val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-        return current.format(formatter)
+    private fun getPrefs(): String {
+        return context.getSharedPreferences(P_N, Context.MODE_PRIVATE)
+            .getString(TIME, "Nothing") ?: "Error 404"
     }
 
-    private fun createForegroundInfo(progress: String): ForegroundInfo {
-        val id = CHANNEL_ID
-        val title = getCurrentTime()
-        val cancel = CANCEL
+    private fun saveCurTime() {
+        context.getSharedPreferences(P_N, Context.MODE_PRIVATE)
+            .edit()
+            .putString(TIME, getCurrentTime())
+            .apply()
+    }
 
-        val intent = WorkManager.getInstance(applicationContext)
-            .createCancelPendingIntent(getId())
+    private fun getCurrentTime() =
+        LocalDateTime.now()
+            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
+
+
+    private fun createForegroundInfo(): ForegroundInfo {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel()
         }
 
-        val notification = NotificationCompat.Builder(applicationContext, id)
+        return ForegroundInfo(UPDATING_NOTIFY_ID, createUpdatingNotify())
+    }
+
+    private fun createUpdatingNotify(): Notification {
+        val title = getCurrentTime()
+        val intent = WorkManager.getInstance(applicationContext)
+            .createCancelPendingIntent(id)
+
+        return NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setContentTitle(title)
             .setTicker(title)
-            .setContentText(progress)
+            .setContentText("Start...")
             .setSmallIcon(R.drawable.ic_baseline_arrow_drop_down_24)
             .setOngoing(true)
-            .addAction(android.R.drawable.ic_delete, cancel, intent)
+            .addAction(
+                android.R.drawable.ic_delete,
+                context.getString(R.string.notify_cancel),
+                intent
+            )
             .build()
-
-        return ForegroundInfo(14,notification)
     }
 
     private fun createChannel() {
@@ -90,32 +116,27 @@ class NewsWorkManager(
             .apply {
                 description = descriptionText
             }
-
-        val notifyManager: NotificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notifyManager.createNotificationChannel(channel)
     }
 
 
-    private fun createAndShowNotify(title: String, content: String) {
-        val notif = NotificationCompat.Builder(context, CHANNEL_ID)
+    private fun createNewsNotify(title: String, content: String): Notification {
+        return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_baseline_delete_24)
             .setContentTitle(title)
             .setContentText(content)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-        with(NotificationManagerCompat.from(context)) {
-            notify(14, notif.build())
-        }
-
+            .build()
     }
 
     companion object {
         const val UNIQUE_PERIODIC_WORK_NAME = "periodic.work.name"
-        const val CANCEL = "Cancel"
         const val CHANNEL_ID = "78"
-        const val TITLE = "Service"
+        private const val UPDATING_NOTIFY_ID = 1
+        private const val NEWS_NOTIFY_ID = 2
+        private const val P_N = "90902f"
+        private const val TIME = "jojo"
 
         fun createPeriodicRequest(intervalInMnts: Long) =
             PeriodicWorkRequestBuilder<NewsWorkManager>(

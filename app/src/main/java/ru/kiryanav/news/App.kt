@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import com.kiryanav.domain.koin.domainModule
+import com.kiryanav.domain.koin.prefsManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -33,7 +34,8 @@ class App : Application() {
                     viewModelModule,
                     domainModule,
                     dataModule,
-                    databaseModule
+                    databaseModule,
+                    prefsManager
                 )
             )
         }

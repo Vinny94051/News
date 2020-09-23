@@ -6,8 +6,11 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kiryanav.domain.prefs.ISharedPrefsManager
 import kotlinx.android.synthetic.main.fragment_settings.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.KoinComponent
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentSettingsBinding
 import ru.kiryanav.ui.model.ArticleSourceUI
@@ -18,11 +21,14 @@ import vlnny.base.ext.show
 import vlnny.base.fragment.BaseBindableFragment
 
 
-class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSourceItemClick {
+class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSourceItemClick,
+    KoinComponent {
 
     private val settingsViewModel by viewModel<SettingsViewModel>()
-    override fun layoutId(): Int = R.layout.fragment_settings
+    private val prefsManager: ISharedPrefsManager by inject()
     private val sourcesForSaving = mutableListOf<ArticleSourceUI>()
+
+    override fun layoutId(): Int = R.layout.fragment_settings
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -37,8 +43,12 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
     override fun initViewModel() {
         super.initViewModel()
         settingsViewModel.sourcesSavedNotify.observe(this, Observer {
-            findNavController().popBackStack()
+           closeFragment()
         })
+    }
+
+    private fun closeFragment() {
+        findNavController().popBackStack()
     }
 
     override fun initViews() {
@@ -55,9 +65,35 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
                 saveSourcesBtn.show()
             }
         }
-
+        initNotifys()
         saveSourcesBtn.setOnClickListener {
             settingsViewModel.saveSources(sourcesForSaving)
+        }
+    }
+
+    private fun initNotifys() {
+        notificationsLayout.setOnClickListener {
+            if (intervalRadioGroup.isVisible) {
+                intervalRadioGroup.hide()
+                saveNotifyBtn.hide()
+                openNotifSettingsBtn.rotateDefault()
+            } else {
+                intervalRadioGroup.show()
+                saveNotifyBtn.show()
+                openNotifSettingsBtn.rotateFromTopToBottom()
+            }
+        }
+
+        interval15mnts.setOnClickListener { prefsManager.setInterval(15) }
+        interval30mnts.setOnClickListener { prefsManager.setInterval(30) }
+        interval60mnts.setOnClickListener { prefsManager.setInterval(60) }
+        interval120mnts.setOnClickListener { prefsManager.setInterval(120) }
+        interval240mnts.setOnClickListener { prefsManager.setInterval(240) }
+        interval480mnts.setOnClickListener { prefsManager.setInterval(480) }
+        interval24hours.setOnClickListener { prefsManager.setInterval(1440) }
+
+        saveNotifyBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
