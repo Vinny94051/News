@@ -36,8 +36,6 @@ class NewsWorkManager(
 
 
     override suspend fun doWork(): Result {
-        Looper.prepare()
-        Toast.makeText(context, "Start work.", Toast.LENGTH_SHORT).show()
         Log.e(javaClass.simpleName, "Start working")
         setForeground(createForegroundInfo())
         val news = interactor
