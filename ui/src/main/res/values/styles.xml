@@ -7,7 +7,7 @@
         <item name="colorAccent">#1565c0</item>
     </style>
 
-    <style name="radioBtn">
+    <style name="notifyRadioBtn">
         <item name="android:textSize">18sp</item>
     </style>
 

@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
 import com.kiryanav.domain.NewsInteractor
+import com.kiryanav.domain.model.TimeInterval
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import ru.kiryanav.ui.R
@@ -136,9 +137,9 @@ class NewsWorkManager(
         private const val P_N = "90902f"
         private const val TIME = "jojo"
 
-        fun createPeriodicRequest(intervalInMnts: Long) =
+        fun createPeriodicRequest(timeInterval: TimeInterval) =
             PeriodicWorkRequestBuilder<NewsWorkManager>(
-                intervalInMnts,
+                timeInterval.timeInMnts,
                 TimeUnit.MINUTES
             ).build()
     }

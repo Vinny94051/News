@@ -17,6 +17,7 @@ import org.koin.core.KoinComponent
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentSettingsBinding
 import ru.kiryanav.ui.model.ArticleSourceUI
+import com.kiryanav.domain.model.TimeInterval
 import ru.kiryanav.ui.presentation.worker.NewsWorkManager
 import vlnny.base.ext.hide
 import vlnny.base.ext.rotateDefault
@@ -80,7 +81,6 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
     private fun initNotifys() {
         notificationsLayout.setOnClickListener {
             if (intervalRadioGroup.isVisible) {
-
                 intervalRadioGroup.hide()
                 saveNotifyBtn.hide()
                 openNotifSettingsBtn.rotateDefault()
@@ -92,59 +92,37 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
         }
 
         when (prefsManager.getInterval()) {
-            15 -> {
-                setRadioBtnActive(interval15mnts)
-            }
-            30 -> {
-                setRadioBtnActive(interval30mnts)
-            }
-            60 -> {
-                setRadioBtnActive(interval60mnts)
-            }
-            120 -> {
-                setRadioBtnActive(interval120mnts)
-            }
-            240 -> {
-                setRadioBtnActive(interval240mnts)
-            }
-            480 -> {
-                setRadioBtnActive(interval480mnts)
-            }
-            1440 -> {
-                setRadioBtnActive(interval24hours)
-            }
+            TimeInterval.MINUTES_15 -> setRadioBtnActive(interval15mnts)
+            TimeInterval.MINUTES_30 -> setRadioBtnActive(interval30mnts)
+            TimeInterval.HOURS_ONE -> setRadioBtnActive(interval60mnts)
+            TimeInterval.HOURS_2 -> setRadioBtnActive(interval120mnts)
+            TimeInterval.HOURS_4 -> setRadioBtnActive(interval240mnts)
+            TimeInterval.HOURS_8 -> setRadioBtnActive(interval480mnts)
+            TimeInterval.ONE_DAY -> setRadioBtnActive(interval24hours)
         }
 
-        interval15mnts.setOnClickListener {
-            prefsManager.setInterval(15)
-            createWork()
+        var timeInterval: TimeInterval? = null
+
+        interval15mnts.setOnClickListener { timeInterval = TimeInterval.MINUTES_15 }
+        interval30mnts.setOnClickListener { timeInterval = TimeInterval.MINUTES_30 }
+        interval60mnts.setOnClickListener { timeInterval = TimeInterval.HOURS_ONE }
+        interval120mnts.setOnClickListener { timeInterval = TimeInterval.HOURS_2 }
+        interval240mnts.setOnClickListener { timeInterval = TimeInterval.HOURS_4 }
+        interval480mnts.setOnClickListener { timeInterval = TimeInterval.HOURS_8 }
+        interval24hours.setOnClickListener { timeInterval = TimeInterval.ONE_DAY }
+        turnOffNotify.setOnClickListener {
+            timeInterval = null
+            prefsManager.setInterval(null)
         }
-        interval30mnts.setOnClickListener {
-            prefsManager.setInterval(30)
-            createWork()
-        }
-        interval60mnts.setOnClickListener {
-            prefsManager.setInterval(60)
-            createWork()
-        }
-        interval120mnts.setOnClickListener {
-            prefsManager.setInterval(120)
-            createWork()
-        }
-        interval240mnts.setOnClickListener {
-            prefsManager.setInterval(240)
-            createWork()
-        }
-        interval480mnts.setOnClickListener {
-            prefsManager.setInterval(480)
-            createWork()
-        }
-        interval24hours.setOnClickListener {
-            prefsManager.setInterval(1440)
-            createWork()
-        }
+
+
 
         saveNotifyBtn.setOnClickListener {
+            timeInterval?.let { interval ->
+                createWork(interval)
+            } ?: WorkManager.getInstance(requireContext())
+                .cancelUniqueWork(NewsWorkManager.UNIQUE_PERIODIC_WORK_NAME)
+
             findNavController().popBackStack()
         }
     }
@@ -153,12 +131,15 @@ class SettingsFragment : BaseBindableFragment<FragmentSettingsBinding>(), OnSour
         btn.isChecked = true
     }
 
-    private fun createWork() {
-        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-            NewsWorkManager.UNIQUE_PERIODIC_WORK_NAME,
-            ExistingPeriodicWorkPolicy.REPLACE,
-            NewsWorkManager.createPeriodicRequest(prefsManager.getInterval().toLong())
-        )
+    private fun createWork(timeInterval: TimeInterval) {
+        prefsManager.setInterval(timeInterval)
+        prefsManager.getInterval()?.let { interval ->
+            WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
+                NewsWorkManager.UNIQUE_PERIODIC_WORK_NAME,
+                ExistingPeriodicWorkPolicy.REPLACE,
+                NewsWorkManager.createPeriodicRequest(interval)
+            )
+        }
     }
 
     override fun selectClick(item: ArticleSourceUI, isChecked: Boolean) {

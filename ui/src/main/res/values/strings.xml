@@ -35,4 +35,5 @@ You always can change it.</string>
     <string name="_4_hours">4 hours</string>
     <string name="_8_hours">8 hours</string>
     <string name="_24_hours">24 hours</string>
+    <string name="turn_off_notification">Turn off notification</string>
 </resources>

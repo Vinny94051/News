@@ -118,14 +118,14 @@
 
             <RadioButton
                 android:id="@+id/interval15mnts"
-                style="@style/radioBtn"
+                style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_15_mnts" />
 
             <RadioButton
                 android:id="@+id/interval30mnts"
-                style="@style/radioBtn"
+                style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_30_mnts" />
@@ -133,7 +133,7 @@
 
             <RadioButton
                 android:id="@+id/interval60mnts"
-                style="@style/radioBtn"
+                style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_1_hour" />
@@ -141,7 +141,7 @@
 
             <RadioButton
                 android:id="@+id/interval120mnts"
-                style="@style/radioBtn"
+                style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_2_hours" />
@@ -149,7 +149,7 @@
 
             <RadioButton
                 android:id="@+id/interval240mnts"
-                style="@style/radioBtn"
+                style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_4_hours" />
@@ -157,17 +157,25 @@
 
             <RadioButton
                 android:id="@+id/interval480mnts"
-                style="@style/radioBtn"
+                style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_8_hours" />
 
             <RadioButton
                 android:id="@+id/interval24hours"
-                style="@style/radioBtn"
+                style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_24_hours" />
+
+            <RadioButton
+                android:id="@+id/turnOffNotify"
+                style="@style/notifyRadioBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/turn_off_notification"
+                />
 
         </RadioGroup>
 
