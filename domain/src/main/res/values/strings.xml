@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notify_cancel">Cancel</string>
+    <string name="notification_done_message">You have unread news</string>
+    <string name="error_time_not_found_default_value">00:00</string>
+    <string name="title_foreground_notify">Start...</string>
+</resources>

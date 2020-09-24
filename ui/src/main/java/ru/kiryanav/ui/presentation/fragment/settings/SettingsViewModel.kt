@@ -50,4 +50,12 @@ class SettingsViewModel(
         }
     }
 
+    fun createNotifyWork(){
+
+    }
+
+    fun cancelNotifyWork(){
+
+    }
+
 }

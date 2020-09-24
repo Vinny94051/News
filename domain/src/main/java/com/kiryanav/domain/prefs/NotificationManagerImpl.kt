@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.kiryanav.domain.model.TimeInterval
 
-class PrefsManager(context: Context) : ISharedPrefsManager {
+class NotificationManagerImpl(context: Context) : NotificationIntervalManager {
 
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -25,7 +25,7 @@ class PrefsManager(context: Context) : ISharedPrefsManager {
         )
 
     companion object {
-        const val PREFS_NAME = "ru.kir.prefs.interval.name"
-        const val INTERVAL_NAME = "ru.kir.search.interval"
+        private const val PREFS_NAME = "ru.kir.prefs.interval.name"
+        private const val INTERVAL_NAME = "ru.kir.search.interval"
     }
 }

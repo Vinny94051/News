@@ -52,22 +52,23 @@ private fun createDate(date: String): String {
 
 fun List<SavedArticleWrapper>.toArticleItemList(context: Context): List<ArticleItem> {
     val resultList = mutableListOf<ArticleItem>()
-    val tmpList : List<ArticleItem.ArticleUI> = this.map {articleWrapper ->
+    val tmpList: List<ArticleItem.ArticleUI> = this.map { articleWrapper ->
         articleWrapper.toArticleUI(context)
     }
-
-    resultList.add(ArticleItem.DateHeader(tmpList[0].publishedAt))
-
-    for(i in 0..tmpList.size-2){
+    try {
+        resultList.add(ArticleItem.DateHeader(tmpList[0].publishedAt))
+    } catch (ex: Throwable) {
+        ex.printStackTrace()
+    }
+    for (i in 0..tmpList.size - 2) {
         resultList.add(tmpList[i])
-        if(tmpList[i].publishedAt != tmpList[i+1].publishedAt){
-            resultList.add(ArticleItem.DateHeader(tmpList[i+1].publishedAt))
+        if (tmpList[i].publishedAt != tmpList[i + 1].publishedAt) {
+            resultList.add(ArticleItem.DateHeader(tmpList[i + 1].publishedAt))
         }
     }
 
     return resultList
 }
-
 
 
 fun SavedArticleSourceWrapper.toArticleSourceUI() =

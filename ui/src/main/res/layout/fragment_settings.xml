@@ -59,6 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/sourceLayout"
+            android:layout_above="@id/saveSourcesBtn"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="10"
@@ -71,7 +72,7 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/margin_default"
             android:background="@android:color/holo_green_light"
-            android:text="Сохранить"
+            android:text="@string/save"
             android:visibility="gone" />
 
         <RelativeLayout
@@ -113,18 +114,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/separateLine2"
+            android:layout_above="@id/saveNotifyBtn"
             android:padding="@dimen/default_margin"
             android:visibility="gone">
 
             <RadioButton
-                android:id="@+id/interval15mnts"
+                android:id="@+id/btn15"
                 style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_15_mnts" />
 
             <RadioButton
-                android:id="@+id/interval30mnts"
+                android:id="@+id/btn30"
                 style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,7 +134,7 @@
 
 
             <RadioButton
-                android:id="@+id/interval60mnts"
+                android:id="@+id/btn60"
                 style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -140,7 +142,7 @@
 
 
             <RadioButton
-                android:id="@+id/interval120mnts"
+                android:id="@+id/btn120"
                 style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -148,7 +150,7 @@
 
 
             <RadioButton
-                android:id="@+id/interval240mnts"
+                android:id="@+id/btn240"
                 style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -156,14 +158,14 @@
 
 
             <RadioButton
-                android:id="@+id/interval480mnts"
+                android:id="@+id/btn480"
                 style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_8_hours" />
 
             <RadioButton
-                android:id="@+id/interval24hours"
+                android:id="@+id/btn1440"
                 style="@style/notifyRadioBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -186,7 +188,7 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/margin_default"
             android:background="@android:color/holo_green_light"
-            android:text="Сохранить"
+            android:text="@string/save"
             android:visibility="gone" />
 
     </RelativeLayout>

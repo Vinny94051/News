@@ -6,31 +6,36 @@ import android.view.View
 import android.widget.SearchView
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.kiryanav.domain.worker.NewsUpdaterListener
 import kotlinx.android.synthetic.main.fragment_news.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import org.koin.android.scope.scope
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
+import org.koin.core.inject
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentNewsBinding
 import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
-import ru.kiryanav.ui.presentation.worker.NewsWorkManager
 import ru.kiryanav.ui.presentation.worker.WorkerViewModel
 import vlnny.base.ext.openLink
 import vlnny.base.fragment.BaseBindableFragment
 
 
 class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
-    OnArticleItemClick,
-    KoinComponent {
+    OnArticleItemClick, KoinComponent {
 
     private val newsViewModel by viewModel<NewsViewModel>()
     private val workViewModel = WorkerViewModel
+    private val newsUpdateListener: NewsUpdaterListener by inject()
+    private val job = CoroutineScope(Job())
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -60,6 +65,17 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
         initRecycler()
         initSettings()
         initPullToRefresh()
+    }
+
+    override fun initViewModel() {
+        super.initViewModel()
+        job.launch {
+            newsUpdateListener.listener.collect { isUpdate ->
+                if (isUpdate) {
+                    loadNews()
+                }
+            }
+        }
     }
 
     private fun initSettings() {
