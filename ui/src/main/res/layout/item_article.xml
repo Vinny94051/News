@@ -35,10 +35,9 @@
 
             <CheckBox
                 android:id="@+id/isSavedLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/news_8dp"
                 android:checked="@{article.saved}"
                 android:button="@drawable/checkbox_saved_selector"
                 android:foreground="?attr/selectableItemBackground"
@@ -91,9 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/description"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/default_margin"
-                android:layout_marginStart="@dimen/margin_news_32dp"
-                android:layout_marginTop="4dp"
+                android:padding="@dimen/default_margin"
                 android:gravity="end"
                 android:foreground="?attr/selectableItemBackground"
                 android:maxLength="10"
