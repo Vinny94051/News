@@ -150,12 +150,9 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
     }
 
     private fun loadNews(
-        query: String? = null,
-        from: String? = null,
-        to: String? = null,
-        language: String? = null
+        query: String? = null
     ) =
-        newsViewModel.loadNews(query, from, to, language)
+        newsViewModel.loadNews(query)
 
     private fun createAndShowPopup(
         itemView: View,

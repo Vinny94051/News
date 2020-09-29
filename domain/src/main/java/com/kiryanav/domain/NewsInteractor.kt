@@ -1,6 +1,7 @@
 package com.kiryanav.domain
 
 import com.kiryanav.domain.model.*
+import vlnny.base.data.model.ResponseResult
 
 interface NewsInteractor {
 
@@ -16,33 +17,24 @@ interface NewsInteractor {
         query: String? = null,
         from: String? = null,
         to: String? = null,
-        sources : List<ArticleSource>,
+        sources: List<ArticleSource>,
         language: String? = null,
         pageNumber: Int = 1
-    ): NewsWrapper
+    ): ResponseResult<NewsWrapper, Error>
 
-    /**
-     * Save article in local storage
-     * @param article - article which will be saved
-     */
+    suspend fun saveArticle(article: Article): ResponseResult<Unit, Error>
 
-    suspend fun saveArticle(article: Article)
+    suspend fun getSavedArticles(): ResponseResult<List<SavedArticleWrapper>, Error>
 
-    /**
-     * Get all saved articles
-     */
+    suspend fun getSourcesByLanguage(language: String): ResponseResult<List<ArticleSource>, Error>
 
-    suspend fun getSavedArticles(): List<SavedArticleWrapper>
+    suspend fun getSavedSources(): ResponseResult<List<ArticleSource>, Error>
 
-    suspend fun getSourcesByLanguage(language : String) : List<ArticleSource>
+    suspend fun saveSources(sources: List<ArticleSource>): ResponseResult<Unit, Error>
 
-    suspend fun getSavedSources() : List<ArticleSource>
+    suspend fun deleteSource(source: ArticleSource): ResponseResult<Unit, Error>
 
-    suspend fun saveSources(sources : List<ArticleSource>)
+    suspend fun getSources(): ResponseResult<List<SavedArticleSourceWrapper>, Error>
 
-    suspend fun deleteSource(source : ArticleSource)
-
-    suspend fun getSources() : List<SavedArticleSourceWrapper>
-
-    suspend fun deleteArticle(article: Article)
+    suspend fun deleteArticle(article: Article): ResponseResult<Unit, Error>
 }

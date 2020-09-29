@@ -67,7 +67,7 @@ class NewsInteractorImplTest {
     }
 
     @Test
-    fun deleteArticle(): Unit {
+    fun deleteArticle() {
     }
 
     @Test
@@ -103,7 +103,4 @@ class NewsInteractorImplTest {
             )
         )
     }
-
-    private fun getFakeSources() =
-        listOf<ArticleSource>()
 }

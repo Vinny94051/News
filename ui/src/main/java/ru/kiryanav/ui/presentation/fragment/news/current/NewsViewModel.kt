@@ -7,11 +7,13 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.kiryanav.ui.R
 import com.kiryanav.domain.NewsInteractor
+import com.kiryanav.domain.model.NewsWrapper
 import ru.kiryanav.ui.mapper.toArticle
 import ru.kiryanav.ui.mapper.toArticleItemList
 import ru.kiryanav.ui.model.ArticleItem
-import ru.kiryanav.ui.presentation.notification.NotificationHelper
 import ru.kiryanav.ui.presentation.worker.WorkerViewModel
+import vlnny.base.data.model.ResponseResult
+import vlnny.base.error.ui.Error
 import vlnny.base.viewModel.BaseViewModel
 import java.time.LocalDateTime
 
@@ -54,21 +56,35 @@ class NewsViewModel(
         dayNumber = DAY_NUMBER_DEFAULT_VALUE
 
         viewModelScope.launch {
-            _isProgressVisible.value = true
+            isProgressVisibleLiveData.value = true
 
-            newsInteractor.getNews(
-                query, from, to, newsInteractor.getSavedSources(), language
-            )
-                .apply {
-                    _isProgressVisible.value = false
+            when (val savedSources = newsInteractor.getSavedSources()) {
+                is ResponseResult.Success -> {
+                    newsInteractor.getNews(
+                        query, from, to, savedSources.value, language
+                    )
+                        .apply {
 
-                    _totalNewsLiveData.value =
-                        context.getString(R.string.total_results).format(totalResult.toString())
+                            when (this) {
+                                is ResponseResult.Success -> {
+                                    _totalNewsLiveData.value =
+                                        context.getString(R.string.total_results)
+                                            .format(value.totalResult.toString())
 
-                    WorkerViewModel.newsLiveData.value =
-                        articles.toArticleItemList(context)
+                                    WorkerViewModel.newsLiveData.value =
+                                        value.articles.toArticleItemList(context)
+                                }
 
+                                is ResponseResult.Error -> errorLiveData.value = Error.UNKNOWN
+
+                            }
+                            isProgressVisibleLiveData.value = false
+
+                        }
                 }
+
+                is ResponseResult.Error -> errorLiveData.value = Error.UNKNOWN
+            }
         }
     }
 
@@ -77,33 +93,41 @@ class NewsViewModel(
     ) {
         viewModelScope.launch {
             _isLoadingMore.value = true
+            when (val sources = newsInteractor.getSavedSources()) {
+                is ResponseResult.Success -> {
+                    updateUI(lastQuery)
+                    dayNumber++
 
-            val sources = newsInteractor.getSavedSources()
+                    if (dayNumber < WEEK_DAYS_NUMBER) {
 
-            updateUI(lastQuery)
-            dayNumber++
+                        val nextPage = newsInteractor
+                            .getNews(
+                                lastQuery,
+                                getDate(dayNumber - 1),
+                                getDate(dayNumber),
+                                sources.value,
+                                language
+                            )
 
-            if (dayNumber < WEEK_DAYS_NUMBER) {
-
-                val nextPage = newsInteractor
-                    .getNews(
-                        lastQuery,
-                        getDate(dayNumber - 1),
-                        getDate(dayNumber),
-                        sources,
-                        language
-                    )
-
-                _totalNewsLiveData.value = context.getString(R.string.total_results)
-                    .format(nextPage.totalResult.toString())
-                WorkerViewModel.newsLiveData.value = WorkerViewModel.newsLiveData.value
-                    ?.plus(
-                        nextPage.articles
-                            .toArticleItemList(context)
-                    )
-                _isLoadingMore.value = false
-            } else {
-                _isLoadingMore.value = false
+                        when (nextPage) {
+                            is ResponseResult.Success -> {
+                                _totalNewsLiveData.value = context.getString(R.string.total_results)
+                                    .format(nextPage.value.totalResult.toString())
+                                WorkerViewModel.newsLiveData.value =
+                                    WorkerViewModel.newsLiveData.value
+                                        ?.plus(
+                                            nextPage.value.articles
+                                                .toArticleItemList(context)
+                                        )
+                            }
+                            is ResponseResult.Error -> errorLiveData.value = Error.UNKNOWN
+                        }
+                        _isLoadingMore.value = false
+                    } else {
+                        _isLoadingMore.value = false
+                    }
+                }
+                is ResponseResult.Error -> errorLiveData.value = Error.UNKNOWN
             }
         }
     }

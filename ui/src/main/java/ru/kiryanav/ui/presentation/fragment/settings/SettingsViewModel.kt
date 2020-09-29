@@ -9,6 +9,9 @@ import ru.kiryanav.ui.mapper.toArticleSource
 import ru.kiryanav.ui.mapper.toArticleSourceUI
 import ru.kiryanav.ui.model.ArticleSourceUI
 import ru.kiryanav.ui.utils.SingleLiveEvent
+import vlnny.base.data.model.ResponseResult
+import vlnny.base.data.model.isError
+import vlnny.base.error.ui.Error
 import vlnny.base.viewModel.BaseViewModel
 
 class SettingsViewModel(
@@ -25,37 +28,39 @@ class SettingsViewModel(
 
     fun loadSources() {
         viewModelScope.launch {
-            _sourcesLiveData.value = newsInteractor.getSources()
-                .map { source ->
-                    source.toArticleSourceUI()
-                }
+            when (val sources = newsInteractor.getSources()) {
+                is ResponseResult.Success -> _sourcesLiveData.value =
+                    sources.value.map { source -> source.toArticleSourceUI() }
+                is ResponseResult.Error -> errorLiveData.value = Error.UNKNOWN
+            }
         }
     }
 
     fun saveSources(sources: List<ArticleSourceUI>) {
         if (sources.isNotEmpty()) {
             viewModelScope.launch {
-                newsInteractor.saveSources(sources.map { it.toArticleSource() })
-            }.invokeOnCompletion {
-                it?.printStackTrace()
-                _sourcesSavedNotify.call()
+                if (newsInteractor.saveSources(
+                        sources
+                            .map { uiSource ->
+                                uiSource.toArticleSource()
+                            }
+                    ).isError()
+                ) {
+                    errorLiveData.value = Error.UNKNOWN
+                } else {
+                    _sourcesSavedNotify.call()
+                }
             }
-
         }
     }
 
     fun deleteSource(source: ArticleSourceUI) {
         viewModelScope.launch {
-            newsInteractor.deleteSource(source.toArticleSource())
+            if (newsInteractor.deleteSource(source.toArticleSource()).isError()) {
+                errorLiveData.value = Error.UNKNOWN
+            }
         }
     }
 
-    fun createNotifyWork(){
-
-    }
-
-    fun cancelNotifyWork(){
-
-    }
 
 }

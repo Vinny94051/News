@@ -1,8 +1,10 @@
 package com.kiryanav.domain.repoApi
 
+import com.kiryanav.domain.Error
 import com.kiryanav.domain.model.News
 import com.kiryanav.domain.model.SortBy
 import com.kiryanav.domain.model.ArticleSource
+import vlnny.base.data.model.ResponseResult
 
 interface NewsRepository {
     suspend fun getNews(
@@ -13,10 +15,10 @@ interface NewsRepository {
         language: String?,
         pageNumber: Int,
         sortBy: SortBy = SortBy.PUBLISHED_AT
-    ): News
+    ): ResponseResult<News, Error>
 
     suspend fun getSourcesByLanguage(
         language: String
-    ): List<ArticleSource>
+    ): ResponseResult<List<ArticleSource>,Error>
 
 }
