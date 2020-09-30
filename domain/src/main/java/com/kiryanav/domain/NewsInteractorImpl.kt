@@ -59,7 +59,7 @@ class NewsInteractorImpl(
     override suspend fun getSources(): ResponseResult<List<SavedArticleSourceWrapper>, Error> {
 
         val unsavedWrappedSources =
-            newsRepository.getSourcesByLanguage("ru").mapIfSuccess { sources ->
+            newsRepository.getSources().mapIfSuccess { sources ->
                 ResponseResult.Success(sources.map { source ->
                     SavedArticleSourceWrapper(false, source)
                 })
@@ -96,7 +96,7 @@ class NewsInteractorImpl(
         }
 
     override suspend fun getSourcesByLanguage(language: String): ResponseResult<List<ArticleSource>, Error> =
-        newsRepository.getSourcesByLanguage(language)
+        newsRepository.getSources(language)
 
     override suspend fun getSavedSources(): ResponseResult<List<ArticleSource>, Error> =
         sourceRepository.getSavedSources()

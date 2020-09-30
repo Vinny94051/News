@@ -33,7 +33,7 @@ class NewsRepositoryImpl(private val newsApi: NewsApi) : BaseRepository(), NewsR
             ).toNews()
         }
 
-    override suspend fun getSourcesByLanguage(language: String)
+    override suspend fun getSources(language: String)
             : ResponseResult<List<ArticleSource>, Error> =
         withErrorHandlingCall {
             newsApi.getSourcesByLanguage(
