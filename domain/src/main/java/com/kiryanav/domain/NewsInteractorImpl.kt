@@ -14,7 +14,6 @@ class NewsInteractorImpl(
     private val sourceRepository: SourceRepository
 ) : NewsInteractor {
 
-    //TODO like getSources
     override suspend fun getNews(
         query: String?,
         from: String?,
@@ -23,39 +22,37 @@ class NewsInteractorImpl(
         language: String?,
         pageNumber: Int
     ): ResponseResult<NewsWrapper, Error> {
-        val response: ResponseResult<News, Error> =
+
+        var totalResult: Int? = null
+
+        val unsavedWrappedArticles =
             newsRepository.getNews(query, from, to, sources, language, pageNumber)
-
-        val unsavedWrappedArticles: List<SavedArticleWrapper>
-
-        when (response) {
-            is ResponseResult.Success<News> -> {
-                unsavedWrappedArticles = response.value.articles.map { article ->
-                    SavedArticleWrapper(false, article)
+                .mapIfSuccess { news ->
+                    totalResult = news.resultNumber
+                    ResponseResult.Success(news.articles.map { article ->
+                        SavedArticleWrapper(false, article)
+                    })
                 }
-            }
-            is ResponseResult.Error -> return response
-        }
 
-        val savedArticles: ResponseResult<List<Article>, Error> =
-            articleRepository.getAllSavedArticles()
-
-        val savedWrappedArticles: List<SavedArticleWrapper>
-
-        when (savedArticles) {
-            is ResponseResult.Success<List<Article>> -> savedWrappedArticles =
-                savedArticles.value.map { article ->
+        val savedWrappedArticles =
+            articleRepository.getAllSavedArticles().mapIfSuccess { articles ->
+                ResponseResult.Success(articles.map { article ->
                     SavedArticleWrapper(true, article)
-                }
-            is ResponseResult.Error -> return savedArticles
-        }
+                })
+            }
 
         return ResponseResult.Success(
-            NewsWrapper(
-                response.value.resultNumber ?: 0,
-                unsavedWrappedArticles.updateFrom(savedWrappedArticles) { item1, item2 ->
-                    item1.item.title == item2.item.title
-                })
+            NewsWrapper(totalResult
+                ?: return ResponseResult.Error(unsavedWrappedArticles.error()),
+                unsavedWrappedArticles.successValue()
+                    ?.updateFrom(
+                        savedWrappedArticles.successValue()
+                            ?: return ResponseResult.Error(savedWrappedArticles.error())
+                    ) { item1, item2 ->
+                        item1.item.title == item2.item.title
+                    }
+                    ?: return ResponseResult.Error(unsavedWrappedArticles.error())
+            )
         )
     }
 
@@ -96,7 +93,7 @@ class NewsInteractorImpl(
             ResponseResult.Success(articles.map { article ->
                 SavedArticleWrapper(true, article)
             })
-        } ?: ResponseResult.Error()
+        }
 
     override suspend fun getSourcesByLanguage(language: String): ResponseResult<List<ArticleSource>, Error> =
         newsRepository.getSourcesByLanguage(language)
@@ -111,3 +108,5 @@ class NewsInteractorImpl(
     override suspend fun deleteSource(source: ArticleSource) =
         sourceRepository.deleteSource(source)
 }
+
+

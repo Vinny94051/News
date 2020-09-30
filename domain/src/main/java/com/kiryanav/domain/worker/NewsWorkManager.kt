@@ -15,6 +15,9 @@ import com.kiryanav.domain.notification.createNotificationChannel
 import com.kiryanav.domain.prefs.TimeManager
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import vlnny.base.data.model.ResponseResult
+import vlnny.base.data.model.mapIfSuccess
+import vlnny.base.data.model.successValue
 import java.util.concurrent.TimeUnit
 
 class NewsWorkManager(
@@ -39,16 +42,28 @@ class NewsWorkManager(
         val newTitle: String?
 
         interactor.apply {
-            oldTitle = getSavedArticles()[0].item.title
+            oldTitle = getSavedArticles()
+                .mapIfSuccess { savedArticles ->
+                    ResponseResult.Success(savedArticles[0].item.title ?: "")
+
+                }
+                .successValue() ?: return Result.failure()
+
             newTitle = getNews(
-                null,
-                null,
-                null,
+                null, null, null,
                 getSavedSources()
-            ).articles[0].item.title
+                    .mapIfSuccess { articleSources ->
+                        ResponseResult.Success(articleSources)
+                    }
+                    .successValue() ?: return Result.failure()
+            )
+                .mapIfSuccess { newsWrapper ->
+                    ResponseResult.Success(newsWrapper.articles)
+                }
+                .successValue()?.get(0)?.item?.title ?: return Result.failure()
         }
 
-        newsUpdateReceiver.pushNews(oldTitle == newTitle)
+        newsUpdateReceiver.pushNews(oldTitle != newTitle)
         return Result.success()
     }
 

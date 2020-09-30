@@ -9,9 +9,8 @@ import ru.kiryanav.ui.mapper.toArticleSource
 import ru.kiryanav.ui.mapper.toArticleSourceUI
 import ru.kiryanav.ui.model.ArticleSourceUI
 import ru.kiryanav.ui.utils.SingleLiveEvent
-import vlnny.base.data.model.ResponseResult
-import vlnny.base.data.model.isError
-import vlnny.base.error.ui.Error
+import vlnny.base.data.model.doOnError
+import vlnny.base.data.model.doOnSuccess
 import vlnny.base.viewModel.BaseViewModel
 
 class SettingsViewModel(
@@ -28,37 +27,44 @@ class SettingsViewModel(
 
     fun loadSources() {
         viewModelScope.launch {
-            when (val sources = newsInteractor.getSources()) {
-                is ResponseResult.Success -> _sourcesLiveData.value =
-                    sources.value.map { source -> source.toArticleSourceUI() }
-                is ResponseResult.Error -> errorLiveData.value = Error.UNKNOWN
-            }
+
+            newsInteractor.getSources()
+                .doOnSuccess { savedSources ->
+                    _sourcesLiveData.value =
+                        savedSources.map { source -> source.toArticleSourceUI() }
+                }
+                .doOnError {
+                    errorLiveData.value = defineErrorType(it)
+                }
+
         }
     }
 
     fun saveSources(sources: List<ArticleSourceUI>) {
         if (sources.isNotEmpty()) {
             viewModelScope.launch {
-                if (newsInteractor.saveSources(
-                        sources
-                            .map { uiSource ->
-                                uiSource.toArticleSource()
-                            }
-                    ).isError()
-                ) {
-                    errorLiveData.value = Error.UNKNOWN
-                } else {
-                    _sourcesSavedNotify.call()
-                }
+
+                newsInteractor.saveSources(
+                    sources.map { uiSource ->
+                        uiSource.toArticleSource()
+                    }
+                )
+                    .doOnSuccess {
+                        _sourcesSavedNotify.call()
+                    }
+                    .doOnError {
+                        errorLiveData.value = defineErrorType(it)
+                    }
             }
         }
     }
 
     fun deleteSource(source: ArticleSourceUI) {
         viewModelScope.launch {
-            if (newsInteractor.deleteSource(source.toArticleSource()).isError()) {
-                errorLiveData.value = Error.UNKNOWN
-            }
+            newsInteractor.deleteSource(source.toArticleSource())
+                .doOnError {
+                    errorLiveData.value = defineErrorType(it)
+                }
         }
     }
 

@@ -26,18 +26,15 @@ class NewsRepositoryImpl(private val newsApi: NewsApi) : BaseRepository(), NewsR
     ): ResponseResult<News, Error> =
         withErrorHandlingCall {
             val sourcesIds = createSourcesParam(sources)
-            newsApi.getEverything(
-                query,
-                from,
-                to,
-                getLanguage(language),
+            newsApi.getEverything(query, from, to, getLanguage(language),
                 sortBy.toSortByApi().keyword,
                 pageNumber,
                 if (sourcesIds.isNotEmpty()) sourcesIds else DEFAULT_SOURCE
             ).toNews()
         }
 
-    override suspend fun getSourcesByLanguage(language: String): ResponseResult<List<ArticleSource>, Error> =
+    override suspend fun getSourcesByLanguage(language: String)
+            : ResponseResult<List<ArticleSource>, Error> =
         withErrorHandlingCall {
             newsApi.getSourcesByLanguage(
                 language

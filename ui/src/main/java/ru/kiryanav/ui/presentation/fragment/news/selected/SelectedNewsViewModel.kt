@@ -9,9 +9,8 @@ import kotlinx.coroutines.launch
 import ru.kiryanav.ui.mapper.toArticle
 import ru.kiryanav.ui.mapper.toArticleUI
 import ru.kiryanav.ui.model.ArticleItem
-import vlnny.base.data.model.ResponseResult
-import vlnny.base.data.model.isError
-import vlnny.base.error.ui.Error
+import vlnny.base.data.model.doOnError
+import vlnny.base.data.model.doOnSuccess
 import vlnny.base.viewModel.BaseViewModel
 
 class SelectedNewsViewModel(
@@ -25,9 +24,10 @@ class SelectedNewsViewModel(
 
     fun remove(article: ArticleItem.ArticleUI) {
         viewModelScope.launch {
-            if (newsInteractor.deleteArticle(article.toArticle()).isError()) {
-                errorLiveData.value = Error.UNKNOWN
-            }
+            newsInteractor.deleteArticle(article.toArticle())
+                .doOnError {
+                    errorLiveData.value = defineErrorType(it)
+                }
         }
     }
 
@@ -35,14 +35,15 @@ class SelectedNewsViewModel(
         viewModelScope.launch {
             isProgressVisibleLiveData.value = true
 
-            when (val result = newsInteractor.getSavedArticles()) {
-                is ResponseResult.Success -> {
-                    articlesMutableLiveData.value = result.value.map { article ->
+            newsInteractor.getSavedArticles()
+                .doOnSuccess { savedArticleWrapper ->
+                    articlesMutableLiveData.value = savedArticleWrapper.map { article ->
                         article.toArticleUI(context)
                     }
                 }
-                else -> errorLiveData.value = Error.UNKNOWN
-            }
+                .doOnError {
+                    errorLiveData.value = defineErrorType(it)
+                }
 
             isProgressVisibleLiveData.value = false
         }

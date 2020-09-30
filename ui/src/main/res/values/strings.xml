@@ -37,4 +37,5 @@ You always can change it.</string>
     <string name="_24_hours">24 hours</string>
     <string name="turn_off_notification">Turn off notification</string>
     <string name="save">Сохранить</string>
+    <string name="default_error">Something went wrong</string>
 </resources>

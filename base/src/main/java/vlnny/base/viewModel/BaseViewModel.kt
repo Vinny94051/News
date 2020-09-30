@@ -11,4 +11,11 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
     protected val errorLiveData = MutableLiveData<Error>()
     val error: LiveData<Error>
         get() = errorLiveData
+
+    val isWithUnknownError: Boolean
+        get() = errorLiveData.value == Error.UNKNOWN
+
+    protected fun <E> defineErrorType(error: E?): Error =
+        Error.UNKNOWN
+
 }

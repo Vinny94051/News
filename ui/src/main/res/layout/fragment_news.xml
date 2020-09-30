@@ -10,10 +10,6 @@
             type="ru.kiryanav.ui.presentation.fragment.news.current.NewsViewModel" />
 
         <variable
-            name="workerViewModel"
-            type="ru.kiryanav.ui.presentation.worker.WorkerViewModel" />
-
-        <variable
             name="callback"
             type="ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick" />
     </data>
@@ -66,7 +62,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/newsRecycler"
                 articleCallback="@{callback}"
-                articles="@{workerViewModel.newsLiveData}"
+                articles="@{viewModel.newsLiveData}"
                 isVisible="@{!viewModel.isProgressVisible()}"
                 isWithSaveIcon="@{true}"
                 android:layout_width="match_parent"
@@ -98,6 +94,26 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/news_8dp"
                 android:indeterminateTint="@android:color/black" />
+
+
+            <TextView
+                android:id="@+id/errorView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/default_error"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                isVisible="@{viewModel.withUnknownError}"
+                android:background="@android:color/black"
+                android:padding="@dimen/default_margin"
+                android:elevation="48dp"
+                android:textColor="@android:color/holo_red_dark"
+                />
         </RelativeLayout>
+
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </layout>

@@ -16,7 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.koin.android.scope.scope
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -24,7 +23,6 @@ import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentNewsBinding
 import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
-import ru.kiryanav.ui.presentation.worker.WorkerViewModel
 import vlnny.base.ext.openLink
 import vlnny.base.fragment.BaseBindableFragment
 
@@ -33,7 +31,6 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
     OnArticleItemClick, KoinComponent {
 
     private val newsViewModel by viewModel<NewsViewModel>()
-    private val workViewModel = WorkerViewModel
     private val newsUpdateListener: NewsUpdaterListener by inject()
     private val job = CoroutineScope(Job())
 
@@ -41,7 +38,6 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
         super.onActivityCreated(savedInstanceState)
         binding.apply {
             this.viewModel = this@NewsFragment.newsViewModel
-            this.workerViewModel = this@NewsFragment.workViewModel
             this.callback = this@NewsFragment
             executePendingBindings()
         }
