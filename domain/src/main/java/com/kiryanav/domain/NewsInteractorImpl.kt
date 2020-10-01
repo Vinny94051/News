@@ -15,12 +15,8 @@ class NewsInteractorImpl(
 ) : NewsInteractor {
 
     override suspend fun getNews(
-        query: String?,
-        from: String?,
-        to: String?,
-        sources: List<ArticleSource>,
-        language: String?,
-        pageNumber: Int
+        query: String?, from: String?, to: String?, sources: List<ArticleSource>,
+        language: String?, pageNumber: Int
     ): ResponseResult<NewsWrapper, Error> {
 
         var totalResult: Int? = null
@@ -35,11 +31,12 @@ class NewsInteractorImpl(
                 }
 
         val savedWrappedArticles =
-            articleRepository.getAllSavedArticles().mapIfSuccess { articles ->
-                ResponseResult.Success(articles.map { article ->
-                    SavedArticleWrapper(true, article)
-                })
-            }
+            articleRepository.getAllSavedArticles()
+                .mapIfSuccess { articles ->
+                    ResponseResult.Success(articles.map { article ->
+                        SavedArticleWrapper(true, article)
+                    })
+                }
 
         return ResponseResult.Success(
             NewsWrapper(totalResult
@@ -83,10 +80,8 @@ class NewsInteractorImpl(
     override suspend fun saveArticle(article: Article) =
         articleRepository.saveArticle(article)
 
-
     override suspend fun deleteArticle(article: Article) =
         articleRepository.deleteArticle(article)
-
 
     override suspend fun getSavedArticles(): ResponseResult<List<SavedArticleWrapper>, Error> =
         articleRepository.getAllSavedArticles().mapIfSuccess { articles ->
@@ -100,7 +95,6 @@ class NewsInteractorImpl(
 
     override suspend fun getSavedSources(): ResponseResult<List<ArticleSource>, Error> =
         sourceRepository.getSavedSources()
-
 
     override suspend fun saveSources(sources: List<ArticleSource>) =
         sourceRepository.insertSources(sources)

@@ -20,8 +20,7 @@ import java.time.LocalDateTime
 class NewsViewModel(
     private val context: Context,
     private val newsInteractor: NewsInteractor
-) :
-    BaseViewModel() {
+) : BaseViewModel() {
 
     private val _newsLiveData = MutableLiveData<List<ArticleItem>>()
     val newsLiveData: LiveData<List<ArticleItem>>
@@ -103,12 +102,9 @@ class NewsViewModel(
         if (dayNumber < WEEK_DAYS_NUMBER) {
 
             newsInteractor
-                .getNews(
-                    lastQuery,
+                .getNews(lastQuery,
                     getDate(dayNumber - 1),
-                    getDate(dayNumber),
-                    sources,
-                    language
+                    getDate(dayNumber), sources, language
                 ).doOnSuccess { nextPage ->
                     setTotalNews(nextPage.totalResult)
                     _newsLiveData.value = _newsLiveData.value
