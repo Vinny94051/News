@@ -56,7 +56,7 @@ class NewsViewModel(
         dayNumber = DAY_NUMBER_DEFAULT_VALUE
 
         viewModelScope.launch {
-            isProgressVisibleLiveData.value = true
+            isProgressVisibleLiveData.postValue(true)
 
             newsInteractor.getSavedSources()
                 .doOnSuccess { savedSources ->
@@ -71,7 +71,7 @@ class NewsViewModel(
         language: String? = null
     ) {
         viewModelScope.launch {
-            _isLoadingMore.value = true
+            _isLoadingMore.postValue(true)
 
             newsInteractor.getSavedSources()
                 .doOnSuccess { sources ->
@@ -102,21 +102,22 @@ class NewsViewModel(
         if (dayNumber < WEEK_DAYS_NUMBER) {
 
             newsInteractor
-                .getNews(lastQuery,
+                .getNews(
+                    lastQuery,
                     getDate(dayNumber - 1),
                     getDate(dayNumber), sources, language
                 ).doOnSuccess { nextPage ->
                     setTotalNews(nextPage.totalResult)
-                    _newsLiveData.value = _newsLiveData.value
-                            ?.plus(nextPage.articles.toArticleItemList(context))
+                    _newsLiveData.postValue( _newsLiveData.value
+                        ?.plus(nextPage.articles.toArticleItemList(context)))
 
                 }.doOnError {
                     errorLiveData.value = defineErrorType(it)
                 }
 
-            _isLoadingMore.value = false
+            _isLoadingMore.postValue(false)
         } else {
-            _isLoadingMore.value = false
+            _isLoadingMore.postValue(false)
         }
     }
 
@@ -131,18 +132,20 @@ class NewsViewModel(
         newsInteractor.getNews(query, from, to, savedSources, language)
             .doOnSuccess { news ->
                 setTotalNews(news.totalResult)
-                _newsLiveData.value = news.articles.toArticleItemList(context)
+                _newsLiveData.postValue(news.articles.toArticleItemList(context))
             }
             .doOnError {
                 errorLiveData.value = defineErrorType(it)
             }
 
-        isProgressVisibleLiveData.value = false
+        isProgressVisibleLiveData.postValue(  false)
     }
 
-    private fun setTotalNews(totalResult : Int){
-        _totalNewsLiveData.value = context.getString(R.string.total_results)
-            .format(totalResult.toString())
+    private fun setTotalNews(totalResult: Int) {
+        _totalNewsLiveData.postValue(
+            context.getString(R.string.total_results)
+                .format(totalResult.toString())
+        )
     }
 
     private fun getDate(dayNumber: Int): String =

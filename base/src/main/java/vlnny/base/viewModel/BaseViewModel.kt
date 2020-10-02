@@ -17,5 +17,4 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
 
     protected fun <E> defineErrorType(error: E?): Error =
         Error.UNKNOWN
-
 }

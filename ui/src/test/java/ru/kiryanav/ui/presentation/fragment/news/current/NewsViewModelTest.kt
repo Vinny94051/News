@@ -2,53 +2,76 @@ package ru.kiryanav.ui.presentation.fragment.news.current
 
 import android.content.Context
 import com.kiryanav.domain.model.Article
-import kotlinx.coroutines.runBlocking
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
+import ru.kiryanav.ui.R
 import ru.kiryanav.ui.model.ArticleItem
+import kotlin.test.assertNotEquals
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class NewsViewModelTest {
+open class NewsViewModelTest {
 
-    @Mock
-    private lateinit var mockContext: Context
+    private val mockContext = mockk<Context>()
     private val newsInteractor = FakeInteractor()
-    private lateinit var viewModel: NewsViewModel
+    private var viewModel: NewsViewModel = NewsViewModel(mockContext, newsInteractor)
 
     @BeforeEach
     internal fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        viewModel = NewsViewModel(mockContext, newsInteractor)
+
+        every {
+            mockContext.getString(R.string.total_results)
+        } returns "Total results: %s"
+
+        every {
+            mockContext.getString(R.string.author)
+        } returns "Author %s"
     }
 
     @Test
-    fun removeArticle() {
-        runBlocking {
-            viewModel.removeArticle(
-                ArticleItem.ArticleUI(
+    open fun removeArticle() {
+        viewModel.removeArticle(
+            ArticleItem.ArticleUI(
+                "",
+                "",
+                "", "",
+                "",
+                "",
+                Article(
                     "",
                     "",
-                    "", "",
                     "",
                     "",
-                    Article("", "", "", "", "", "", "", "", ""), true
-                )
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+                ),
+                true
             )
-        }
+        )
+        assertNotEquals(viewModel.isWithUnknownError, true)
+    }
+
+
+    @Test
+    open fun loadNews() {
+        viewModel.loadNews()
+        assertNotEquals(viewModel.isWithUnknownError, true)
     }
 
     @Test
-    fun loadNews() {
+    open fun loadMore() {
+        viewModel.loadMore()
+        assertNotEquals(viewModel.isWithUnknownError, true)
     }
 
     @Test
-    fun loadMore() {
-    }
-
-    @Test
-    fun saveArticle() {
+    open fun saveArticle() {
     }
 }
