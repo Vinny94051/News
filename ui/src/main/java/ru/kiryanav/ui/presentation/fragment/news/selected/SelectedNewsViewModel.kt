@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.kiryanav.domain.NewsInteractor
 import kotlinx.coroutines.launch
 import ru.kiryanav.ui.mapper.toArticle
+import ru.kiryanav.ui.mapper.toArticleItemList
 import ru.kiryanav.ui.mapper.toArticleUI
 import ru.kiryanav.ui.model.ArticleItem
 import vlnny.base.data.model.doOnError
@@ -33,19 +34,20 @@ class SelectedNewsViewModel(
 
     fun getSavedArticles() {
         viewModelScope.launch {
-            isProgressVisibleLiveData.value = true
+            isProgressVisibleLiveData.postValue(true)
 
             newsInteractor.getSavedArticles()
                 .doOnSuccess { savedArticleWrapper ->
-                    articlesMutableLiveData.value = savedArticleWrapper.map { article ->
-                        article.toArticleUI(context)
-                    }
+                    articlesMutableLiveData.postValue(
+                        savedArticleWrapper
+                            .toArticleItemList(context)
+                    )
                 }
                 .doOnError {
-                    errorLiveData.value = defineErrorType(it)
+                    errorLiveData.postValue(defineErrorType(it))
                 }
 
-            isProgressVisibleLiveData.value = false
+            isProgressVisibleLiveData.postValue(false)
         }
     }
 

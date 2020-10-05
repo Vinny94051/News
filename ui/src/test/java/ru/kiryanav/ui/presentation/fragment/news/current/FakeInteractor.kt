@@ -4,6 +4,7 @@ import com.kiryanav.domain.NewsInteractor
 import com.kiryanav.domain.model.*
 import com.kiryanav.domain.Error
 import vlnny.base.data.model.ResponseResult
+import java.util.*
 
 class FakeInteractor : NewsInteractor {
     override suspend fun getNews(
@@ -59,7 +60,7 @@ class FakeInteractor : NewsInteractor {
                         "description".plus(i),
                         "articleUrl".plus(i),
                         "imageUrl".plus(i),
-                        "datedatedate".plus(i),
+                       Date(),
                         "content".plus(i)
                     )
                 )

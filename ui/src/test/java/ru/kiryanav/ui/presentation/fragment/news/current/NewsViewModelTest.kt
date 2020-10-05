@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.model.ArticleItem
+import java.util.*
 import kotlin.test.assertNotEquals
 
 
@@ -49,7 +50,7 @@ open class NewsViewModelTest {
                     "",
                     "",
                     "",
-                    "",
+                    Date(),
                     ""
                 ),
                 true
@@ -73,5 +74,27 @@ open class NewsViewModelTest {
 
     @Test
     open fun saveArticle() {
+        viewModel.saveArticle(
+            ArticleItem.ArticleUI(
+                "",
+                "",
+                "", "",
+                "",
+                "",
+                Article(
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    Date(),
+                    ""
+                ),
+                true
+            )
+        )
+        assertNotEquals(viewModel.isWithUnknownError, true)
     }
 }

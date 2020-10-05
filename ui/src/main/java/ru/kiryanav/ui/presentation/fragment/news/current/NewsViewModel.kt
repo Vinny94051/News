@@ -1,6 +1,7 @@
 package ru.kiryanav.ui.presentation.fragment.news.current
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -108,8 +109,10 @@ class NewsViewModel(
                     getDate(dayNumber), sources, language
                 ).doOnSuccess { nextPage ->
                     setTotalNews(nextPage.totalResult)
-                    _newsLiveData.postValue( _newsLiveData.value
-                        ?.plus(nextPage.articles.toArticleItemList(context)))
+                    _newsLiveData.postValue(
+                        _newsLiveData.value
+                            ?.plus(nextPage.articles.toArticleItemList(context))
+                    )
 
                 }.doOnError {
                     errorLiveData.value = defineErrorType(it)
@@ -132,13 +135,15 @@ class NewsViewModel(
         newsInteractor.getNews(query, from, to, savedSources, language)
             .doOnSuccess { news ->
                 setTotalNews(news.totalResult)
+                Log.e(javaClass.simpleName, news.toString())
                 _newsLiveData.postValue(news.articles.toArticleItemList(context))
             }
             .doOnError {
+                Log.e(javaClass.simpleName, "error")
                 errorLiveData.value = defineErrorType(it)
             }
 
-        isProgressVisibleLiveData.postValue(  false)
+        isProgressVisibleLiveData.postValue(false)
     }
 
     private fun setTotalNews(totalResult: Int) {

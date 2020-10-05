@@ -8,6 +8,7 @@ abstract class BaseRepository {
         try {
             ResponseResult.Success(call.invoke())
         } catch (ex: Throwable) {
+            ex.printStackTrace()
             ResponseResult.Error()
         }
 
