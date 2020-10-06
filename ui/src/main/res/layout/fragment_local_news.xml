@@ -15,6 +15,7 @@
     </data>
 
     <RelativeLayout
+        newsError="@{viewModel.error}"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -22,8 +23,8 @@
             android:id="@+id/headerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/default_margin"
             android:text="@string/saved_news"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_22sp"
@@ -52,22 +53,6 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="10"
             tools:listitem="@layout/item_article" />
-
-        <TextView
-            android:id="@+id/errorView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/default_error"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            isVisible="@{viewModel.withUnknownError}"
-            android:background="@android:color/black"
-            android:padding="@dimen/default_margin"
-            android:elevation="48dp"
-            android:textColor="@android:color/holo_red_dark"
-            />
 
     </RelativeLayout>
 </layout>

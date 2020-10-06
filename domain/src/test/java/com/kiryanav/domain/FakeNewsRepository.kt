@@ -1,12 +1,11 @@
 package com.kiryanav.domain
 
+import com.kiryanav.domain.error.NewsError
 import com.kiryanav.domain.model.Article
 import com.kiryanav.domain.model.ArticleSource
 import com.kiryanav.domain.model.News
 import com.kiryanav.domain.model.SortBy
-import com.kiryanav.domain.repoApi.ArticleRepository
 import com.kiryanav.domain.repoApi.NewsRepository
-import com.kiryanav.domain.repoApi.SourceRepository
 import vlnny.base.data.model.ResponseResult
 
 class FakeNewsRepository : NewsRepository {
@@ -18,7 +17,7 @@ class FakeNewsRepository : NewsRepository {
         language: String?,
         pageNumber: Int,
         sortBy: SortBy
-    ): ResponseResult<News, Error> {
+    ): ResponseResult<News, NewsError> {
         return ResponseResult.Success(
             News(
                 12,
@@ -47,7 +46,7 @@ class FakeNewsRepository : NewsRepository {
         return articles
     }
 
-    override suspend fun getSources(language: String): ResponseResult<List<ArticleSource>, Error> {
+    override suspend fun getSources(language: String): ResponseResult<List<ArticleSource>, NewsError> {
         return ResponseResult.Success(
             createFakeSources()
         )

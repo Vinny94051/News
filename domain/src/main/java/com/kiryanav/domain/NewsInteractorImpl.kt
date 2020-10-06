@@ -1,5 +1,7 @@
 package com.kiryanav.domain
 
+import com.kiryanav.domain.error.NewsError
+import com.kiryanav.domain.error.SourceError
 import com.kiryanav.domain.model.*
 import com.kiryanav.domain.repoApi.ArticleRepository
 import com.kiryanav.domain.repoApi.NewsRepository
@@ -17,7 +19,7 @@ class NewsInteractorImpl(
     override suspend fun getNews(
         query: String?, from: String?, to: String?, sources: List<ArticleSource>,
         language: String?, pageNumber: Int
-    ): ResponseResult<NewsWrapper, Error> {
+    ): ResponseResult<NewsWrapper, NewsError> {
 
         var totalResult: Int? = null
 
@@ -53,7 +55,7 @@ class NewsInteractorImpl(
         )
     }
 
-    override suspend fun getSources(): ResponseResult<List<SavedArticleSourceWrapper>, Error> {
+    override suspend fun getSources(): ResponseResult<List<SavedArticleSourceWrapper>, SourceError> {
 
         val unsavedWrappedSources =
             newsRepository.getSources().mapIfSuccess { sources ->
@@ -83,17 +85,17 @@ class NewsInteractorImpl(
     override suspend fun deleteArticle(article: Article) =
         articleRepository.deleteArticle(article)
 
-    override suspend fun getSavedArticles(): ResponseResult<List<SavedArticleWrapper>, Error> =
+    override suspend fun getSavedArticles(): ResponseResult<List<SavedArticleWrapper>, NewsError> =
         articleRepository.getAllSavedArticles().mapIfSuccess { articles ->
             ResponseResult.Success(articles.map { article ->
                 SavedArticleWrapper(true, article)
             })
         }
 
-    override suspend fun getSourcesByLanguage(language: String): ResponseResult<List<ArticleSource>, Error> =
+    override suspend fun getSourcesByLanguage(language: String): ResponseResult<List<ArticleSource>, SourceError> =
         newsRepository.getSources(language)
 
-    override suspend fun getSavedSources(): ResponseResult<List<ArticleSource>, Error> =
+    override suspend fun getSavedSources(): ResponseResult<List<ArticleSource>, SourceError> =
         sourceRepository.getSavedSources()
 
     override suspend fun saveSources(sources: List<ArticleSource>) =

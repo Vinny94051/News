@@ -1,15 +1,17 @@
 package com.kiryanav.domain
 
+import com.kiryanav.domain.error.NewsError
 import com.kiryanav.domain.model.Article
 import com.kiryanav.domain.repoApi.ArticleRepository
 import vlnny.base.data.model.ResponseResult
+import java.util.*
 
 class FakeArticleRepository : ArticleRepository {
-    override suspend fun saveArticle(article: Article): ResponseResult<Unit, Error> {
+    override suspend fun saveArticle(article: Article): ResponseResult<Unit, NewsError> {
         return ResponseResult.Success(Unit)
     }
 
-    override suspend fun getAllSavedArticles(): ResponseResult<List<Article>, Error> {
+    override suspend fun getAllSavedArticles(): ResponseResult<List<Article>, NewsError> {
         return ResponseResult.Success(createFakeArticles())
     }
 
@@ -25,7 +27,7 @@ class FakeArticleRepository : ArticleRepository {
                     "description".plus(i),
                     "articleUrl".plus(i),
                     "imageUrl".plus(i),
-                    "date".plus(i),
+                    Date(),
                     "content".plus(i)
                 )
             )
@@ -33,7 +35,7 @@ class FakeArticleRepository : ArticleRepository {
         return articles
     }
 
-    override suspend fun deleteArticle(article: Article): ResponseResult<Unit, Error> {
+    override suspend fun deleteArticle(article: Article): ResponseResult<Unit, NewsError> {
         return ResponseResult.Success(Unit)
     }
 }

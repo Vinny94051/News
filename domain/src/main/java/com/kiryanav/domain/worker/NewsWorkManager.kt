@@ -49,14 +49,13 @@ class NewsWorkManager(
                 }
                 .successValue() ?: return Result.failure()
 
-            newTitle = getNews(
-                null, null, null,
-                getSavedSources()
-                    .mapIfSuccess { articleSources ->
-                        ResponseResult.Success(articleSources)
-                    }
-                    .successValue() ?: return Result.failure()
-            )
+            val sources =  getSavedSources()
+                .mapIfSuccess { articleSources ->
+                    ResponseResult.Success(articleSources)
+                }
+                .successValue() ?: return Result.failure()
+
+            newTitle = getNews(sources = sources)
                 .mapIfSuccess { newsWrapper ->
                     ResponseResult.Success(newsWrapper.articles)
                 }

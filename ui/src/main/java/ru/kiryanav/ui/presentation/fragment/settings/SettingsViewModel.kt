@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.kiryanav.domain.NewsInteractor
+import com.kiryanav.domain.error.Error
+import com.kiryanav.domain.error.SourceError
 import kotlinx.coroutines.launch
 import ru.kiryanav.ui.mapper.toArticleSource
 import ru.kiryanav.ui.mapper.toArticleSourceUI
 import ru.kiryanav.ui.model.ArticleSourceUI
+import ru.kiryanav.ui.presentation.base.BaseErrorViewModel
 import ru.kiryanav.ui.utils.SingleLiveEvent
 import vlnny.base.data.model.doOnError
 import vlnny.base.data.model.doOnSuccess
@@ -15,7 +18,7 @@ import vlnny.base.viewModel.BaseViewModel
 
 class SettingsViewModel(
     private val newsInteractor: NewsInteractor
-) : BaseViewModel() {
+) : BaseErrorViewModel<Error, SettingsError>() {
 
     private val _sourcesLiveData = MutableLiveData<List<ArticleSourceUI>>()
     val sourcesLiveData: LiveData<List<ArticleSourceUI>>
@@ -24,6 +27,13 @@ class SettingsViewModel(
     private val _sourcesSavedNotify = SingleLiveEvent<Any>()
     val sourcesSavedNotify: LiveData<Any>
         get() = _sourcesSavedNotify
+
+
+    override fun defineErrorType(error: Error?): SettingsError = when (error) {
+        is SourceError.BadApiKey -> SettingsError.BadApiKey
+        else -> SettingsError.Unknown
+    }
+
 
     fun loadSources() {
         viewModelScope.launch {

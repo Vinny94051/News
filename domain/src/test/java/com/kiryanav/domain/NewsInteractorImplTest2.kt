@@ -5,6 +5,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import vlnny.base.data.model.successValue
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 
@@ -32,9 +33,9 @@ class NewsInteractorImplTest2 {
     @Test
     fun getSources() {
         runBlocking {
-            assertNotNull(
-                interactor.getSources().successValue()
-            )
+            val sources = interactor.getSources().successValue()
+            assertNotNull(sources)
+            assertEquals(12, sources.size)
         }
     }
 

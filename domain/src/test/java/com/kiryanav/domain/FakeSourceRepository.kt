@@ -1,11 +1,12 @@
 package com.kiryanav.domain
 
+import com.kiryanav.domain.error.NewsError
 import com.kiryanav.domain.model.ArticleSource
 import com.kiryanav.domain.repoApi.SourceRepository
 import vlnny.base.data.model.ResponseResult
 
 class FakeSourceRepository : SourceRepository {
-    override suspend fun getSavedSources(): ResponseResult<List<ArticleSource>, Error> {
+    override suspend fun getSavedSources(): ResponseResult<List<ArticleSource>, NewsError> {
         return ResponseResult.Success(createFakeSources())
     }
 
@@ -29,11 +30,11 @@ class FakeSourceRepository : SourceRepository {
         return sources
     }
 
-    override suspend fun insertSources(source: List<ArticleSource>): ResponseResult<Unit, Error> {
+    override suspend fun insertSources(source: List<ArticleSource>): ResponseResult<Unit, NewsError> {
        return ResponseResult.Success(Unit)
     }
 
-    override suspend fun deleteSource(source: ArticleSource): ResponseResult<Unit, Error> {
+    override suspend fun deleteSource(source: ArticleSource): ResponseResult<Unit, NewsError> {
         return ResponseResult.Success(Unit)
     }
 }

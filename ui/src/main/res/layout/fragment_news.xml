@@ -17,7 +17,9 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        newsError="@{viewModel.error}"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -94,23 +96,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/news_8dp"
                 android:indeterminateTint="@android:color/black" />
-
-
-            <TextView
-                android:id="@+id/errorView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/default_error"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                isVisible="@{viewModel.withUnknownError}"
-                android:background="@android:color/black"
-                android:padding="@dimen/default_margin"
-                android:elevation="48dp"
-                android:textColor="@android:color/holo_red_dark"
-                />
         </RelativeLayout>
 
 

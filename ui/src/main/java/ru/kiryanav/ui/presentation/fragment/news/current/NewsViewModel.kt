@@ -8,20 +8,23 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.kiryanav.ui.R
 import com.kiryanav.domain.NewsInteractor
+import com.kiryanav.domain.error.Error
+import com.kiryanav.domain.error.NewsError
+import com.kiryanav.domain.error.SourceError
 import com.kiryanav.domain.model.ArticleSource
 import ru.kiryanav.ui.mapper.toArticle
 import ru.kiryanav.ui.mapper.toArticleItemList
 import ru.kiryanav.ui.model.ArticleItem
+import ru.kiryanav.ui.presentation.base.BaseErrorViewModel
+import ru.kiryanav.ui.presentation.fragment.news.NewsUIError
 import vlnny.base.data.model.*
-import vlnny.base.error.ui.Error
-import vlnny.base.viewModel.BaseViewModel
 import java.time.LocalDateTime
 
 
 class NewsViewModel(
     private val context: Context,
     private val newsInteractor: NewsInteractor
-) : BaseViewModel() {
+) : BaseErrorViewModel<Error, NewsUIError>() {
 
     private val _newsLiveData = MutableLiveData<List<ArticleItem>>()
     val newsLiveData: LiveData<List<ArticleItem>>
@@ -37,6 +40,16 @@ class NewsViewModel(
 
     private var dayNumber: Int = DAY_NUMBER_DEFAULT_VALUE
     var lastQuery: String = ""
+
+
+    override fun defineErrorType(error: Error?): NewsUIError =
+        when (error) {
+            is SourceError.BadApiKey -> NewsUIError.BadApiKey
+            is NewsError.BadApiKey -> NewsUIError.BadApiKey
+            is NewsError.NoSavedSources -> NewsUIError.NoSavedSources
+            else -> NewsUIError.Unknown
+        }
+
 
     fun removeArticle(article: ArticleItem.ArticleUI) {
         viewModelScope.launch {
@@ -100,7 +113,7 @@ class NewsViewModel(
         updateUI(lastQuery)
         dayNumber++
 
-        if (dayNumber < WEEK_DAYS_NUMBER) {
+        if (dayNumber < MAX_DAYS_NUMBER) {
 
             newsInteractor
                 .getNews(
@@ -115,7 +128,7 @@ class NewsViewModel(
                     )
 
                 }.doOnError {
-                    errorLiveData.value = defineErrorType(it)
+                    errorLiveData.postValue(defineErrorType(it))
                 }
 
             _isLoadingMore.postValue(false)
@@ -139,7 +152,6 @@ class NewsViewModel(
                 _newsLiveData.postValue(news.articles.toArticleItemList(context))
             }
             .doOnError {
-                Log.e(javaClass.simpleName, "error")
                 errorLiveData.value = defineErrorType(it)
             }
 
@@ -157,7 +169,9 @@ class NewsViewModel(
         LocalDateTime.now().minusDays(dayNumber.toLong()).toString()
 
     companion object {
-        private const val WEEK_DAYS_NUMBER = 8
+        private const val MAX_DAYS_NUMBER = 8
         private const val DAY_NUMBER_DEFAULT_VALUE = 1
     }
+
+
 }

@@ -1,6 +1,7 @@
 package ru.kiryanav.data.repository
 
-import com.kiryanav.domain.Error
+import com.kiryanav.domain.error.NewsError
+import com.kiryanav.domain.error.SourceError
 import com.kiryanav.domain.model.News
 import com.kiryanav.domain.model.SortBy
 import com.kiryanav.domain.model.ArticleSource
@@ -23,25 +24,38 @@ class NewsRepositoryImpl(private val newsApi: NewsApi) : BaseRepository(), NewsR
         language: String?,
         pageNumber: Int,
         sortBy: SortBy
-    ): ResponseResult<News, Error> =
-        withErrorHandlingCall {
-            val sourcesIds = createSourcesParam(sources)
-            newsApi.getEverything(query, from, to, getLanguage(language),
+    ): ResponseResult<News, NewsError> {
+        val sourcesIds = createSourcesParam(sources)
+        return withErrorHandlingCall({
+            newsApi.getEverything(
+                query, from, to, getLanguage(language),
                 sortBy.toSortByApi().keyword,
                 pageNumber,
-                if (sourcesIds.isNotEmpty()) sourcesIds else DEFAULT_SOURCE
+                sourcesIds
             ).toNews()
-        }
+        }, { errorCode ->
+            when (errorCode) {
+                400 -> NewsError.NoSavedSources
+                401 -> NewsError.BadApiKey
+                else -> NewsError.Unknown
+            }
+        })
+    }
 
     override suspend fun getSources(language: String)
-            : ResponseResult<List<ArticleSource>, Error> =
-        withErrorHandlingCall {
+            : ResponseResult<List<ArticleSource>, SourceError> =
+        withErrorHandlingCall({
             newsApi.getSourcesByLanguage(
                 language
             ).sources.map { source ->
                 source.toArticleSource()
             }
-        }
+        }, { errorCode ->
+            when (errorCode) {
+                401 -> SourceError.BadApiKey
+                else -> SourceError.Unknown
+            }
+        })
 
     private fun createSourcesParam(sources: List<ArticleSource>): String {
         var sourcesId = ""
@@ -53,9 +67,4 @@ class NewsRepositoryImpl(private val newsApi: NewsApi) : BaseRepository(), NewsR
 
     private fun getLanguage(language: String?): String =
         language ?: Locale.getDefault().language
-
-    companion object {
-        const val DEFAULT_SOURCE = "RBC"
-    }
-
 }
