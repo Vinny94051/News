@@ -6,7 +6,7 @@ import com.kiryanav.domain.repoApi.ArticleRepository
 import vlnny.base.data.model.ResponseResult
 import java.util.*
 
-class FakeArticleRepository : ArticleRepository {
+class FakeArticleRepository(internal val articlesNumber : Int) : ArticleRepository {
     override suspend fun saveArticle(article: Article): ResponseResult<Unit, NewsError> {
         return ResponseResult.Success(Unit)
     }
@@ -17,7 +17,7 @@ class FakeArticleRepository : ArticleRepository {
 
     private fun createFakeArticles(): List<Article> {
         val articles = mutableListOf<Article>()
-        for (i in 0..10) {
+        for (i in 0..articlesNumber) {
             articles.add(
                 Article(
                     "sourceId".plus(i),

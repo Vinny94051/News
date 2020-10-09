@@ -57,12 +57,10 @@ internal class SelectedNewsViewModelTest {
                 true
             )
         )
-       assertNotEquals(viewModel.isWithUnknownError, true)
     }
 
     @Test
     fun getSavedArticles() {
         viewModel.getSavedArticles()
-        assertNotEquals(viewModel.isWithUnknownError, true)
     }
 }

@@ -6,9 +6,7 @@ import com.kiryanav.domain.model.News
 import com.kiryanav.domain.model.SortBy
 import com.kiryanav.domain.model.ArticleSource
 import com.kiryanav.domain.repoApi.NewsRepository
-import ru.kiryanav.data.mapper.toArticleSource
-import ru.kiryanav.data.mapper.toNews
-import ru.kiryanav.data.mapper.toSortByApi
+import ru.kiryanav.data.mapper.*
 import ru.kiryanav.data.network.NewsApi
 import vlnny.base.data.model.ResponseResult
 import vlnny.base.data.repository.BaseRepository
@@ -18,8 +16,8 @@ class NewsRepositoryImpl(private val newsApi: NewsApi) : BaseRepository(), NewsR
 
     override suspend fun getNews(
         query: String?,
-        from: String?,
-        to: String?,
+        from: Date?,
+        to: Date?,
         sources: List<ArticleSource>,
         language: String?,
         pageNumber: Int,
@@ -28,7 +26,10 @@ class NewsRepositoryImpl(private val newsApi: NewsApi) : BaseRepository(), NewsR
         val sourcesIds = createSourcesParam(sources)
         return withErrorHandlingCall({
             newsApi.getEverything(
-                query, from, to, getLanguage(language),
+                query,
+                from.toEpoch(),
+                to.toEpoch(),
+                getLanguage(language),
                 sortBy.toSortByApi().keyword,
                 pageNumber,
                 sourcesIds
@@ -41,6 +42,7 @@ class NewsRepositoryImpl(private val newsApi: NewsApi) : BaseRepository(), NewsR
             }
         })
     }
+
 
     override suspend fun getSources(language: String)
             : ResponseResult<List<ArticleSource>, SourceError> =

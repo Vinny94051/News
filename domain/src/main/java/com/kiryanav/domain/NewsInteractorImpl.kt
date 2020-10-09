@@ -8,6 +8,7 @@ import com.kiryanav.domain.repoApi.NewsRepository
 import com.kiryanav.domain.repoApi.SourceRepository
 import vlnny.base.data.model.*
 import vlnny.base.ext.updateFrom
+import java.util.*
 
 
 class NewsInteractorImpl(
@@ -17,7 +18,10 @@ class NewsInteractorImpl(
 ) : NewsInteractor {
 
     override suspend fun getNews(
-        query: String?, from: String?, to: String?, sources: List<ArticleSource>,
+        query: String?,
+        from: Date?,
+        to: Date?,
+        sources: List<ArticleSource>,
         language: String?, pageNumber: Int
     ): ResponseResult<NewsWrapper, NewsError> {
 

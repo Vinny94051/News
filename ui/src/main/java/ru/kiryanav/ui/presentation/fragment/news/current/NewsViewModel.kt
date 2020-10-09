@@ -5,20 +5,24 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-import ru.kiryanav.ui.R
 import com.kiryanav.domain.NewsInteractor
 import com.kiryanav.domain.error.Error
 import com.kiryanav.domain.error.NewsError
 import com.kiryanav.domain.error.SourceError
 import com.kiryanav.domain.model.ArticleSource
+import kotlinx.coroutines.launch
+import ru.kiryanav.ui.R
 import ru.kiryanav.ui.mapper.toArticle
 import ru.kiryanav.ui.mapper.toArticleItemList
 import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.presentation.base.BaseErrorViewModel
 import ru.kiryanav.ui.presentation.fragment.news.NewsUIError
-import vlnny.base.data.model.*
-import java.time.LocalDateTime
+import vlnny.base.data.model.doOnError
+import vlnny.base.data.model.doOnSuccess
+import vlnny.base.ext.currentDate
+import vlnny.base.ext.getDate
+import vlnny.base.ext.toDate
+import java.util.*
 
 
 class NewsViewModel(
@@ -38,7 +42,7 @@ class NewsViewModel(
     val isLoadingMore: LiveData<Boolean>
         get() = _isLoadingMore
 
-    private var dayNumber: Int = DAY_NUMBER_DEFAULT_VALUE
+    private var dayNumber: Long = DAY_NUMBER_DEFAULT_VALUE
     var lastQuery: String = ""
 
 
@@ -62,8 +66,8 @@ class NewsViewModel(
 
     fun loadNews(
         query: String? = null,
-        from: String? = null,
-        to: String? = null,
+        from: Date? = null,
+        to: Date? = null,
         language: String? = null
     ) {
         updateUI(query)
@@ -74,7 +78,7 @@ class NewsViewModel(
 
             newsInteractor.getSavedSources()
                 .doOnSuccess { savedSources ->
-                    updateNews(savedSources, query, from, to, language)
+                    updateNews(savedSources, query, currentDate.toDate(), getDate(1), language)
                 }.doOnError {
                     errorLiveData.value = defineErrorType(it)
                 }
@@ -86,7 +90,6 @@ class NewsViewModel(
     ) {
         viewModelScope.launch {
             _isLoadingMore.postValue(true)
-
             newsInteractor.getSavedSources()
                 .doOnSuccess { sources ->
                     loadMoreNews(sources, language)
@@ -115,17 +118,18 @@ class NewsViewModel(
 
         if (dayNumber < MAX_DAYS_NUMBER) {
 
-            newsInteractor
-                .getNews(
+            newsInteractor.getNews(
                     lastQuery,
                     getDate(dayNumber - 1),
-                    getDate(dayNumber), sources, language
-                ).doOnSuccess { nextPage ->
+                    getDate(dayNumber),
+                    sources, language
+                )
+                .doOnSuccess { nextPage ->
+
                     setTotalNews(nextPage.totalResult)
-                    _newsLiveData.postValue(
-                        _newsLiveData.value
-                            ?.plus(nextPage.articles.toArticleItemList(context))
-                    )
+                    _newsLiveData.postValue(_newsLiveData.value?.plus(
+                        nextPage.articles.toArticleItemList(context)
+                    ))
 
                 }.doOnError {
                     errorLiveData.postValue(defineErrorType(it))
@@ -140,8 +144,8 @@ class NewsViewModel(
     private suspend fun updateNews(
         savedSources: List<ArticleSource>,
         query: String?,
-        from: String?,
-        to: String?,
+        from: Date?,
+        to: Date?,
         language: String?
     ) {
 
@@ -165,12 +169,10 @@ class NewsViewModel(
         )
     }
 
-    private fun getDate(dayNumber: Int): String =
-        LocalDateTime.now().minusDays(dayNumber.toLong()).toString()
 
     companion object {
-        private const val MAX_DAYS_NUMBER = 8
-        private const val DAY_NUMBER_DEFAULT_VALUE = 1
+        const val MAX_DAYS_NUMBER = 8
+        const val DAY_NUMBER_DEFAULT_VALUE = 1L
     }
 
 

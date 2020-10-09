@@ -4,6 +4,7 @@ import com.kiryanav.domain.error.NewsError
 import com.kiryanav.domain.error.SourceError
 import com.kiryanav.domain.model.*
 import vlnny.base.data.model.ResponseResult
+import java.util.*
 
 interface NewsInteractor {
 
@@ -17,8 +18,8 @@ interface NewsInteractor {
 
     suspend fun getNews(
         query: String? = null,
-        from: String? = null,
-        to: String? = null,
+        from: Date? = null,
+        to: Date? = null,
         sources: List<ArticleSource>,
         language: String? = null,
         pageNumber: Int = 1

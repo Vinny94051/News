@@ -2,7 +2,7 @@ package ru.kiryanav.ui.model
 
 import com.kiryanav.domain.model.Article
 
-sealed class ArticleItem() {
+sealed class ArticleItem {
     data class ArticleUI(
         val author: String,
         val title: String,

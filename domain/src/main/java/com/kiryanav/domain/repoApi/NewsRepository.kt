@@ -11,8 +11,8 @@ import java.util.*
 interface NewsRepository {
     suspend fun getNews(
         query: String?,
-        from: String?,
-        to: String?,
+        from: Date?,
+        to: Date?,
         sources: List<ArticleSource>,
         language: String?,
         pageNumber: Int,

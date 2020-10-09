@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
 
+internal const val ISO_8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
 fun Source.toArticleSource(): ArticleSource =
     ArticleSource(
@@ -36,17 +37,21 @@ fun NewsResponse.toNews(): News =
                 article.description,
                 article.articleUrl,
                 article.previewUrl,
-                epochToDate(article.publishedAt),
+                article.publishedAt.fromEpochToDate(),
                 article.content
             )
         }
     )
 
-//2020-09-10T14:28:00Z
+
 @SuppressLint("SimpleDateFormat")
-private fun epochToDate(epochDate: String?): Date? {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-    return dateFormat.parse(epochDate ?: return null)
+internal fun String?.fromEpochToDate(): Date? {
+    return SimpleDateFormat(ISO_8601_DATE_FORMAT).parse(this ?: return null)
+}
+
+@SuppressLint("SimpleDateFormat")
+internal fun Date?.toEpoch(): String {
+    return SimpleDateFormat(ISO_8601_DATE_FORMAT).format(this ?: Date())
 }
 
 fun SortBy.toSortByApi(): SortByForApi =

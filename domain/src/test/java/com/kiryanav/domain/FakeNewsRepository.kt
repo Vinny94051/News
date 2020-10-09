@@ -1,18 +1,21 @@
 package com.kiryanav.domain
 
 import com.kiryanav.domain.error.NewsError
+import com.kiryanav.domain.error.SourceError
 import com.kiryanav.domain.model.Article
 import com.kiryanav.domain.model.ArticleSource
 import com.kiryanav.domain.model.News
 import com.kiryanav.domain.model.SortBy
 import com.kiryanav.domain.repoApi.NewsRepository
 import vlnny.base.data.model.ResponseResult
+import java.util.*
 
-class FakeNewsRepository : NewsRepository {
+class FakeNewsRepository(internal val sourceNumber: Int, internal val articlesNumber: Int) :
+    NewsRepository {
     override suspend fun getNews(
         query: String?,
-        from: String?,
-        to: String?,
+        from: Date?,
+        to: Date?,
         sources: List<ArticleSource>,
         language: String?,
         pageNumber: Int,
@@ -28,7 +31,7 @@ class FakeNewsRepository : NewsRepository {
 
     private fun createFakeArticles(): List<Article> {
         val articles = mutableListOf<Article>()
-        for (i in 0..10) {
+        for (i in 0..articlesNumber) {
             articles.add(
                 Article(
                     "sourceId".plus(i),
@@ -38,7 +41,7 @@ class FakeNewsRepository : NewsRepository {
                     "description".plus(i),
                     "articleUrl".plus(i),
                     "imageUrl".plus(i),
-                    "date".plus(i),
+                    Date(),
                     "content".plus(i)
                 )
             )
@@ -46,16 +49,14 @@ class FakeNewsRepository : NewsRepository {
         return articles
     }
 
-    override suspend fun getSources(language: String): ResponseResult<List<ArticleSource>, NewsError> {
-        return ResponseResult.Success(
-            createFakeSources()
-        )
+    override suspend fun getSources(language: String): ResponseResult<List<ArticleSource>, SourceError> {
+        return ResponseResult.Success(createFakeSources())
     }
 
     private fun createFakeSources(): List<ArticleSource> {
         val sources = mutableListOf<ArticleSource>()
-        for (i in 0..10) {
-            ArticleSource(
+        for (i in 0..sourceNumber) {
+         sources.add(  ArticleSource(
                 "id".plus(i),
                 "name".plus(i),
                 "description".plus(i),
@@ -63,7 +64,7 @@ class FakeNewsRepository : NewsRepository {
                 "category".plus(i),
                 "lang".plus(i),
                 "country".plus(i)
-            )
+            ))
         }
         return sources
     }

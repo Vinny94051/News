@@ -3,6 +3,7 @@ package ru.kiryanov.database.entites
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "articles")
 data class ArticleEntity(
@@ -22,7 +23,7 @@ data class ArticleEntity(
     @ColumnInfo(name = "preview_image_url")
     val previewImageUrl: String,
     @ColumnInfo(name = "published_at")
-    val publishedAt: String,
+    val publishedAt: Date?,
     @ColumnInfo(name = "content")
     val content: String
 )
