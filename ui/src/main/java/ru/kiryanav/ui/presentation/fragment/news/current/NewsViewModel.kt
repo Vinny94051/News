@@ -59,6 +59,9 @@ class NewsViewModel(
     fun removeArticle(article: ArticleItem.ArticleUI) {
         viewModelScope.launch {
             newsInteractor.deleteArticle(article.toArticle())
+                .doOnSuccess {
+                    checkAndClearError()
+                }
                 .doOnError {
                     errorLiveData.value = NewsUIError.RemovingError
                 }
@@ -78,6 +81,7 @@ class NewsViewModel(
 
             newsInteractor.getSavedSources()
                 .doOnSuccess { savedSources ->
+                    checkAndClearError()
                     updateNews(
                         savedSources, query, currentDate.toDate(),
                         getDate(1), language
@@ -95,6 +99,7 @@ class NewsViewModel(
             _isLoadingMore.postValue(true)
             newsInteractor.getSavedSources()
                 .doOnSuccess { sources ->
+                    checkAndClearError()
                     loadMoreNews(sources, language)
                 }.doOnError {
                     errorLiveData.value = defineErrorType(it)
@@ -105,6 +110,9 @@ class NewsViewModel(
     fun saveArticle(item: ArticleItem.ArticleUI) {
         viewModelScope.launch {
             newsInteractor.saveArticle(item.toArticle())
+                .doOnSuccess {
+                    checkAndClearError()
+                }
                 .doOnError {
                     errorLiveData.value = NewsUIError.SavingError
                 }
@@ -129,7 +137,7 @@ class NewsViewModel(
                 sources, language
             )
                 .doOnSuccess { nextPage ->
-
+                    checkAndClearError()
                     setTotalNews(nextPage.totalResult)
                     _newsLiveData.postValue(
                         _newsLiveData.value?.plus(
@@ -174,7 +182,6 @@ class NewsViewModel(
                 .format(totalResult.toString())
         )
     }
-
 
     companion object {
         const val MAX_DAYS_NUMBER = 8
