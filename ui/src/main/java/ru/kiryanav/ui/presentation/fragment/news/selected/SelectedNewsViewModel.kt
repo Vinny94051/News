@@ -27,8 +27,10 @@ class SelectedNewsViewModel(
         get() = articlesMutableLiveData
 
 
-    override fun defineErrorType(error: NewsError?): NewsUIError {
-        TODO("Not yet implemented")
+    override fun defineErrorType(error: NewsError?): NewsUIError = when (error) {
+        is NewsError.NoSavedSources -> NewsUIError.NoSavedSources
+        is NewsError.BadApiKey -> NewsUIError.BadApiKey
+        else -> NewsUIError.Unknown
     }
 
     fun remove(article: ArticleItem.ArticleUI) {

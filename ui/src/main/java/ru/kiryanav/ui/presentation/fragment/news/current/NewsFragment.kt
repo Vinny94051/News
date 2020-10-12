@@ -2,11 +2,13 @@ package ru.kiryanav.ui.presentation.fragment.news.current
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +35,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
     private val newsViewModel by viewModel<NewsViewModel>()
     private val newsUpdateListener: NewsUpdaterListener by inject()
     private val job = CoroutineScope(Job())
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -160,8 +163,8 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
             setOnMenuItemClickListener(menuItemClickListener)
         }.show()
 
-    override fun onCheckBoxClick(article: ArticleItem.ArticleUI, isSave: Boolean) {
-        if (isSave) {
+    override fun onSaveItemClick(article: ArticleItem.ArticleUI, isSaved: Boolean) {
+        if (isSaved) {
             newsViewModel.saveArticle(article)
         } else {
             newsViewModel.removeArticle(article)

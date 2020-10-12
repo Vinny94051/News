@@ -28,7 +28,7 @@ class SelectedNewsFragment : BaseBindableFragment<FragmentLocalNewsBinding>(),
         loadSaved()
     }
 
-    override fun onCheckBoxClick(article: ArticleItem.ArticleUI, isSave: Boolean) {
+    override fun onSaveItemClick(article: ArticleItem.ArticleUI, isSave: Boolean) {
         if(!isSave){
             savedNewsViewModel.remove(article)
         }

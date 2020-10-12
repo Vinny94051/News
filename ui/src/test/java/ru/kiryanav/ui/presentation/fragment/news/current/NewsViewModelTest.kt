@@ -39,37 +39,11 @@ open class NewsViewModelTest {
     }
 
     @Test
-    open fun removeArticle() {
-        viewModel.removeArticle(
-            ArticleItem.ArticleUI(
-                "",
-                "",
-                "", "",
-                "",
-                "",
-                Article(
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    Date(),
-                    ""
-                ),
-                true
-            )
-        )
-    }
-
-
-    @Test
     open fun loadNews() {
         viewModel.loadNews()
-
-
-
+        val size = viewModel.newsLiveData.value?.size!!
+        println(size)
+        assertEquals(true, size > 0)
     }
 
 
@@ -77,7 +51,7 @@ open class NewsViewModelTest {
     open fun loadMore() {
 
         viewModel.loadNews()
-        for (i in NewsViewModel.DAY_NUMBER_DEFAULT_VALUE+1 until NewsViewModel.MAX_DAYS_NUMBER) {
+        for (i in NewsViewModel.DAY_NUMBER_DEFAULT_VALUE + 1 until NewsViewModel.MAX_DAYS_NUMBER) {
             viewModel.loadMore()
 
             println("${newsInteractor.from}, ${getDate(i - 1)}")
@@ -87,31 +61,5 @@ open class NewsViewModelTest {
             assertEquals(newsInteractor.to, getDate(i))
 
         }
-    }
-
-
-    @Test
-    open fun saveArticle() {
-        viewModel.saveArticle(
-            ArticleItem.ArticleUI(
-                "",
-                "",
-                "", "",
-                "",
-                "",
-                Article(
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    Date(),
-                    ""
-                ),
-                true
-            )
-        )
     }
 }

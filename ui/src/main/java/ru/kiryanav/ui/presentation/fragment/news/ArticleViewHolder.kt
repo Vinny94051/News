@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import org.koin.core.KoinComponent
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.ItemArticleBinding
 import ru.kiryanav.ui.model.ArticleItem
@@ -15,7 +16,7 @@ class ArticleViewHolder(
     private val callback: OnArticleItemClick,
     private val isWithSaveIcon: Boolean
 ) :
-    BaseViewHolder<ArticleItem.ArticleUI>(binding.root) {
+    BaseViewHolder<ArticleItem.ArticleUI>(binding.root), KoinComponent {
 
     companion object {
         fun from(
@@ -41,8 +42,8 @@ class ArticleViewHolder(
             if (!isWithSaveIcon) {
                 isSavedLabel.hide()
             } else {
-                isSavedLabel.setOnCheckedChangeListener { _, isChecked ->
-                    callback.onCheckBoxClick(item, isChecked)
+                isSavedLabel.setOnClickListener {
+                    callback.onSaveItemClick(item, article?.isSaved != true)
                 }
             }
 

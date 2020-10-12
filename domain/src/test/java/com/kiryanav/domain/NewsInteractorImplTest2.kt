@@ -56,8 +56,6 @@ class NewsInteractorImplTest2 {
         }
     }
 
-    internal class InvalidDataException(message: String) : Throwable(message)
-
     @Test
     fun getSavedArticles() {
         runBlocking {

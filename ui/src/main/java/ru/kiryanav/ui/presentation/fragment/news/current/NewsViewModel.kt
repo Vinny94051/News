@@ -17,6 +17,7 @@ import ru.kiryanav.ui.mapper.toArticleItemList
 import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.presentation.base.BaseErrorViewModel
 import ru.kiryanav.ui.presentation.fragment.news.NewsUIError
+import ru.kiryanav.ui.utils.SingleLiveEvent
 import vlnny.base.data.model.doOnError
 import vlnny.base.data.model.doOnSuccess
 import vlnny.base.ext.currentDate
@@ -59,15 +60,14 @@ class NewsViewModel(
         viewModelScope.launch {
             newsInteractor.deleteArticle(article.toArticle())
                 .doOnError {
-                    errorLiveData.value = defineErrorType(it)
+                    errorLiveData.value = NewsUIError.RemovingError
                 }
+            loadNews()
         }
     }
 
     fun loadNews(
         query: String? = null,
-        from: Date? = null,
-        to: Date? = null,
         language: String? = null
     ) {
         updateUI(query)
@@ -78,7 +78,10 @@ class NewsViewModel(
 
             newsInteractor.getSavedSources()
                 .doOnSuccess { savedSources ->
-                    updateNews(savedSources, query, currentDate.toDate(), getDate(1), language)
+                    updateNews(
+                        savedSources, query, currentDate.toDate(),
+                        getDate(1), language
+                    )
                 }.doOnError {
                     errorLiveData.value = defineErrorType(it)
                 }
@@ -103,8 +106,9 @@ class NewsViewModel(
         viewModelScope.launch {
             newsInteractor.saveArticle(item.toArticle())
                 .doOnError {
-                    errorLiveData.value = defineErrorType(it)
+                    errorLiveData.value = NewsUIError.SavingError
                 }
+            loadNews()
         }
     }
 
@@ -119,17 +123,19 @@ class NewsViewModel(
         if (dayNumber < MAX_DAYS_NUMBER) {
 
             newsInteractor.getNews(
-                    lastQuery,
-                    getDate(dayNumber - 1),
-                    getDate(dayNumber),
-                    sources, language
-                )
+                lastQuery,
+                getDate(dayNumber - 1),
+                getDate(dayNumber),
+                sources, language
+            )
                 .doOnSuccess { nextPage ->
 
                     setTotalNews(nextPage.totalResult)
-                    _newsLiveData.postValue(_newsLiveData.value?.plus(
-                        nextPage.articles.toArticleItemList(context)
-                    ))
+                    _newsLiveData.postValue(
+                        _newsLiveData.value?.plus(
+                            nextPage.articles.toArticleItemList(context)
+                        )
+                    )
 
                 }.doOnError {
                     errorLiveData.postValue(defineErrorType(it))

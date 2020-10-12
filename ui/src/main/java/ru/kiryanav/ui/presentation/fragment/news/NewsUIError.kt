@@ -4,4 +4,6 @@ sealed class NewsUIError {
     object Unknown : NewsUIError()
     object BadApiKey : NewsUIError()
     object NoSavedSources : NewsUIError()
+    object SavingError : NewsUIError()
+    object RemovingError : NewsUIError()
 }
