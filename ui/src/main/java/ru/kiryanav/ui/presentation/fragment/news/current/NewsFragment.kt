@@ -2,13 +2,11 @@ package ru.kiryanav.ui.presentation.fragment.news.current
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,13 +22,15 @@ import org.koin.core.inject
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentNewsBinding
 import ru.kiryanav.ui.model.ArticleItem
-import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
+import ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback
+import ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick
+import ru.kiryanav.ui.presentation.fragment.news.sources.SourcesDialogFragment
 import vlnny.base.ext.openLink
 import vlnny.base.fragment.BaseBindableFragment
 
 
 class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
-    OnArticleItemClick, KoinComponent {
+    OnArticleItemClick, KoinComponent, NewsErrorCallback {
 
     private val newsViewModel by viewModel<NewsViewModel>()
     private val newsUpdateListener: NewsUpdaterListener by inject()
@@ -42,6 +42,7 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
         binding.apply {
             this.viewModel = this@NewsFragment.newsViewModel
             this.callback = this@NewsFragment
+            this.errorCallback = this@NewsFragment
             executePendingBindings()
         }
     }
@@ -179,4 +180,21 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
         startShareIntent(article.articleUrl, R.string.chosser_send_header)
     }
 
+    override fun noSavedSourcesError() {
+        SourcesDialogFragment.newInstance().apply {
+            show(router.fragmentManager, SourcesDialogFragment.id)
+            setOnCloseDialogListener {
+                loadNews()
+            }
+        }
+    }
+
+
+    override fun unknownError() {
+        showSnack(getString(R.string.error_something_went_wrong))
+    }
+
+    override fun badApiKeyError() {
+        showSnack(getString(R.string.error_bad_api_key))
+    }
 }

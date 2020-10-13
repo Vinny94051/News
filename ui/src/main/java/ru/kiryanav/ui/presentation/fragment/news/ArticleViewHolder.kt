@@ -8,6 +8,7 @@ import org.koin.core.KoinComponent
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.ItemArticleBinding
 import ru.kiryanav.ui.model.ArticleItem
+import ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick
 import vlnny.base.adapter.BaseViewHolder
 import vlnny.base.ext.hide
 

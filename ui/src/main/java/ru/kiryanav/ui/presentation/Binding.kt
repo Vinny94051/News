@@ -10,7 +10,8 @@ import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.model.ArticleSourceUI
 import ru.kiryanav.ui.presentation.fragment.news.ArticleAdapter
 import ru.kiryanav.ui.presentation.fragment.news.NewsUIError
-import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
+import ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback
+import ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick
 import ru.kiryanav.ui.presentation.fragment.settings.OnSourceItemClick
 import ru.kiryanav.ui.presentation.fragment.settings.SettingsError
 import ru.kiryanav.ui.presentation.fragment.settings.SourceAdapter
@@ -68,16 +69,14 @@ fun bindSources(
     }
 }
 
-@BindingAdapter("newsError")
+@BindingAdapter("newsError", "newsErrorCallback")
 fun bindNewsError(
     parent: ViewGroup,
-    newsError: NewsUIError?
+    newsError: NewsUIError?,
+    newsErrorCallback : NewsErrorCallback
 ) {
     when (newsError) {
-        is NewsUIError.NoSavedSources -> showToast(
-            parent.context,
-            "Нет сохраненных источников, вы можете поменять это в настройках."
-        )
+        is NewsUIError.NoSavedSources -> newsErrorCallback.noSavedSourcesError()
         is NewsUIError.Unknown -> showToast(parent.context, "Что-то пошло не так.")
         is NewsUIError.BadApiKey -> showToast(parent.context, "Проблемы с вашей подпиской.")
     }

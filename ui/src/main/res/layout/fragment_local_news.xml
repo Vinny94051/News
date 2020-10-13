@@ -7,15 +7,20 @@
 
         <variable
             name="callback"
-            type="ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick" />
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick" />
 
         <variable
             name="viewModel"
             type="ru.kiryanav.ui.presentation.fragment.news.selected.SelectedNewsViewModel" />
+
+        <variable
+            name="errorCallback"
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback" />
     </data>
 
     <RelativeLayout
         newsError="@{viewModel.error}"
+        newsErrorCallback="@{errorCallback}"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

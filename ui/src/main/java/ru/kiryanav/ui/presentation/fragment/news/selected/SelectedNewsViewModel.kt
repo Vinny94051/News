@@ -9,13 +9,11 @@ import com.kiryanav.domain.error.NewsError
 import kotlinx.coroutines.launch
 import ru.kiryanav.ui.mapper.toArticle
 import ru.kiryanav.ui.mapper.toArticleItemList
-import ru.kiryanav.ui.mapper.toArticleUI
 import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.presentation.base.BaseErrorViewModel
 import ru.kiryanav.ui.presentation.fragment.news.NewsUIError
 import vlnny.base.data.model.doOnError
 import vlnny.base.data.model.doOnSuccess
-import vlnny.base.viewModel.BaseViewModel
 
 class SelectedNewsViewModel(
     private val newsInteractor: NewsInteractor,
@@ -36,10 +34,40 @@ class SelectedNewsViewModel(
     fun remove(article: ArticleItem.ArticleUI) {
         viewModelScope.launch {
             newsInteractor.deleteArticle(article.toArticle())
+                .doOnSuccess {
+                    removeItemUI(article)
+                }
                 .doOnError {
                     errorLiveData.value = defineErrorType(it)
                 }
         }
+    }
+
+    private fun removeItemUI(article: ArticleItem.ArticleUI) {
+        val newList = articlesMutableLiveData.value?.toMutableList()
+        val removedItemIndex = newList?.indexOf(article)
+
+        removedItemIndex?.let { index ->
+
+            if (newList[index - 1] is ArticleItem.DateHeader) {
+                if (newList.size > index + 1) {
+                    if (newList[index + 1] is ArticleItem.DateHeader) {
+                        newList.removeAt(index)
+                        newList.removeAt(index - 1)
+                    } else {
+                        newList.removeAt(index)
+                    }
+                } else {
+                    for (i in 0 until 2) {
+                        newList.removeAt(newList.size - 1)
+                    }
+                }
+            } else {
+                newList.removeAt(index)
+            }
+        }
+
+        articlesMutableLiveData.value = newList
     }
 
     fun getSavedArticles() {

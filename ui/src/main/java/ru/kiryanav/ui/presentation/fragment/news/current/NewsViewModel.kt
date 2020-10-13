@@ -59,12 +59,12 @@ class NewsViewModel(
         viewModelScope.launch {
             newsInteractor.deleteArticle(article.toArticle())
                 .doOnSuccess {
+                    updateItemState(article, false)
                     checkAndClearError()
                 }
                 .doOnError {
                     errorLiveData.value = NewsUIError.RemovingError
                 }
-            loadNews()
         }
     }
 
@@ -110,17 +110,33 @@ class NewsViewModel(
         viewModelScope.launch {
             newsInteractor.saveArticle(item.toArticle())
                 .doOnSuccess {
+                    updateItemState(item, true)
                     checkAndClearError()
                 }
                 .doOnError {
                     errorLiveData.value = NewsUIError.SavingError
                 }
-            loadNews()
         }
     }
 
     private fun updateLastQuery(query: String?) {
         lastQuery = query.orEmpty()
+    }
+
+    private fun updateItemState(item: ArticleItem.ArticleUI, isSaved: Boolean) {
+        val newItem = (item.copy(isSaved = isSaved))
+        val replacingItemIndex = newsLiveData.value?.indexOf(item)
+
+        val newArticlesList: MutableList<ArticleItem>? =
+            _newsLiveData.value?.toMutableList()
+
+        replacingItemIndex?.let { index ->
+            newArticlesList?.let { newsList ->
+                newsList[index] = newItem
+            }
+        }
+
+        _newsLiveData.value = newArticlesList
     }
 
     private suspend fun loadMoreNews(sources: List<ArticleSource>, language: String?) {

@@ -1,4 +1,4 @@
-package ru.kiryanav.ui.presentation.fragment.news
+package ru.kiryanav.ui.presentation.fragment.news.callback
 
 
 import ru.kiryanav.ui.model.ArticleItem

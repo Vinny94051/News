@@ -20,4 +20,5 @@
 Вы всегда можете его поменять.</string>
     <string name="source">Источники</string>
     <string name="snack_source_changed">Источник успешно изменен на %s</string>
+    <string name="error_bad_api_key">Проблемы с вашей подпиской.</string>
 </resources>
