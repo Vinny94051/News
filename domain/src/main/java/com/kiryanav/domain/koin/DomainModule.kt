@@ -13,11 +13,15 @@ import org.koin.dsl.module
 val domainModule = module {
     single<NewsInteractor> { NewsInteractorImpl(get(), get(),get()) }
 
-    single<NewsUpdaterReceiver> {
+    single {
         NewsUpdater()
     }
 
+    single<NewsUpdaterReceiver> {
+        get<NewsUpdater>()
+    }
+
     single<NewsUpdaterListener> {
-        NewsUpdater()
+        get<NewsUpdater>()
     }
 }

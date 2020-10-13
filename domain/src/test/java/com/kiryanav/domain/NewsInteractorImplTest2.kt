@@ -13,8 +13,8 @@ import kotlin.test.assertNotNull
 class NewsInteractorImplTest2 {
 
     companion object {
-        const val NEWS_REPO_SOURCES_NUMBER = 9
-        const val SOURCE_REPO_SOURCES_NUMBER = 4
+        const val NEWS_REPO_SOURCES_NUMBER = 15
+        const val SOURCE_REPO_SOURCES_NUMBER = 6
         const val NEWS_REPO_ARTICLES_NUMBER = 6
         const val ARTICLE_REPO_SOURCES_NUMBER = 8
     }
@@ -31,7 +31,7 @@ class NewsInteractorImplTest2 {
             val news = interactor.getNews(
                 sources = interactor.getSavedSources().successValue()!!
             ).successValue()
-            assertEquals(NEWS_REPO_ARTICLES_NUMBER, news?.articles?.size!!-1)
+            assertEquals(NEWS_REPO_ARTICLES_NUMBER, news?.articles?.size!! - 1)
         }
     }
 
@@ -40,17 +40,14 @@ class NewsInteractorImplTest2 {
     fun getSources() {
         runBlocking {
             val sources = interactor.getSources().successValue()
-            var savedSourcesCounter = 0
 
-            sources?.forEach { wrapped ->
-                if (wrapped.isSelected) {
-                    savedSourcesCounter++
-                }
+            val savedSourcesCounter = sources?.count { wrapped ->
+                wrapped.isSelected
             }
 
             assertEquals(
                 savedSourcesCounter,
-                NEWS_REPO_SOURCES_NUMBER - SOURCE_REPO_SOURCES_NUMBER
+                SOURCE_REPO_SOURCES_NUMBER
             )
 
         }

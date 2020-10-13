@@ -5,7 +5,7 @@ import com.kiryanav.domain.model.ArticleSource
 import com.kiryanav.domain.repoApi.SourceRepository
 import vlnny.base.data.model.ResponseResult
 
-class FakeSourceRepository(internal val sourcesNumber: Int) : SourceRepository {
+class FakeSourceRepository(private val sourcesNumber: Int) : SourceRepository {
     override suspend fun getSavedSources(): ResponseResult<List<ArticleSource>, SourceError> {
         return ResponseResult.Success(createFakeSources())
     }
@@ -13,7 +13,7 @@ class FakeSourceRepository(internal val sourcesNumber: Int) : SourceRepository {
     private fun createFakeSources(): List<ArticleSource> {
         val sources = mutableListOf<ArticleSource>()
 
-        for (i in 0..sourcesNumber) {
+        for (i in 0 until sourcesNumber) {
             sources.add(
                 ArticleSource(
                     "id".plus(i),

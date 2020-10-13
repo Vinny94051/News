@@ -8,7 +8,7 @@ import vlnny.base.data.model.ResponseResult
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FakeInteractor : NewsInteractor {
+class FakeInteractor(private val savedArticleNumber : Int = 10) : NewsInteractor {
 
     var from: Date? = null
     var to: Date? = null
@@ -63,7 +63,7 @@ class FakeInteractor : NewsInteractor {
     ): List<SavedArticleWrapper> {
         val savedArticleWrappers = mutableListOf<SavedArticleWrapper>()
 
-        for (i in 0..10) {
+        for (i in 0 until savedArticleNumber) {
             savedArticleWrappers.add(
                 SavedArticleWrapper(
                     if (!isSaved) i % 2 == 1 else isSaved,

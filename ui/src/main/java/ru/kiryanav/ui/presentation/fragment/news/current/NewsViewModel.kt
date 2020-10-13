@@ -17,7 +17,6 @@ import ru.kiryanav.ui.mapper.toArticleItemList
 import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.presentation.base.BaseErrorViewModel
 import ru.kiryanav.ui.presentation.fragment.news.NewsUIError
-import ru.kiryanav.ui.utils.SingleLiveEvent
 import vlnny.base.data.model.doOnError
 import vlnny.base.data.model.doOnSuccess
 import vlnny.base.ext.currentDate
@@ -73,7 +72,7 @@ class NewsViewModel(
         query: String? = null,
         language: String? = null
     ) {
-        updateUI(query)
+        updateLastQuery(query)
         dayNumber = DAY_NUMBER_DEFAULT_VALUE
 
         viewModelScope.launch {
@@ -120,12 +119,12 @@ class NewsViewModel(
         }
     }
 
-    private fun updateUI(query: String?) {
+    private fun updateLastQuery(query: String?) {
         lastQuery = query.orEmpty()
     }
 
     private suspend fun loadMoreNews(sources: List<ArticleSource>, language: String?) {
-        updateUI(lastQuery)
+        updateLastQuery(lastQuery)
         dayNumber++
 
         if (dayNumber < MAX_DAYS_NUMBER) {
