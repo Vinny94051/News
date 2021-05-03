@@ -4,6 +4,7 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import ru.kiryanav.ui.presentation.fragment.news.current.NewsViewModel
 import ru.kiryanav.ui.presentation.fragment.news.selected.SelectedNewsViewModel
+import ru.kiryanav.ui.presentation.fragment.news.sources.SourceViewModel
 import ru.kiryanav.ui.presentation.fragment.settings.SettingsViewModel
 
 val viewModelModule = module {
@@ -23,5 +24,9 @@ val viewModelModule = module {
             get(),
             get()
         )
+    }
+
+    viewModel {
+        SourceViewModel(get())
     }
 }

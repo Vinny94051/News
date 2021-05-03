@@ -1,6 +1,8 @@
 package com.kiryanav.domain.repoApi
 
+import com.kiryanav.domain.error.NewsError
 import com.kiryanav.domain.model.Article
+import vlnny.base.data.model.ResponseResult
 
 interface ArticleRepository {
     /**
@@ -8,13 +10,13 @@ interface ArticleRepository {
      * @param article - this article will be saved
      */
 
-    suspend fun saveArticle(article: Article)
+    suspend fun saveArticle(article: Article) : ResponseResult<Unit, NewsError>
 
     /**
      * Get all saved articles
      */
 
-    suspend fun getAllSavedArticles(): List<Article>
+    suspend fun getAllSavedArticles(): ResponseResult<List<Article>, NewsError>
 
-    suspend fun deleteArticle(article: Article)
+    suspend fun deleteArticle(article: Article) : ResponseResult<Unit, NewsError>
 }

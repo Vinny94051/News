@@ -2,6 +2,7 @@ package ru.kiryanav.ui.presentation.fragment.news
 
 import android.view.ViewGroup
 import ru.kiryanav.ui.model.ArticleItem
+import ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick
 import vlnny.base.adapter.BaseAdapter
 import vlnny.base.adapter.BaseViewHolder
 

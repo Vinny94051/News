@@ -7,14 +7,20 @@
 
         <variable
             name="callback"
-            type="ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick" />
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick" />
 
         <variable
             name="viewModel"
             type="ru.kiryanav.ui.presentation.fragment.news.selected.SelectedNewsViewModel" />
+
+        <variable
+            name="errorCallback"
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback" />
     </data>
 
     <RelativeLayout
+        newsError="@{viewModel.error}"
+        newsErrorCallback="@{errorCallback}"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -22,8 +28,8 @@
             android:id="@+id/headerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/default_margin"
             android:text="@string/saved_news"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_22sp"

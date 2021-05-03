@@ -11,13 +11,20 @@
 
         <variable
             name="callback"
-            type="ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick" />
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick" />
+
+        <variable
+            name="errorCallback"
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        newsError="@{viewModel.error}"
+        newsErrorCallback="@{errorCallback}"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -62,7 +69,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/newsRecycler"
                 articleCallback="@{callback}"
-                articles="@{viewModel.articlesLiveData}"
+                articles="@{viewModel.newsLiveData}"
                 isVisible="@{!viewModel.isProgressVisible()}"
                 isWithSaveIcon="@{true}"
                 android:layout_width="match_parent"
@@ -95,5 +102,8 @@
                 android:layout_marginBottom="@dimen/news_8dp"
                 android:indeterminateTint="@android:color/black" />
         </RelativeLayout>
+
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </layout>

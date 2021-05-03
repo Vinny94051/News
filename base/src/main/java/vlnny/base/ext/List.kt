@@ -1,5 +1,6 @@
 package vlnny.base.ext
 
+
 fun <E> List<E>.updateFrom(
     list: List<E>,
     ruleBlock: (E, E) -> Boolean
@@ -14,4 +15,13 @@ fun <E> List<E>.updateFrom(
         tmpList.add(item)
     }
     return tmpList
+}
+
+inline fun <P, reified S : P> List<P>.findAllBySubType(): List<S> {
+    val found = mutableListOf<S>()
+    this.forEach { item ->
+        if (item is S)
+            found.add(item)
+    }
+    return found
 }

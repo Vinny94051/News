@@ -10,28 +10,39 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.kiryanav.domain.worker.NewsUpdaterListener
 import kotlinx.android.synthetic.main.fragment_news.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
+import org.koin.core.inject
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentNewsBinding
 import ru.kiryanav.ui.model.ArticleItem
-import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
+import ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback
+import ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick
+import ru.kiryanav.ui.presentation.fragment.news.sources.SourcesDialogFragment
 import vlnny.base.ext.openLink
 import vlnny.base.fragment.BaseBindableFragment
 
 
 class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
-    OnArticleItemClick,
-    KoinComponent {
+    OnArticleItemClick, KoinComponent, NewsErrorCallback {
 
     private val newsViewModel by viewModel<NewsViewModel>()
+    private val newsUpdateListener: NewsUpdaterListener by inject()
+    private val job = CoroutineScope(Job())
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.apply {
             this.viewModel = this@NewsFragment.newsViewModel
             this.callback = this@NewsFragment
+            this.errorCallback = this@NewsFragment
             executePendingBindings()
         }
     }
@@ -54,6 +65,17 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
         initRecycler()
         initSettings()
         initPullToRefresh()
+    }
+
+    override fun initViewModel() {
+        super.initViewModel()
+        job.launch {
+            newsUpdateListener.listener.collect { isUpdate ->
+                if (isUpdate) {
+                    loadNews()
+                }
+            }
+        }
     }
 
     private fun initSettings() {
@@ -127,14 +149,10 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
         })
     }
 
-
     private fun loadNews(
-        query: String? = null,
-        from: String? = null,
-        to: String? = null,
-        language: String? = null
+        query: String? = null
     ) =
-        newsViewModel.loadNews(query, from, to, language)
+        newsViewModel.loadNews(query)
 
     private fun createAndShowPopup(
         itemView: View,
@@ -146,8 +164,8 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
             setOnMenuItemClickListener(menuItemClickListener)
         }.show()
 
-    override fun onCheckBoxClick(article: ArticleItem.ArticleUI, isSave: Boolean) {
-        if (isSave) {
+    override fun onSaveItemClick(article: ArticleItem.ArticleUI, isSaved: Boolean) {
+        if (isSaved) {
             newsViewModel.saveArticle(article)
         } else {
             newsViewModel.removeArticle(article)
@@ -162,4 +180,21 @@ class NewsFragment : BaseBindableFragment<FragmentNewsBinding>(),
         startShareIntent(article.articleUrl, R.string.chosser_send_header)
     }
 
+    override fun noSavedSourcesError() {
+        SourcesDialogFragment.newInstance().apply {
+            show(router.fragmentManager, SourcesDialogFragment.id)
+            setOnCloseDialogListener {
+                loadNews()
+            }
+        }
+    }
+
+
+    override fun unknownError() {
+        showSnack(getString(R.string.error_something_went_wrong))
+    }
+
+    override fun badApiKeyError() {
+        showSnack(getString(R.string.error_bad_api_key))
+    }
 }

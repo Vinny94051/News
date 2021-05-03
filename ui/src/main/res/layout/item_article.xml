@@ -33,16 +33,15 @@
                 android:src="@drawable/preview_image"
                 tools:background="@color/cardview_shadow_start_color" />
 
-            <CheckBox
+            <ImageView
                 android:id="@+id/isSavedLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                tools:src="@drawable/ic_baseline_delete_24"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/news_8dp"
-                android:checked="@{article.saved}"
-                android:button="@drawable/checkbox_saved_selector"
+                android:padding="6dp"
                 android:foreground="?attr/selectableItemBackground"
-                android:src="@drawable/ic_baseline_done_24" />
+                android:src="@{article.saved ? @drawable/ic_baseline_delete_24 : @drawable/ic_baseline_save_alt_24 }" />
 
             <TextView
                 android:id="@+id/title"
@@ -91,12 +90,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/description"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/default_margin"
-                android:layout_marginStart="@dimen/margin_news_32dp"
-                android:layout_marginTop="4dp"
-                android:gravity="end"
                 android:foreground="?attr/selectableItemBackground"
+                android:gravity="end"
                 android:maxLength="10"
+                android:padding="@dimen/default_margin"
                 android:src="@drawable/ic_baseline_share_24"
                 android:textSize="@dimen/subtitle" />
         </RelativeLayout>

@@ -1,6 +1,10 @@
 package com.kiryanav.domain
 
+import com.kiryanav.domain.error.NewsError
+import com.kiryanav.domain.error.SourceError
 import com.kiryanav.domain.model.*
+import vlnny.base.data.model.ResponseResult
+import java.util.*
 
 interface NewsInteractor {
 
@@ -13,36 +17,27 @@ interface NewsInteractor {
      */
 
     suspend fun getNews(
-        query: String?,
-        from: String?,
-        to: String?,
-        sources : List<ArticleSource>,
-        language: String?,
+        query: String? = null,
+        from: Date? = null,
+        to: Date? = null,
+        sources: List<ArticleSource>,
+        language: String? = null,
         pageNumber: Int = 1
-    ): NewsWrapper
+    ): ResponseResult<NewsWrapper, NewsError>
 
-    /**
-     * Save article in local storage
-     * @param article - article which will be saved
-     */
+    suspend fun saveArticle(article: Article): ResponseResult<Unit, NewsError>
 
-    suspend fun saveArticle(article: Article)
+    suspend fun getSavedArticles(): ResponseResult<List<SavedArticleWrapper>, NewsError>
 
-    /**
-     * Get all saved articles
-     */
+    suspend fun getSourcesByLanguage(language: String): ResponseResult<List<ArticleSource>, SourceError>
 
-    suspend fun getSavedArticles(): List<SavedArticleWrapper>
+    suspend fun getSavedSources(): ResponseResult<List<ArticleSource>, SourceError>
 
-    suspend fun getSourcesByLanguage(language : String) : List<ArticleSource>
+    suspend fun saveSources(sources: List<ArticleSource>): ResponseResult<Unit, SourceError>
 
-    suspend fun getSavedSources() : List<ArticleSource>
+    suspend fun deleteSource(source: ArticleSource): ResponseResult<Unit, SourceError>
 
-    suspend fun saveSources(sources : List<ArticleSource>)
+    suspend fun getSources(): ResponseResult<List<SavedArticleSourceWrapper>, SourceError>
 
-    suspend fun deleteSource(source : ArticleSource)
-
-    suspend fun getSources() : List<SavedArticleSourceWrapper>
-
-    suspend fun deleteArticle(article: Article)
+    suspend fun deleteArticle(article: Article): ResponseResult<Unit, NewsError>
 }

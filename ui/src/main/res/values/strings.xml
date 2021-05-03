@@ -25,4 +25,18 @@ You always can change it.</string>
     <string name="saved_news">Избранное</string>
     <string name="send_action_text">Довольно интересная статья. Рекомендую прочитать.</string>
     <string name="chosser_send_header">Кому отправить?</string>
+    <string name="channel_name">Notify channel</string>
+
+    <string name="notify_text_settings">Notifications</string>
+    <string name="_15_mnts">15 mnts</string>
+    <string name="_30_mnts">30 mnts</string>
+    <string name="_1_hour">1 hour</string>
+    <string name="_2_hours">2 hours</string>
+    <string name="_4_hours">4 hours</string>
+    <string name="_8_hours">8 hours</string>
+    <string name="_24_hours">24 hours</string>
+    <string name="turn_off_notification">Turn off notification</string>
+    <string name="save">Сохранить</string>
+    <string name="default_error">Something went wrong</string>
+    <string name="error_bad_api_key">Some problems with your subscription.</string>
 </resources>

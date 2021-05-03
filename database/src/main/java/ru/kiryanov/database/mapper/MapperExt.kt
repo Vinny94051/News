@@ -5,6 +5,7 @@ import com.kiryanav.domain.model.ArticleSource
 import ru.kiryanov.database.entites.ArticleEntity
 import ru.kiryanov.database.entites.ArticleSourceEntity
 
+
 fun ArticleEntity.toArticle(): Article =
     Article(
         sourceId,
@@ -27,7 +28,7 @@ fun Article.toArticleEntity(): ArticleEntity =
         description.orEmpty(),
         articleUrl.orEmpty(),
         previewImageUrl.orEmpty(),
-        publishedAt.orEmpty(),
+        publishedAt ,
         content.orEmpty()
     )
 

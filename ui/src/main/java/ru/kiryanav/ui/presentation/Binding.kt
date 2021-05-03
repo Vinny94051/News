@@ -1,13 +1,19 @@
 package ru.kiryanav.ui.presentation
 
+import android.content.Context
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.kiryanav.ui.model.ArticleItem
 import ru.kiryanav.ui.model.ArticleSourceUI
 import ru.kiryanav.ui.presentation.fragment.news.ArticleAdapter
-import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
+import ru.kiryanav.ui.presentation.fragment.news.NewsUIError
+import ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback
+import ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick
 import ru.kiryanav.ui.presentation.fragment.settings.OnSourceItemClick
+import ru.kiryanav.ui.presentation.fragment.settings.SettingsError
 import ru.kiryanav.ui.presentation.fragment.settings.SourceAdapter
 import vlnny.base.ext.hide
 import vlnny.base.ext.show
@@ -61,4 +67,33 @@ fun bindSources(
     } else {
         (recyclerView.adapter as SourceAdapter).updateList(sources ?: emptyList())
     }
+}
+
+@BindingAdapter("newsError", "newsErrorCallback")
+fun bindNewsError(
+    parent: ViewGroup,
+    newsError: NewsUIError?,
+    newsErrorCallback : NewsErrorCallback
+) {
+    when (newsError) {
+        is NewsUIError.NoSavedSources -> newsErrorCallback.noSavedSourcesError()
+        is NewsUIError.Unknown -> showToast(parent.context, "Что-то пошло не так.")
+        is NewsUIError.BadApiKey -> showToast(parent.context, "Проблемы с вашей подпиской.")
+    }
+}
+
+@BindingAdapter("settingsError")
+fun bindSettingsError(
+    parent: ViewGroup,
+    settingsError : SettingsError?
+){
+    when(settingsError){
+        is SettingsError.BadApiKey -> showToast(parent.context, "Проблемы с вашей подпиской.")
+        is SettingsError.Unknown -> showToast(parent.context, "Что-то пошло не так.")
+    }
+}
+
+private fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT)
+        .show()
 }

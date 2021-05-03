@@ -17,6 +17,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        settingsError="@{viewModel.error}"
         android:background="@android:color/white">
 
         <RelativeLayout
@@ -59,6 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/sourceLayout"
+            android:layout_above="@id/saveSourcesBtn"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="10"
@@ -68,12 +70,127 @@
             android:id="@+id/saveSourcesBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Сохранить"
-            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/margin_default"
             android:background="@android:color/holo_green_light"
-            />
+            android:text="@string/save"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/notificationsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_setting_item"
+            android:layout_below="@id/sourceLayout">
+
+            <TextView
+                android:id="@+id/notifyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_default"
+                android:text="@string/notify_text_settings"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_settings" />
+
+            <ImageView
+                android:id="@+id/openNotifSettingsBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin_default"
+                android:src="@drawable/ic_baseline_arrow_drop_down_24" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/separateLine2"
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_below="@id/notificationsLayout"
+            android:background="@color/color_grey_49" />
+
+        <RadioGroup
+            android:id="@+id/intervalRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/separateLine2"
+            android:layout_above="@id/saveNotifyBtn"
+            android:padding="@dimen/default_margin"
+            android:visibility="gone">
+
+            <RadioButton
+                android:id="@+id/btn15"
+                style="@style/notifyRadioBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_15_mnts" />
+
+            <RadioButton
+                android:id="@+id/btn30"
+                style="@style/notifyRadioBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_30_mnts" />
+
+
+            <RadioButton
+                android:id="@+id/btn60"
+                style="@style/notifyRadioBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_1_hour" />
+
+
+            <RadioButton
+                android:id="@+id/btn120"
+                style="@style/notifyRadioBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_2_hours" />
+
+
+            <RadioButton
+                android:id="@+id/btn240"
+                style="@style/notifyRadioBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_4_hours" />
+
+
+            <RadioButton
+                android:id="@+id/btn480"
+                style="@style/notifyRadioBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_8_hours" />
+
+            <RadioButton
+                android:id="@+id/btn1440"
+                style="@style/notifyRadioBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_24_hours" />
+
+            <RadioButton
+                android:id="@+id/turnOffNotify"
+                style="@style/notifyRadioBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/turn_off_notification"
+                />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/saveNotifyBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/margin_default"
+            android:background="@android:color/holo_green_light"
+            android:text="@string/save"
+            android:visibility="gone" />
 
     </RelativeLayout>
 </layout>

@@ -7,12 +7,14 @@ import org.koin.core.KoinComponent
 import ru.kiryanav.ui.R
 import ru.kiryanav.ui.databinding.FragmentLocalNewsBinding
 import ru.kiryanav.ui.model.ArticleItem
-import ru.kiryanav.ui.presentation.fragment.news.OnArticleItemClick
+import ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback
+import ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick
+import ru.kiryanav.ui.presentation.fragment.news.sources.SourcesDialogFragment
 import vlnny.base.ext.openLink
 import vlnny.base.fragment.BaseBindableFragment
 
 class SelectedNewsFragment : BaseBindableFragment<FragmentLocalNewsBinding>(),
-    OnArticleItemClick,
+    OnArticleItemClick, NewsErrorCallback,
     KoinComponent {
 
     private val savedNewsViewModel by viewModel<SelectedNewsViewModel>()
@@ -28,8 +30,8 @@ class SelectedNewsFragment : BaseBindableFragment<FragmentLocalNewsBinding>(),
         loadSaved()
     }
 
-    override fun onCheckBoxClick(article: ArticleItem.ArticleUI, isSave: Boolean) {
-        if(!isSave){
+    override fun onSaveItemClick(article: ArticleItem.ArticleUI, isSaved: Boolean) {
+        if (!isSaved) {
             savedNewsViewModel.remove(article)
         }
     }
@@ -43,4 +45,17 @@ class SelectedNewsFragment : BaseBindableFragment<FragmentLocalNewsBinding>(),
     }
 
     private fun loadSaved() = savedNewsViewModel.getSavedArticles()
+
+    override fun noSavedSourcesError() {
+        showSnack(getString(R.string.default_error))
+    }
+
+
+    override fun unknownError() {
+        showSnack(getString(R.string.error_something_went_wrong))
+    }
+
+    override fun badApiKeyError() {
+        showSnack(getString(R.string.error_bad_api_key))
+    }
 }
