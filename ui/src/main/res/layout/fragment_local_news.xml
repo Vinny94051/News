@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="callback"
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick" />
+
+        <variable
+            name="viewModel"
+            type="ru.kiryanav.ui.presentation.fragment.news.selected.SelectedNewsViewModel" />
+
+        <variable
+            name="errorCallback"
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback" />
+    </data>
+
+    <RelativeLayout
+        newsError="@{viewModel.error}"
+        newsErrorCallback="@{errorCallback}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/headerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@string/saved_news"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_22sp"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/mainProgressBar"
+            isVisible="@{viewModel.isProgressVisible()}"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@android:color/black"
+            android:visibility="visible" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            articleCallback="@{callback}"
+            articles="@{viewModel.articlesLiveData}"
+            isVisible="@{!viewModel.isProgressVisible()}"
+            isWithSaveIcon="@{true}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/headerTextView"
+            android:layout_marginTop="@dimen/default_margin"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_article" />
+
+    </RelativeLayout>
+</layout>

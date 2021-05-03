@@ -1,14 +1,10 @@
 package vlnny.base.ext
 
-import android.app.Activity
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.TextView
-import com.google.android.material.snackbar.Snackbar
-import vlnny.base.R
+import android.widget.ImageView
 
 fun View.hide() {
     this.visibility = View.GONE
@@ -39,3 +35,10 @@ fun EditText.clearText(){
 
 fun EditText.isEmpty() : Boolean =
     this.text.toString().isEmpty()
+
+fun ImageView.rotateFromTopToBottom(){
+    animate().rotation(180f).start()
+}
+
+fun ImageView.rotateDefault() =
+    animate().rotation(0f).start()

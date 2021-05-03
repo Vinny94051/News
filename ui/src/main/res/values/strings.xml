@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">News</string>
+    <string name="unknown_author">Unknown</string>
+    <string name="author">Author is: %s</string>
+    <string name="search_hint">Search for news</string>
+    <string name="total_results">Total results: %s</string>
+    <string name="popup_save">Save</string>
+    <string name="article_saved">Article successfully saved</string>
+    <string name="error_saved">Something went wrong</string>
+    <string name="show_more"> Show more</string>
+    <string name="default_search">Models</string>
+    <string name="show_saved">Show saved</string>
+    <string name="back">Back</string>
+    <string name="change_keyword">Change keyword</string>
+    <string name="Save">Save</string>
+    <string name="error_change_keyword_short_word">Enter word or phrase.</string>
+    <string name="alert_title_change_keyword">What your favorite theme?</string>
+    <string name="alert_message_change_keyword">Enter the keyword, which will be searched
+You always can change it.</string>
+    <string name="source">Sources</string>
+    <string name="snack_source_changed">Source successfuly changed to %s</string>
+    <string name="error_something_went_wrong">Something went wrong</string>
+    <string name="popup_remove">Удалить</string>
+    <string name="settings">Настройки</string>
+    <string name="saved_news">Избранное</string>
+    <string name="send_action_text">Довольно интересная статья. Рекомендую прочитать.</string>
+    <string name="chosser_send_header">Кому отправить?</string>
+    <string name="channel_name">Notify channel</string>
+
+    <string name="notify_text_settings">Notifications</string>
+    <string name="_15_mnts">15 mnts</string>
+    <string name="_30_mnts">30 mnts</string>
+    <string name="_1_hour">1 hour</string>
+    <string name="_2_hours">2 hours</string>
+    <string name="_4_hours">4 hours</string>
+    <string name="_8_hours">8 hours</string>
+    <string name="_24_hours">24 hours</string>
+    <string name="turn_off_notification">Turn off notification</string>
+    <string name="save">Сохранить</string>
+    <string name="default_error">Something went wrong</string>
+    <string name="error_bad_api_key">Some problems with your subscription.</string>
+</resources>

@@ -12,7 +12,7 @@ import vlnny.base.fragment.BaseFragment
 
 class Router(
     private var activity: AppCompatActivity,
-    private var fragmentManager: FragmentManager
+    var fragmentManager: FragmentManager
 ) {
 
     fun openActivity(to: AppCompatActivity) =

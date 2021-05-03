@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="ru.kiryanav.ui.presentation.fragment.news.current.NewsViewModel" />
+
+        <variable
+            name="callback"
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.OnArticleItemClick" />
+
+        <variable
+            name="errorCallback"
+            type="ru.kiryanav.ui.presentation.fragment.news.callback.NewsErrorCallback" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        newsError="@{viewModel.error}"
+        newsErrorCallback="@{errorCallback}"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <SearchView
+                android:id="@+id/searchView"
+                isVisible="@{!viewModel.isProgressVisible()}"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:layout_marginEnd="48dp"
+                android:background="@android:color/darker_gray"
+                android:searchIcon="@drawable/ic_baseline_search_24" />
+
+            <ImageView
+                android:id="@+id/more"
+                isVisible="@{!viewModel.isProgressVisible()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:src="@drawable/ic_baseline_more_vert_24" />
+
+            <TextView
+                android:id="@+id/totalResults"
+                isVisible="@{!viewModel.isProgressVisible()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/searchView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/news_8dp"
+                android:text="@{viewModel.totalNewsLiveData}"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Total results: 4900" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/newsRecycler"
+                articleCallback="@{callback}"
+                articles="@{viewModel.newsLiveData}"
+                isVisible="@{!viewModel.isProgressVisible()}"
+                isWithSaveIcon="@{true}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/totalResults"
+                android:layout_marginTop="@dimen/default_margin"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="10"
+                tools:listitem="@layout/item_article" />
+
+
+            <ProgressBar
+                android:id="@+id/mainProgressBar"
+                isVisible="@{viewModel.isProgressVisible()}"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:indeterminateTint="@android:color/black"
+                android:visibility="visible" />
+
+            <ProgressBar
+                android:id="@+id/loadMoreProgressBar"
+                isVisible="@{viewModel.isLoadingMore()}"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/news_8dp"
+                android:indeterminateTint="@android:color/black" />
+        </RelativeLayout>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</layout>

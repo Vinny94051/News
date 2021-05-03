@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Новости</string>
+    <string name="unknown_author">Неизвестный</string>
+    <string name="author">Автор: %s</string>
+    <string name="search_hint">Поиск новостей</string>
+    <string name="total_results">Количество результатов: %s</string>
+    <string name="popup_save">Добавить в избранное</string>
+    <string name="article_saved">Новость успешно сохранена</string>
+    <string name="error_saved">Что-то пошло не так</string>
+    <string name="show_more"> Показать далее</string>
+    <string name="default_search">Мода</string>
+    <string name="show_saved">Показать сохраненные</string>
+    <string name="back">Назад</string>
+    <string name="change_keyword">Изменить ключевое слово</string>
+    <string name="Save">Сохранить</string>
+    <string name="error_change_keyword_short_word">Введите слово или фразу.</string>
+    <string name="alert_title_change_keyword">Какая тема вам наиболее интересна?</string>
+    <string name="alert_message_change_keyword">Введите ключевое слово по которому будет происходит по входу в приложение.
+Вы всегда можете его поменять.</string>
+    <string name="source">Источники</string>
+    <string name="snack_source_changed">Источник успешно изменен на %s</string>
+    <string name="error_bad_api_key">Проблемы с вашей подпиской.</string>
+</resources>

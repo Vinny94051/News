@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="source"
+            type="ru.kiryanav.ui.model.ArticleSourceUI" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:paddingStart="@dimen/margin_default"
+        android:paddingTop="8dp"
+        tools:ignore="RtlSymmetry">
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{source.name}"
+            android:textColor="@color/color_grey_49"
+            android:textSize="@dimen/text_size_22sp"
+            tools:text="Name" />
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/categoryTextView"
+            android:layout_marginTop="@dimen/margin_default"
+            android:text="@{source.description}"
+            android:textColor="@color/color_grey_49"
+            android:textSize="@dimen/text_size_16sp"
+            tools:text="Description" />
+
+        <TextView
+            android:id="@+id/categoryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nameTextView"
+            android:layout_marginTop="@dimen/news_8dp"
+            android:text="@{source.category}"
+            android:textColor="@color/color_grey_49"
+            android:textSize="@dimen/text_size_16sp"
+            tools:text="Category" />
+
+        <CheckBox
+            android:id="@+id/isItemSelected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/margin_default"
+            android:checked="@{source.isSelected}" />
+
+    </RelativeLayout>
+</layout>
