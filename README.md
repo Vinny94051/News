@@ -24,3 +24,9 @@
 5. Images - Glide
 6. Multi - modules
 
+
+
+### P.S. ###
+
+This old project for showing my skills. Now it is higher, I suppose :)
+
