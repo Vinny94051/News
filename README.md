@@ -1,14 +1,26 @@
 # News
 
-News is the app which showed the latest news
+### News is the app which showed the latest news using https://newsapi.org/ ###
 
-## Usage
-Just open the app and see news, if you wanna change topic of showed news, use search field on the top of the screen
 
-If you want to show all description, press "Show more"
 
-If you want to save news in local library, hold your finger on the article, until button "Save" appear, press it
 
-If you want to see local library press "Show saved button", press "Back" for back
+# Main Features
 
-Swipe from to bottom for update list
+1. Show the latest news by last week
+2. Saving interesting articles
+3. Possibility to set notifications about new news every 15mnts, 1 hour ect.
+4. Search news by header
+
+
+
+
+# Technologies
+
+1. MVVM + Clean Architecture
+2. Kotlin Coroutines
+3. DI - Koin
+4. DB - Room
+5. Images - Glide
+6. Multi - modules
+
