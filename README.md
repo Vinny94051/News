@@ -28,5 +28,5 @@
 
 ### P.S. ###
 
-This old project for showing my skills. Now it is higher, I suppose :)
+This old project for showing my skills. Now my abilities are higher, I suppose :)
 
